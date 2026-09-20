@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
+import { ArrowRight, Check, ChevronLeft, ChevronRight, Copy, Menu, RotateCcw, Share2, Sparkles, X } from "lucide-react";
 import { useState, useRef } from "react";
 import { Button } from "@/components/v2/ui/button";
 
@@ -404,12 +404,172 @@ export default function V2Page() {
   const monthsTo1Sqm = Number((currentCity.pricePerSqm / Math.max(1, currentCity.averageHourlyWage * 8 * 21.67)).toFixed(1));
   const yearsToDeposit = Math.max(1, Math.round((currentCity.rawDeposit - numericSavings) / Math.max(1, currentCity.rawSalary * 0.2)));
 
+  // Audit / Calculate animation states
+  const [isAuditing, setIsAuditing] = useState(false);
+  const [auditStep, setAuditStep] = useState(0);
+  const [hasAudited, setHasAudited] = useState(false);
+  const [auditShake, setAuditShake] = useState(false);
+
+  // Sub-tabs under the calculator
+  const [activeCalcTab, setActiveCalcTab] = useState<"receipt" | "boomer" | "auction">("receipt");
+  const [copiedReceipt, setCopiedReceipt] = useState(false);
+
+  // Boomer simulator toggles
+  const [boomerSacrifices, setBoomerSacrifices] = useState({
+    coffee: true,
+    avo: true,
+    streaming: false,
+    walking: false,
+    noHeating: false,
+  });
+
+  // Auction simulator state
+  const [auctionState, setAuctionState] = useState<"idle" | "bidding" | "outbid" | "sold">("idle");
+  const [auctionLog, setAuctionLog] = useState<string[]>([]);
+
+  // Renty corgi wisdom
+  const [rentyIndex, setRentyIndex] = useState(0);
+  const [rentyBarking, setRentyBarking] = useState(false);
+
+  const auditMessages = [
+    "Consulting the Reserve Bank of Australia... 🏦",
+    "Auditing 14 years of your UberEats and flat white orders... 🍟",
+    "Converting life savings into microscopic dust particles... 🔬",
+    "Cross-referencing with offshore cash syndicates on WhatsApp... 📱",
+    "Bank Algorithm Verdict Rendered: 0 SQM! ⚖️",
+  ];
+
   const calculate = () => {
     if (!savings) setSavings("25000");
+    if (isAuditing) return;
+
+    setIsAuditing(true);
+    setAuditStep(0);
+
+    let step = 0;
+    const interval = setInterval(() => {
+      step += 1;
+      if (step < auditMessages.length) {
+        setAuditStep(step);
+      } else {
+        clearInterval(interval);
+        setIsAuditing(false);
+        setHasAudited(true);
+        setAuditShake(true);
+        setTimeout(() => setAuditShake(false), 800);
+      }
+    }, 320);
   };
 
   const handlePreset = (val: string) => {
     setSavings(val);
+  };
+
+  const getSliderRoast = (val: number, symbol: string) => {
+    if (val <= 0) return "Pure freedom (and negative net worth) 🧘";
+    if (val < 2500) return `With ${symbol}${val.toLocaleString()}, you can afford 2 days of Sydney CBD parking & an iced flat white ☕`;
+    if (val < 10000) return `Enough for 1 doormat in Bondi, but strictly during off-peak hours 🚪`;
+    if (val < 25000) return `Justin tier: a nice laptop, a corgi harness, and exactly 0 m² 💻`;
+    if (val < 50000) return `The air rights directly between the fridge and the wall in an unrenovated studio 🧊`;
+    if (val < 80000) return `Enough to cover strata legal fees for your neighbour's leaking balcony 🌧️`;
+    if (val < 120000) return `You can now inhale the oxygen at a Saturday open inspection without coughing 👃`;
+    if (val < 150000) return `Almost enough for stamp duty on a cardboard box in Surry Hills 📦`;
+    return `Offshore cash buyer laughing in the background on speakerphone 📞`;
+  };
+
+  const rentyQuotes = [
+    { text: "Woof! Rent is a construct. Sticks at the dog park are free and have 100% equity.", emoji: "🪵" },
+    { text: "Arf! My dog bed is 0.4 m². Legally, I own more prime land than Justin.", emoji: "🛏️" },
+    { text: "Bark! If you bury your savings in the backyard, at least the bank won't charge an account keeping fee.", emoji: "🦴" },
+    { text: "Woof woof! Landlord said 'no pets', so technically I am a high-risk uninsured financial liability.", emoji: "🚨" },
+    { text: "Awoo! Have you tried having rich boomer parents? Justin hasn't, and look where that got us.", emoji: "🥑" },
+    { text: "Yip! Justin spent 4 hours on Excel yesterday. We still don't have a backyard, but the charts are very colorful.", emoji: "📊" },
+  ];
+
+  const handleAskRenty = () => {
+    setRentyBarking(true);
+    setRentyIndex((prev) => (prev + 1) % rentyQuotes.length);
+    setTimeout(() => setRentyBarking(false), 500);
+  };
+
+  const boomerItems = [
+    { key: "coffee" as const, label: "Skip Daily Flat White", saving: 2007, desc: "+$5.50 / day" },
+    { key: "avo" as const, label: "Stop Eating Smashed Avocado", saving: 1144, desc: "+$22 / week" },
+    { key: "streaming" as const, label: "Cancel Netflix, Disney+ & Spotify", saving: 540, desc: "+$45 / month" },
+    { key: "walking" as const, label: "Walk 30km to Work (No Opal/Train)", saving: 2860, desc: "+$55 / week" },
+    { key: "noHeating" as const, label: "Zero Winter Heating (Wear 4 Jumpers)", saving: 600, desc: "+$150 / winter mo" },
+  ];
+
+  const totalBoomerSaving = boomerItems.reduce((acc, item) => {
+    return acc + (boomerSacrifices[item.key] ? item.saving : 0);
+  }, 0);
+
+  const boomerApprovalScore = Math.min(100, Math.round((totalBoomerSaving / 7151) * 100));
+
+  const monthlyBaseSaving = (currentCity.rawSalary * 0.2) / 12;
+  const monthlyTotalSaving = monthlyBaseSaving + (totalBoomerSaving / 12);
+  const monthsWithSacrifices = (currentCity.pricePerSqm / Math.max(1, monthlyTotalSaving)).toFixed(1);
+
+  const runAuctionSimulation = () => {
+    const bidAmount = numericSavings > 0 ? numericSavings.toLocaleString() : "25,000";
+    setAuctionState("bidding");
+    setAuctionLog([
+      `📢 Auctioneer: "Opening bid of ${currentCity.currencySymbol}${bidAmount} from the young hopeful in the back row!"`
+    ]);
+
+    setTimeout(() => {
+      setAuctionState("outbid");
+      setAuctionLog((prev) => [
+        ...prev,
+        `📱 Offshore Phone Bidder: "Raise to $1,850,000 CASH, unconditional, 7-day settlement!"`,
+        `👨‍💼 Auctioneer: "Going once, going twice..."`
+      ]);
+    }, 1100);
+
+    setTimeout(() => {
+      setAuctionState("sold");
+      setAuctionLog((prev) => [
+        ...prev,
+        `🔨 GAVEL SLAMS: "SOLD to the phone bidder who hasn't stepped foot in the Southern Hemisphere!"`,
+        `🏆 Verdict: You won 0 SQM (and 1 free bottle of lukewarm auction water).`
+      ]);
+    }, 2300);
+  };
+
+  const getReceiptText = () => {
+    return `==========================================
+         0 SQM REALTY PTY LTD
+    OFFICIAL SETTLEMENT TAX INVOICE
+==========================================
+Date: ${new Date().toLocaleDateString()}
+Buyer: Justin (or You)
+Location: ${currentCity.name}, ${currentCity.country}
+------------------------------------------
+ITEM                                AMOUNT
+------------------------------------------
+Base Land Acquired (0.00 m²)         ${currentCity.currencySymbol}0.00
+Theoretical Land (${affordableSqm.toFixed(2)} m²)       ${currentCity.currencySymbol}${numericSavings.toLocaleString()}
+Stamp Duty (on fresh air)       ${currentCity.currencySymbol}42,500.00
+Strata Sinking Fund (broken pool) ${currentCity.currencySymbol}3,400.00
+Landlord Mortgage Contribution        100%
+Banker's Condescending Smile          FREE
+Emotional Damage                 PRICELESS
+------------------------------------------
+TOTAL PROPERTY ACQUIRED:             0 SQM
+TOTAL SAVINGS FORFEITED:        ${currentCity.currencySymbol}${numericSavings.toLocaleString()}
+==========================================
+||| | ||||| || |||||| |||| | ||||| |||
+"Thank you for funding someone else's retirement!"
+https://0sqm.fun
+==========================================`;
+  };
+
+  const handleCopyReceipt = () => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(getReceiptText());
+      setCopiedReceipt(true);
+      setTimeout(() => setCopiedReceipt(false), 2000);
+    }
   };
 
   const [activePhoto, setActivePhoto] = useState<{
@@ -797,12 +957,44 @@ export default function V2Page() {
                     </label>
                     <Button
                       variant="ink"
-                      className="h-11 w-full min-[360px]:w-auto cursor-pointer font-bold"
+                      className="h-11 w-full min-[360px]:w-auto cursor-pointer font-bold flex items-center justify-center gap-2 transition-transform active:scale-95"
                       onClick={calculate}
+                      disabled={isAuditing}
                     >
-                      Calculate
+                      {isAuditing ? (
+                        <>
+                          <div className="size-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                          <span>Auditing...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="size-4 text-amber-400" />
+                          <span>Calculate</span>
+                        </>
+                      )}
                     </Button>
                   </div>
+
+                  {/* Comedic Auditing Progress Banner */}
+                  {isAuditing && (
+                    <div className="mt-3 p-3 rounded-md bg-amber-500/15 border border-amber-500/30 text-xs font-mono text-foreground animate-in fade-in slide-in-from-top-1 duration-200">
+                      <div className="flex items-center justify-between mb-1.5 font-bold">
+                        <span className="flex items-center gap-2">
+                          <span className="size-2 rounded-full bg-amber-600 animate-ping" />
+                          <span>{auditMessages[auditStep]}</span>
+                        </span>
+                        <span className="text-[11px] text-muted-foreground">
+                          {Math.round(((auditStep + 1) / auditMessages.length) * 100)}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-neutral-200 h-1.5 rounded-full overflow-hidden">
+                        <div
+                          className="bg-amber-500 h-full transition-all duration-300 rounded-full"
+                          style={{ width: `${((auditStep + 1) / auditMessages.length) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   {/* Range Slider for immediate live interactive fun */}
                   <div className="mt-3 flex items-center gap-3">
@@ -818,6 +1010,14 @@ export default function V2Page() {
                       aria-label="Savings slider"
                     />
                     <span className="text-[11px] font-bold text-muted-foreground">{currentCity.currencySymbol}150k+</span>
+                  </div>
+
+                  {/* Dynamic Live Slider Roaster */}
+                  <div className="mt-2 flex items-center gap-2 rounded-md bg-amber-500/10 border border-amber-500/20 px-3 py-2 text-xs text-foreground transition-all">
+                    <span className="text-sm shrink-0">🔥</span>
+                    <span className="font-semibold italic leading-snug">
+                      {getSliderRoast(numericSavings, currentCity.currencySymbol)}
+                    </span>
                   </div>
 
                   {/* Quick Preset Chips */}
@@ -932,31 +1132,354 @@ export default function V2Page() {
                     </div>
                   </div>
                 </div>
+
+                {/* ========================================================================= */}
+                {/* NEW: Interactive Comedy Sub-Tabs (Receipt, Boomer Advice, Auction Simulator) */}
+                {/* ========================================================================= */}
+                <div className="mt-5 rounded-md border border-border bg-paper p-4">
+                  {/* Tab Selector Buttons */}
+                  <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
+                    <button
+                      type="button"
+                      onClick={() => setActiveCalcTab("receipt")}
+                      className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                        activeCalcTab === "receipt"
+                          ? "bg-foreground text-background shadow-xs"
+                          : "bg-muted hover:bg-neutral-200 text-muted-foreground"
+                      }`}
+                    >
+                      <span>🧾</span> Reality Receipt
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveCalcTab("boomer")}
+                      className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                        activeCalcTab === "boomer"
+                          ? "bg-foreground text-background shadow-xs"
+                          : "bg-muted hover:bg-neutral-200 text-muted-foreground"
+                      }`}
+                    >
+                      <span>🥑</span> Boomer Advice Simulator
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveCalcTab("auction")}
+                      className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                        activeCalcTab === "auction"
+                          ? "bg-foreground text-background shadow-xs"
+                          : "bg-muted hover:bg-neutral-200 text-muted-foreground"
+                      }`}
+                    >
+                      <span>🔨</span> Sydney Auction Simulator
+                    </button>
+                  </div>
+
+                  {/* Sub-tab 1: Thermal Reality Receipt */}
+                  {activeCalcTab === "receipt" && (
+                    <div className="mt-4 space-y-3 font-mono">
+                      <div className="rounded-sm border-2 border-dashed border-neutral-400 bg-white p-4 text-xs text-neutral-800 shadow-inner max-w-md mx-auto">
+                        <div className="text-center pb-2 border-b border-dashed border-neutral-300">
+                          <p className="font-bold text-sm uppercase tracking-widest">0 SQM REALTY PTY LTD</p>
+                          <p className="text-[10px] text-neutral-500">Official Settlement Tax Invoice</p>
+                          <p className="text-[10px] text-neutral-500 mt-1">
+                            Date: {new Date().toLocaleDateString()} · Buyer: Justin (or You)
+                          </p>
+                        </div>
+
+                        <div className="py-2.5 space-y-1.5 text-[11px] border-b border-dashed border-neutral-300">
+                          <div className="flex justify-between">
+                            <span>Base Land Acquired</span>
+                            <span className="font-bold">0.00 m² ($0.00)</span>
+                          </div>
+                          <div className="flex justify-between text-neutral-600">
+                            <span>Theoretical Land ({affordableSqm.toFixed(2)} m²)</span>
+                            <span>{currentCity.currencySymbol}{numericSavings.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between text-neutral-600">
+                            <span>Stamp Duty (on fresh air)</span>
+                            <span>{currentCity.currencySymbol}42,500.00</span>
+                          </div>
+                          <div className="flex justify-between text-neutral-600">
+                            <span>Strata Sinking Fund (broken lift)</span>
+                            <span>{currentCity.currencySymbol}3,400.00</span>
+                          </div>
+                          <div className="flex justify-between text-neutral-600">
+                            <span>Agent Cologne Surcharge</span>
+                            <span>{currentCity.currencySymbol}450.00</span>
+                          </div>
+                          <div className="flex justify-between text-neutral-600">
+                            <span>Landlord Mortgage Gratitude</span>
+                            <span>100%</span>
+                          </div>
+                          <div className="flex justify-between text-neutral-600">
+                            <span>Emotional Damage</span>
+                            <span className="text-green-600 font-bold">FREE</span>
+                          </div>
+                        </div>
+
+                        <div className="pt-2 flex justify-between text-xs font-black">
+                          <span>TOTAL EQUITY ACQUIRED:</span>
+                          <span className="text-red-600">0 SQM</span>
+                        </div>
+
+                        {/* Barcode & Slogan */}
+                        <div className="mt-3 pt-2 text-center border-t border-dashed border-neutral-300">
+                          <div className="h-6 mx-auto flex items-center justify-center gap-1 tracking-widest text-lg font-black text-neutral-600 select-none">
+                            |||| ||| |||||| || ||||| |||| |||
+                          </div>
+                          <p className="text-[10px] italic text-neutral-500 mt-1">
+                            &ldquo;Thank you for paying off someone else&apos;s mortgage!&rdquo;
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Receipt Action Buttons */}
+                      <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleCopyReceipt}
+                          className="h-8 text-xs font-bold cursor-pointer hover:bg-neutral-100"
+                        >
+                          {copiedReceipt ? (
+                            <>
+                              <Check className="size-3.5 text-green-600 mr-1" />
+                              <span className="text-green-600">Copied to Clipboard!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="size-3.5 mr-1" />
+                              <span>Copy Receipt</span>
+                            </>
+                          )}
+                        </Button>
+                        <a
+                          href={`https://twitter.com/intent/tweet?text=I%20just%20received%20my%20Official%200%20SQM%20Settlement%20Receipt%20for%20${currentCity.name}.%20Total%20equity%3A%200.00%20m%C2%B2.%20Same%20dream.%20Different%20budget.%20%40Own0SQM%20%230SQM&url=https://0sqm.fun`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-sm bg-foreground px-3 text-xs font-bold text-background shadow-xs hover:bg-neutral-800 transition-colors cursor-pointer"
+                        >
+                          <Share2 className="size-3.5" />
+                          <span>Tweet Receipt</span>
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sub-tab 2: Boomer Advice Simulator */}
+                  {activeCalcTab === "boomer" && (
+                    <div className="mt-4 space-y-4">
+                      <div>
+                        <h5 className="font-marker text-base font-bold text-foreground">
+                          Boomer Financial Wisdom: How to Buy 1 m²
+                        </h5>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          Check off the lifestyle sacrifices boomers recommend to see how many decades it shaves off your first square metre.
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        {boomerItems.map((item) => {
+                          const isChecked = boomerSacrifices[item.key];
+                          return (
+                            <label
+                              key={item.key}
+                              className={`flex items-start gap-2.5 p-2.5 rounded-sm border cursor-pointer transition-all ${
+                                isChecked
+                                  ? "bg-amber-500/10 border-amber-500/40 text-foreground"
+                                  : "bg-paper/80 border-border text-muted-foreground hover:bg-muted/50"
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={(e) =>
+                                  setBoomerSacrifices((prev) => ({
+                                    ...prev,
+                                    [item.key]: e.target.checked,
+                                  }))
+                                }
+                                className="mt-0.5 size-4 rounded accent-amber-500 cursor-pointer"
+                              />
+                              <div className="text-xs">
+                                <strong className="block font-medium text-foreground">{item.label}</strong>
+                                <span className="text-[11px] font-mono text-muted-foreground">
+                                  {item.desc} (saves ~${item.saving.toLocaleString()}/yr)
+                                </span>
+                              </div>
+                            </label>
+                          );
+                        })}
+                      </div>
+
+                      {/* Dynamic Boomer Sacrifice Output */}
+                      <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-3 text-xs space-y-2">
+                        <div className="flex justify-between items-center font-mono">
+                          <span className="font-bold text-foreground">Total Annual Sacrifices:</span>
+                          <span className="font-black text-sm text-green-700">
+                            +${totalBoomerSaving.toLocaleString()} / year
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between items-center text-[11px]">
+                          <span className="text-muted-foreground">Months of 100% saving to 1 m²:</span>
+                          <span className="font-bold text-foreground">
+                            {monthsWithSacrifices} months (was {monthsTo1Sqm} months)
+                          </span>
+                        </div>
+
+                        {/* Boomer Approval Meter */}
+                        <div className="pt-1">
+                          <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-1">
+                            <span>BOOMER APPROVAL RATING: {boomerApprovalScore}%</span>
+                            <span>
+                              {boomerApprovalScore < 30
+                                ? "Unforgivable Avocado Addict 🥑"
+                                : boomerApprovalScore < 70
+                                ? "Acceptable, but cut the sourdough 🍞"
+                                : "Certified 1982 Hard Worker 👴"}
+                            </span>
+                          </div>
+                          <div className="w-full bg-neutral-200 h-2 rounded-full overflow-hidden">
+                            <div
+                              className="bg-amber-500 h-full transition-all duration-300 rounded-full"
+                              style={{ width: `${boomerApprovalScore}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <p className="text-[11px] italic text-muted-foreground pt-1 border-t border-amber-500/20">
+                          &ldquo;Back in 1982, interest rates were 17.5% and we walked uphill both ways to the bank! If you just stop breathing restaurant air, you will afford a studio by 2145.&rdquo;
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sub-tab 3: Live Sydney Auction Simulator */}
+                  {activeCalcTab === "auction" && (
+                    <div className="mt-4 space-y-4">
+                      <div>
+                        <h5 className="font-marker text-base font-bold text-foreground">
+                          Sydney Saturday 11 AM Auction Simulator
+                        </h5>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          Experience the thrill of raising your bidder paddle with {currentCity.currencySymbol}
+                          {numericSavings > 0 ? numericSavings.toLocaleString() : "25,000"} in hand against cash syndicates.
+                        </p>
+                      </div>
+
+                      {/* Auction Stage Display */}
+                      <div className="min-h-[140px] rounded-sm border border-border bg-paper/90 p-3 text-xs space-y-2 font-mono">
+                        {auctionLog.length === 0 ? (
+                          <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
+                            <span className="text-3xl mb-1">🔨</span>
+                            <p className="font-bold">The front lawn is packed. 42 people registered.</p>
+                            <p className="text-[11px] mt-0.5">Click below to raise your paddle and make your opening bid.</p>
+                          </div>
+                        ) : (
+                          auctionLog.map((line, idx) => (
+                            <div
+                              key={idx}
+                              className={`p-2 rounded-xs animate-in fade-in slide-in-from-bottom-1 duration-200 ${
+                                line.includes("SOLD")
+                                  ? "bg-red-500/15 text-red-700 font-bold border border-red-500/30"
+                                  : line.includes("GAVEL")
+                                  ? "bg-amber-500/15 text-foreground font-black"
+                                  : "bg-white text-neutral-800 border border-neutral-200"
+                              }`}
+                            >
+                              {line}
+                            </div>
+                          ))
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ink"
+                          onClick={runAuctionSimulation}
+                          disabled={auctionState === "bidding" || auctionState === "outbid"}
+                          className="h-10 text-xs font-bold cursor-pointer flex items-center gap-2"
+                        >
+                          {auctionState === "bidding" || auctionState === "outbid" ? (
+                            <>
+                              <div className="size-3.5 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                              <span>Auction in Progress...</span>
+                            </>
+                          ) : auctionState === "sold" ? (
+                            <>
+                              <RotateCcw className="size-3.5" />
+                              <span>Bid Again (Glutton for punishment)</span>
+                            </>
+                          ) : (
+                            <>
+                              <span>🙋 Raise Paddle (Bid {currentCity.currencySymbol}{numericSavings > 0 ? numericSavings.toLocaleString() : "25,000"})</span>
+                            </>
+                          )}
+                        </Button>
+                        {auctionState === "sold" && (
+                          <span className="text-xs font-marker text-red-600 animate-in fade-in">
+                            Outcome: 0 SQM won! ☺
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Sticky Yellow Reality Note */}
-            <aside className="relative min-w-0 self-start rounded-sm bg-primary p-5 text-center shadow-xl sm:rotate-1 border border-foreground/10 flex flex-col justify-between">
+            <aside
+              className={`relative min-w-0 self-start rounded-sm bg-primary p-5 text-center shadow-xl sm:rotate-1 border border-foreground/10 flex flex-col justify-between transition-transform duration-300 ${
+                auditShake ? "scale-105 rotate-2" : ""
+              }`}
+            >
               {/* Masking tape on top */}
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 masking-tape -rotate-2 z-20 pointer-events-none rounded-xs" />
 
               <div>
-                <span className="font-mono text-[9px] font-black uppercase tracking-wider text-foreground/75 block">
-                  Official Reality Audit
-                </span>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[9px] font-black uppercase tracking-wider text-foreground/75 block">
+                    Official Reality Audit
+                  </span>
+                  {hasAudited && (
+                    <span className="font-mono text-[8px] bg-foreground text-background px-1.5 py-0.5 rounded-xs font-bold uppercase">
+                      AUDIT COMPLETE
+                    </span>
+                  )}
+                </div>
 
                 <p className="mt-1 font-marker text-xl font-bold uppercase text-foreground">
                   In Reality, You Own
                 </p>
 
-                {/* The 0 SQM Punchline */}
-                <div className="my-2 py-3 bg-background/30 rounded-xs border border-foreground/15">
-                  <strong className="block font-marker text-6xl leading-none text-foreground">
-                    0
-                  </strong>
-                  <p className="font-marker text-2xl font-bold text-foreground tracking-wider">
-                    SQM
-                  </p>
+                {/* The 0 SQM Punchline with Stamp */}
+                <div className="relative my-2 py-3 bg-background/30 rounded-xs border border-foreground/15 overflow-hidden">
+                  {isAuditing ? (
+                    <div className="py-4 flex flex-col items-center justify-center min-h-[96px]">
+                      <div className="size-6 border-2 border-foreground border-t-transparent rounded-full animate-spin mb-2" />
+                      <span className="font-mono text-xs font-bold text-foreground animate-pulse">
+                        AUDITING REALITY...
+                      </span>
+                    </div>
+                  ) : (
+                    <>
+                      <strong className="block font-marker text-6xl leading-none text-foreground">
+                        0
+                      </strong>
+                      <p className="font-marker text-2xl font-bold text-foreground tracking-wider">
+                        SQM
+                      </p>
+
+                      {/* Red Rubber Stamp */}
+                      {hasAudited && (
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-3 border-red-600 text-red-600 font-marker px-3 py-1 text-sm uppercase -rotate-12 rounded-xs shadow-md tracking-wider pointer-events-none animate-in zoom-in-75 duration-200 select-none bg-paper/90">
+                          REJECTED: 0 SQM
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
 
                 {/* Theoretical vs Reality */}
@@ -993,6 +1516,27 @@ export default function V2Page() {
                 <p className="font-marker text-xs text-foreground/75">
                   Different cities. Same portfolio. ☺
                 </p>
+              </div>
+
+              {/* Interactive Ask Renty (Justin's Corgi) Card */}
+              <div className="mt-4 pt-3 border-t border-foreground/15 text-left">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-xl transition-transform ${rentyBarking ? "scale-125 rotate-12" : ""}`}>🐕</span>
+                    <strong className="text-[11px] font-marker text-foreground block">Renty&apos;s Wisdom</strong>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAskRenty}
+                    className="text-[10px] font-bold bg-foreground text-background px-2 py-0.5 rounded-xs cursor-pointer hover:bg-neutral-800 transition-colors"
+                  >
+                    Bark 🐾
+                  </button>
+                </div>
+                <div className="mt-2 rounded-xs bg-background/50 p-2 border border-foreground/10 text-[11px] italic text-foreground flex items-start gap-1.5">
+                  <span className="text-sm shrink-0">{rentyQuotes[rentyIndex].emoji}</span>
+                  <p className="leading-snug">&ldquo;{rentyQuotes[rentyIndex].text}&rdquo;</p>
+                </div>
               </div>
             </aside>
           </div>
