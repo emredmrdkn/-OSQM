@@ -1841,10 +1841,10 @@ https://0sqm.fun
             </div>
           </div>
 
-            {/* 4 Polaroid Kartı (Yatayda Serbestçe Kaydırılabilir) */}
-            <div className="relative min-w-0">
+            {/* 4 Polaroid Kartı (Yatayda Serbestçe Kaydırılabilir & Ortalanmış) */}
+            <div className="relative min-w-0 max-w-5xl lg:max-w-6xl mx-auto">
               {/* Yatay Kaydırma Kontrolleri */}
-              <div className="flex items-center justify-between pb-2 px-1">
+              <div className="flex items-center justify-between pb-2 px-2 sm:px-4">
                 <span className="text-[11px] font-mono font-semibold text-muted-foreground">
                   ← 4 Polaroid • Kaydırarak incele →
                 </span>
@@ -1871,13 +1871,13 @@ https://0sqm.fun
               {/* Polaroid Listesi */}
               <div
                 ref={polaroidScrollRef}
-                className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 pt-4 px-4 sm:px-6 items-center justify-start scroll-smooth snap-x snap-mandatory"
+                className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 pt-4 px-4 sm:px-6 items-center justify-start min-[1080px]:justify-center scroll-smooth snap-x snap-mandatory"
               >
                 {justinPolaroids.map((polaroid, idx) => (
                   <figure
                     key={polaroid.id}
                     onClick={() => setActivePhoto(polaroid)}
-                    className={`relative w-[220px] sm:w-[240px] shrink-0 snap-start bg-paper p-3 pb-4 shadow-xl border border-border rounded-xs cursor-pointer ${polaroid.rotation} hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-30 transition-all duration-300 group`}
+                    className={`relative w-[220px] sm:w-[240px] shrink-0 snap-center bg-paper p-3 pb-4 shadow-xl border border-border rounded-xs cursor-pointer ${polaroid.rotation} hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-30 transition-all duration-300 group`}
                   >
                     {/* Masking Tape Effect on Top */}
                     <div
