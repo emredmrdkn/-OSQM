@@ -36,8 +36,16 @@ const jakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  ? process.env.NEXT_PUBLIC_SITE_URL
+  : process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : 'https://0sqm.com.au';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://0sqm.com.au'),
+  metadataBase: new URL(siteUrl),
   title: '$0SQM — The Australian Dream Still Starts at 0m²',
   description: 'Real data. Real prices. Same result. The viral Australian housing reality check.',
   openGraph: {

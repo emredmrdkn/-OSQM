@@ -438,41 +438,47 @@ export default function V2Page() {
     }
   };
 
-  const handleShareOnX = async () => {
-    // 1. Download card PNG
-    await handleDownloadCard();
-
-    // 2. Try copying image to clipboard if supported
-    if (cardRef.current && navigator.clipboard && typeof ClipboardItem !== 'undefined') {
-      try {
-        const blob = await new Promise<Blob | null>((resolve) => {
-          if (!cardRef.current) return resolve(null);
-          toPng(cardRef.current, { pixelRatio: 2, backgroundColor: '#FAF9F5' })
-            .then((url) => fetch(url))
-            .then((r) => r.blob())
-            .then(resolve)
-            .catch(() => resolve(null));
-        });
-        if (blob) {
-          await navigator.clipboard.write([
-            new ClipboardItem({ 'image/png': blob })
-          ]);
-          setShareToast("📸 Kart görseli indirildi ve panoya kopyalandı! X açıldığında görseli yapıştırabilir veya ekleyebilirsiniz.");
-        } else {
-          setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
-        }
-      } catch {
-        setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
+  const handleShareOnX = () => {
+    // 1. Determine site URL (use live deployed origin so Twitter can crawl card, fallback to production domain)
+    let siteUrl = 'https://0sqm.com.au';
+    if (typeof window !== 'undefined' && window.location.origin) {
+      if (!window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1')) {
+        siteUrl = window.location.origin;
       }
+    }
+
+    // 2. Open Twitter / X intent IMMEDIATELY in user gesture so browser popup blocker does NOT block it!
+    const tweetText = `My ${currentCity.name} Reality Score: 0 SQM.\n${affordableSqm.toFixed(2)}m² in theory. 0m² in reality.\nDifferent city. Same portfolio. 🙂\n#0SQM`;
+    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(siteUrl)}`;
+    const win = window.open(tweetUrl, '_blank', 'noopener,noreferrer');
+    if (!win) {
+      window.location.href = tweetUrl;
+    }
+
+    // 3. Download card PNG in background for user
+    handleDownloadCard().catch(console.error);
+
+    // 4. Try copying image to clipboard if supported
+    if (cardRef.current && navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+      toPng(cardRef.current, { pixelRatio: 2, backgroundColor: '#FAF9F5' })
+        .then((url) => fetch(url))
+        .then((r) => r.blob())
+        .then(async (blob) => {
+          if (blob) {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            setShareToast("📸 Kart görseli indirildi ve panoya kopyalandı! X açıldığında görseli yapıştırabilir veya ekleyebilirsiniz.");
+          } else {
+            setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
+          }
+        })
+        .catch(() => {
+          setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
+        });
     } else {
       setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
     }
-
-    // 3. Open Twitter / X intent with requested text and site URL for card preview
-    const siteUrl = 'https://0sqm.com.au';
-    const tweetText = `My ${currentCity.name} Reality Score: 0 SQM.\n${affordableSqm.toFixed(2)}m² in theory. 0m² in reality.\nDifferent city. Same portfolio. 🙂\n#0SQM`;
-    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(siteUrl)}`;
-    window.open(tweetUrl, '_blank', 'noopener,noreferrer');
 
     setTimeout(() => setShareToast(null), 7000);
   };
