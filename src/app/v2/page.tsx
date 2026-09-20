@@ -687,39 +687,41 @@ https://0sqm.fun
       {/* Hero Section */}
       <section
         id="home"
-        className="relative min-h-[760px] scroll-mt-16 overflow-hidden pt-16 sm:min-h-[780px] lg:min-h-[720px]"
+        className="relative min-h-[520px] sm:min-h-[780px] lg:min-h-[720px] scroll-mt-16 overflow-hidden pt-16"
       >
         <img
           src={heroImage}
           alt="A man and his dog looking across Sydney Harbour"
           width={1920}
           height={1088}
-          className="absolute inset-0 h-full w-full object-cover object-[58%_center]"
+          className="absolute inset-0 h-full w-full object-cover object-[27%_bottom] sm:object-[58%_center]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/35 to-foreground/30 lg:bg-gradient-to-r lg:from-background/90 lg:via-background/30 lg:to-transparent" />
-        <div className="relative mx-auto flex min-h-[700px] max-w-7xl items-start px-5 pt-12 sm:px-8 lg:items-center lg:pt-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-transparent to-transparent sm:from-background/80 sm:via-background/35 sm:to-foreground/30 lg:bg-gradient-to-r lg:from-background/90 lg:via-background/30 lg:to-transparent" />
+        <div className="relative mx-auto flex min-h-[460px] sm:min-h-[700px] max-w-7xl items-start px-5 pt-12 sm:px-8 lg:items-center lg:pt-0">
           <div className="min-w-0 max-w-xl">
-            <h1 className="font-marker text-5xl font-bold leading-[0.83] min-[360px]:text-6xl sm:text-7xl lg:text-8xl">
+            <h1 className="hidden sm:block font-marker text-5xl font-bold leading-[0.83] min-[360px]:text-6xl sm:text-7xl lg:text-8xl">
               $<span className="text-primary">0</span>SQM
             </h1>
-            <p className="mt-4 max-w-lg font-marker text-2xl font-bold uppercase leading-tight min-[360px]:text-3xl sm:text-4xl">
+            <p className="hidden sm:block mt-4 max-w-lg font-marker text-2xl font-bold uppercase leading-tight min-[360px]:text-3xl sm:text-4xl">
               The Australian dream
               <br />
               still starts at <mark className="bg-primary px-2 text-foreground">0m²</mark>
             </p>
-            <p className="mt-5 max-w-sm text-sm font-semibold leading-relaxed sm:text-base">
+            <p className="hidden sm:block mt-5 max-w-sm text-sm font-semibold leading-relaxed sm:text-base">
               Just a guy, a dog, and a very expensive housing market. Documenting the journey from 0.00m² to a place we can call home.
             </p>
-            <Button
-              variant="sunshine"
-              size="lg"
-              className="mt-6 max-w-full px-5 text-xs min-[360px]:text-sm"
-              asChild
-            >
-              <a href="https://x.com/Own0SQM" target="_blank" rel="noreferrer">
-                Follow the journey on X <ArrowRight className="size-4" />
-              </a>
-            </Button>
+            <div className="hidden sm:block mt-6">
+              <Button
+                variant="sunshine"
+                size="lg"
+                className="max-w-full px-5 text-xs min-[360px]:text-sm"
+                asChild
+              >
+                <a href="https://x.com/Own0SQM" target="_blank" rel="noreferrer">
+                  Follow the journey on X <ArrowRight className="size-4" />
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -1546,31 +1548,107 @@ https://0sqm.fun
       {/* The Journey Section */}
       <section id="journey" className="scroll-mt-16 bg-background px-4 py-14 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          {/* Üst Kısım: Meet Justin & 3 Polaroid Kartı */}
-          <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-[300px_1fr] lg:items-center">
-            {/* Justin Story Text */}
-            <div>
-              <h2 className="font-marker text-4xl font-bold uppercase">Meet Justin.</h2>
-              <div className="mt-4 space-y-1 text-sm font-medium">
-                <p>Justin works.</p>
-                <p>Justin saves.</p>
-                <p>Justin pays rent.</p>
-                <p>Justin watches property prices go up.</p>
-                <p className="font-bold pt-1">Justin owns 0 SQM.</p>
+          {/* MEET THE TEAM Card */}
+          <div className="mb-12 rounded-2xl border border-border/90 bg-paper p-6 sm:p-8 md:p-10 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
+              <div>
+                <h2 className="font-marker text-3xl sm:text-4xl font-bold uppercase tracking-wide text-foreground">
+                  Meet The Team
+                </h2>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                  The visionary minds behind 0.00 m² of prime Australian real estate.
+                </p>
               </div>
-              <p className="mt-5 font-semibold text-neutral-800">
-                Justin is doing great.
-                <br />
-                His landlord is doing better.
-              </p>
               <Button
                 variant="sunshine"
-                className="mt-5 cursor-pointer"
+                size="sm"
+                className="self-start sm:self-auto cursor-pointer"
                 onClick={() => setIsStoryModalOpen(true)}
               >
                 Read Justin&apos;s story <ArrowRight className="size-4" />
               </Button>
             </div>
+
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14">
+              {/* Justin */}
+              <div className="flex flex-col justify-between">
+                <div className="flex items-start gap-4 sm:gap-5">
+                  <img
+                    src="/images/v2/team-justin.jpg"
+                    alt="Justin - Future Homeowner"
+                    className="size-24 sm:size-28 md:size-32 rounded-2xl object-cover shrink-0 border border-foreground/10 shadow-sm"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-bold text-xl sm:text-2xl text-foreground leading-tight">Justin</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-0.5">Future Homeowner</p>
+                    <div className="w-full h-px bg-border/80 my-2.5" />
+                    <ul className="space-y-1.5 text-xs sm:text-sm text-foreground/90 font-medium">
+                      <li className="flex items-baseline gap-2">
+                        <span className="text-muted-foreground text-xs">•</span>
+                        <span>Current portfolio: <strong className="font-bold">0.00m²</strong></span>
+                      </li>
+                      <li className="flex items-baseline gap-2">
+                        <span className="text-muted-foreground text-xs">•</span>
+                        <span>Expertise: looking at listings</span>
+                      </li>
+                      <li className="flex items-baseline gap-2">
+                        <span className="text-muted-foreground text-xs">•</span>
+                        <span>Strategy: hope, memes, patience</span>
+                      </li>
+                      <li className="flex items-baseline gap-2">
+                        <span className="text-muted-foreground text-xs">•</span>
+                        <span>Believes: one day... maybe</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="mt-6 pt-4 border-t border-dashed border-border/70 text-center sm:text-left">
+                  <p className="font-marker text-base sm:text-lg text-foreground italic">
+                    &ldquo;Still 0m², but never 0 hope.&rdquo;
+                  </p>
+                </div>
+              </div>
+
+              {/* CFO */}
+              <div className="flex flex-col justify-between">
+                <div className="flex items-start gap-4 sm:gap-5">
+                  <img
+                    src="/images/v2/team-cfo.jpg"
+                    alt="CFO - Chief Financial Officer"
+                    className="size-24 sm:size-28 md:size-32 rounded-2xl object-cover shrink-0 border border-foreground/10 shadow-sm"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-bold text-xl sm:text-2xl text-foreground leading-tight">CFO</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-0.5">Chief Financial Officer</p>
+                    <div className="w-full h-px bg-border/80 my-2.5" />
+                    <ul className="space-y-1.5 text-xs sm:text-sm text-foreground/90 font-medium">
+                      <li className="flex items-baseline gap-2">
+                        <span className="text-muted-foreground text-xs">•</span>
+                        <span>Current contribution: <strong className="font-bold">$0</strong></span>
+                      </li>
+                      <li className="flex items-baseline gap-2">
+                        <span className="text-muted-foreground text-xs">•</span>
+                        <span>Responsibilities: emotional support</span>
+                      </li>
+                      <li className="flex items-baseline gap-2">
+                        <span className="text-muted-foreground text-xs">•</span>
+                        <span>Investment strategy: snacks &amp; walks</span>
+                      </li>
+                      <li className="flex items-baseline gap-2">
+                        <span className="text-muted-foreground text-xs">•</span>
+                        <span>Risk management: barking at bills</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="mt-6 pt-4 border-t border-dashed border-border/70 text-center sm:text-left">
+                  <p className="font-marker text-base sm:text-lg text-foreground italic">
+                    &ldquo;Good boys invest in treats.&rdquo;
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
             {/* 4 Polaroid Kartı (Yatayda Serbestçe Kaydırılabilir) */}
             <div className="relative min-w-0">
@@ -1633,7 +1711,6 @@ https://0sqm.fun
                 ))}
               </div>
             </div>
-          </div>
 
           {/* Alt Kısım: Same Cities Grid */}
           <div id="cities" className="mt-14 pt-10 border-t border-border/80">
