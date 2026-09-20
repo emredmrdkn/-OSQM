@@ -1,0 +1,434 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #F7F4ED;
+  --color-ink: #141414;
+  --color-accent-yellow: #FFD452;
+  --color-sticky-yellow: #FBEDBE;
+  --color-merch-bg: #EDE6DE;
+  --color-card-border: #EAE5D9;
+  --color-card-bg: #FFFFFF;
+
+  --color-background: var(--background, #F7F4ED);
+  --color-foreground: var(--foreground, #141414);
+  --color-card: var(--card, #FFFFFF);
+  --color-card-foreground: var(--card-foreground, #141414);
+  --color-popover: var(--popover, #FFFFFF);
+  --color-popover-foreground: var(--popover-foreground, #141414);
+  --color-primary: var(--primary, #FFD452);
+  --color-primary-foreground: var(--primary-foreground, #141414);
+  --color-secondary: var(--secondary, #F4EFE6);
+  --color-secondary-foreground: var(--secondary-foreground, #141414);
+  --color-muted: var(--muted, #EDE6DE);
+  --color-muted-foreground: var(--muted-foreground, #737373);
+  --color-accent: var(--accent, #F4EFE6);
+  --color-accent-foreground: var(--accent-foreground, #141414);
+  --color-destructive: var(--destructive, #EF4444);
+  --color-destructive-foreground: var(--destructive-foreground, #FFFFFF);
+  --color-border: var(--border, #E5E0D4);
+  --color-input: var(--input, #E5E0D4);
+  --color-ring: var(--ring, #FFD452);
+  --color-paper: var(--paper, #FCFBF7);
+  --color-sun: var(--sun, #FFD452);
+  --color-positive: var(--positive, #10B981);
+
+  --font-display: var(--font-bebas), sans-serif;
+  --font-marker: var(--font-marker), cursive;
+  --font-handwritten: var(--font-caveat), cursive;
+  --font-body: var(--font-jakarta), sans-serif;
+}
+
+:root {
+  --canvas: #F7F4ED;
+  --ink: #141414;
+  --accent-yellow: #FFD452;
+  --sticky-yellow: #FBEDBE;
+  --merch-bg: #EDE6DE;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+}
+
+
+html, body {
+  min-height: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  background-color: #F7F4ED;
+  color: #141414;
+  font-family: var(--font-jakarta), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Mode Switch: Akış Modu (default, phone) vs Sahne Modu (min-width: 768px and min-height: 700px) */
+.stage-outer {
+  position: static;
+  width: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #F7F4ED;
+}
+
+.stage-inner {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #F7F4ED;
+}
+
+/* Header responsive styling without DOM duplication */
+.header-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: max(12px, var(--sat, 0px));
+  padding-left: max(16px, var(--sal, 0px));
+  padding-right: max(16px, var(--sar, 0px));
+}
+
+.header-stage-nav,
+.header-stage-social {
+  display: none !important;
+}
+
+.header-mobile-right {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Hero responsive styling without DOM duplication */
+.hero-section {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #F7F4ED;
+}
+
+.hero-stage-backdrop {
+  display: none !important;
+}
+
+.hero-photo-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.hero-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 60%;
+}
+
+
+.hero-flow-body {
+  position: relative;
+  width: 100%;
+  padding: 18px 20px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: #F7F4ED;
+}
+
+.hero-logo-el {
+  position: static;
+  width: 180px;
+  height: 52px;
+  margin-bottom: 8px;
+}
+
+.hero-headline-el {
+  position: static;
+  margin-bottom: 8px;
+}
+
+.hero-para-el {
+  position: static;
+  width: 100%;
+  max-width: 340px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.hero-btn-el {
+  position: static;
+  width: 100%;
+  max-width: 280px;
+  height: 48px;
+  margin-top: 4px;
+}
+
+.hero-note-topright {
+  position: absolute;
+  top: max(56px, calc(var(--sat, 0px) + 42px));
+  right: 14px;
+  font-size: 11px;
+  line-height: 1.1;
+  text-align: right;
+  rotate: 8deg;
+  z-index: 20;
+  color: #141414;
+}
+
+.hero-note-botright {
+  position: absolute;
+  bottom: 22px;
+  right: 14px;
+  font-size: 13px;
+  line-height: 1.15;
+  text-align: left;
+  rotate: -6deg;
+  z-index: 20;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+
+@media (min-width: 768px) and (min-height: 700px) {
+  .stage-outer {
+    position: relative !important;
+    width: 100% !important;
+    height: var(--stage-height, 1536px) !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    overscroll-behavior: auto !important;
+    background-color: #F7F4ED !important;
+  }
+
+  .stage-inner {
+    width: 1024px !important;
+    height: 1536px !important;
+    position: absolute !important;
+    transform-origin: top left !important;
+    transform: var(--stage-transform) !important;
+    visibility: var(--stage-visibility, hidden) !important;
+    display: block !important;
+  }
+
+  /* Header in Stage Mode */
+  .header-container {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 1024px !important;
+    height: 66px !important;
+    padding: 0 !important;
+    display: block !important;
+    z-index: 30 !important;
+  }
+
+  .header-stage-nav,
+  .header-stage-social {
+    display: flex !important;
+  }
+
+  .header-mobile-right {
+    display: none !important;
+  }
+
+  /* Hero in Stage Mode */
+  .hero-section {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 1024px !important;
+    height: 515px !important;
+    display: block !important;
+    overflow: visible !important;
+    z-index: 10 !important;
+  }
+
+  .hero-stage-backdrop {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -1500px !important;
+    width: 4024px !important;
+    height: 515px !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+  }
+
+  .hero-photo-box {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: unset !important;
+    z-index: 2 !important;
+  }
+
+  .hero-photo-img {
+    object-position: center !important;
+  }
+
+  .hero-flow-body {
+    position: static !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .hero-logo-el {
+    position: absolute !important;
+    left: 48px !important;
+    top: 70px !important;
+    width: 285px !important;
+    height: 85px !important;
+    margin: 0 !important;
+  }
+
+  .hero-headline-el {
+    position: absolute !important;
+    left: 48px !important;
+    top: 175px !important;
+    margin: 0 !important;
+  }
+
+  .hero-para-el {
+    position: absolute !important;
+    left: 48px !important;
+    top: 260px !important;
+    width: 280px !important;
+    font-size: 12.5px !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+  }
+
+  .hero-btn-el {
+    position: absolute !important;
+    left: 46px !important;
+    top: 368px !important;
+    width: 210px !important;
+    height: 44px !important;
+    margin: 0 !important;
+  }
+
+  .hero-note-topright {
+    position: absolute !important;
+    left: 855px !important;
+    top: 65px !important;
+    right: auto !important;
+    font-size: 15px !important;
+  }
+
+  .hero-note-botright {
+    position: absolute !important;
+    left: 865px !important;
+    top: 270px !important;
+    bottom: auto !important;
+    right: auto !important;
+    font-size: 17px !important;
+  }
+}
+
+
+
+
+
+img {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Tape strip primitive */
+.tape-strip {
+  background: rgba(255, 255, 255, 0.72);
+  border-left: 2px dashed rgba(0, 0, 0, 0.15);
+  border-right: 2px dashed rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Realistic masking tape on top of polaroid */
+.masking-tape {
+  background: rgba(243, 235, 218, 0.82);
+  backdrop-filter: blur(1.5px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border-left: 2px dashed rgba(210, 195, 170, 0.55);
+  border-right: 2px dashed rgba(210, 195, 170, 0.55);
+}
+
+/* Realistic Polaroid Shadow & Micro-Hover Effect */
+.polaroid-card {
+  box-shadow: 0 10px 25px -4px rgba(35, 25, 15, 0.10),
+              0 4px 10px -2px rgba(35, 25, 15, 0.06),
+              0 0 1px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.polaroid-card:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 18px 30px -6px rgba(35, 25, 15, 0.18),
+              0 6px 14px -3px rgba(35, 25, 15, 0.1);
+  z-index: 20;
+}
+
+/* ==================== V2 ALTERNATIVE SITE STYLES ==================== */
+.v2-container {
+  --radius: 0.5rem;
+  --background: oklch(0.975 0.012 82);
+  --foreground: oklch(0.14 0.01 65);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.042 264.695);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.129 0.042 264.695);
+  --primary: oklch(0.82 0.17 84);
+  --primary-foreground: oklch(0.14 0.01 65);
+  --secondary: oklch(0.968 0.007 247.896);
+  --secondary-foreground: oklch(0.208 0.042 265.755);
+  --muted: oklch(0.94 0.014 78);
+  --muted-foreground: oklch(0.45 0.02 70);
+  --accent: oklch(0.968 0.007 247.896);
+  --accent-foreground: oklch(0.208 0.042 265.755);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.86 0.017 78);
+  --input: oklch(0.88 0.017 78);
+  --ring: oklch(0.72 0.15 84);
+  --paper: oklch(0.99 0.008 86);
+  --ink: oklch(0.14 0.01 65);
+  --sun: oklch(0.82 0.17 84);
+  --positive: oklch(0.57 0.15 151);
+  --shadow-button: 0 4px 0 oklch(0.14 0.01 65 / 0.16);
+
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.paper-grid {
+  background-image: linear-gradient(to right, oklch(0.14 0.01 65 / 0.035) 1px, transparent 1px), linear-gradient(to bottom, oklch(0.14 0.01 65 / 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.torn-top {
+  clip-path: polygon(0 13px, 4% 6px, 9% 11px, 15% 4px, 22% 10px, 29% 3px, 36% 9px, 44% 2px, 52% 10px, 60% 4px, 68% 11px, 77% 3px, 85% 9px, 93% 4px, 100% 10px, 100% 100%, 0 100%);
+}
+
+

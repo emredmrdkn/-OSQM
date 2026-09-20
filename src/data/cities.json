@@ -1,0 +1,232 @@
+[
+  {
+    "id": "sydney",
+    "name": "Sydney",
+    "country": "Australia",
+    "countryCode": "AU",
+    "flagEmoji": "🇦🇺",
+    "currency": "AUD",
+    "currencySymbol": "$",
+    "localCurrencyName": "Australian Dollar",
+    "localCurrencyPrice": 16100,
+    "medianHousePrice": 1610000,
+    "pricePerSqm": 16100,
+    "averageHourlyWage": 42.50,
+    "standardDepositPercent": 0.20,
+    "hyperLocalItems": [
+      {
+        "id": "avocado_toast",
+        "name": "Smashed Avocado on Sourdough",
+        "unitPrice": 22,
+        "unitName": "Avocado Toasts",
+        "emoji": "🥑",
+        "description": "Topped with Persian feta and organic dukkah in Surry Hills."
+      },
+      {
+        "id": "flat_white",
+        "name": "Oat Flat White",
+        "unitPrice": 5.50,
+        "unitName": "Flat Whites",
+        "emoji": "☕",
+        "description": "Double shot, strictly no sugar."
+      },
+      {
+        "id": "bondi_parking",
+        "name": "Bondi Beach Meter Parking (1 Hour)",
+        "unitPrice": 14.00,
+        "unitName": "Parking Hours",
+        "emoji": "🚗",
+        "description": "If you can find a spot."
+      }
+    ],
+    "satiricalNotes": {
+      "minRange": "Congratulations. You own enough Sydney real estate to park half a corgi.",
+      "midRange": "That is about the size of an inspection brochure left on the kitchen bench.",
+      "highRange": "Still not a house, but you can technically lay down if you pull your knees to your chest."
+    }
+  },
+  {
+    "id": "london",
+    "name": "London",
+    "country": "United Kingdom",
+    "countryCode": "GB",
+    "flagEmoji": "🇬🇧",
+    "currency": "GBP",
+    "currencySymbol": "£",
+    "localCurrencyName": "British Pound",
+    "localCurrencyPrice": 9800,
+    "medianHousePrice": 850000,
+    "pricePerSqm": 9800,
+    "averageHourlyWage": 21.50,
+    "standardDepositPercent": 0.20,
+    "hyperLocalItems": [
+      {
+        "id": "pub_pint",
+        "name": "Pint of Craft IPA in Soho",
+        "unitPrice": 7.50,
+        "unitName": "Pints of Bitter",
+        "emoji": "🍺",
+        "description": "Lukewarm, crowded, standing on the pavement in the drizzle."
+      },
+      {
+        "id": "tube_fare",
+        "name": "Zone 1-2 Peak Underground Fare",
+        "unitPrice": 3.40,
+        "unitName": "Tube Journeys",
+        "emoji": "🚇",
+        "description": "Trapped under someone's damp trench coat on the Central line."
+      },
+      {
+        "id": "pret_croissant",
+        "name": "Pret A Manger Butter Croissant",
+        "unitPrice": 2.95,
+        "unitName": "Pret Croissants",
+        "emoji": "🥐",
+        "description": "Eaten on the run to an overpriced shared flat."
+      }
+    ],
+    "satiricalNotes": {
+      "minRange": "Splendid! You can stand upright between two damp Victorian brick walls.",
+      "midRange": "Roughly the dimensions of a classic red phone booth, without the historic charm.",
+      "highRange": "Enough space for an air mattress in Zone 6. Mind the gap."
+    }
+  },
+  {
+    "id": "toronto",
+    "name": "Toronto",
+    "country": "Canada",
+    "countryCode": "CA",
+    "flagEmoji": "🇨🇦",
+    "currency": "CAD",
+    "currencySymbol": "$",
+    "localCurrencyName": "Canadian Dollar",
+    "localCurrencyPrice": 11200,
+    "medianHousePrice": 1150000,
+    "pricePerSqm": 11200,
+    "averageHourlyWage": 34.00,
+    "standardDepositPercent": 0.20,
+    "hyperLocalItems": [
+      {
+        "id": "maple_syrup",
+        "name": "Grade A Pure Maple Syrup (500ml)",
+        "unitPrice": 16.00,
+        "unitName": "Maple Syrup Jugs",
+        "emoji": "🍁",
+        "description": "Authentic liquid gold from Quebec."
+      },
+      {
+        "id": "tim_hortons",
+        "name": "Tim Hortons Large Double-Double",
+        "unitPrice": 2.50,
+        "unitName": "Double-Doubles",
+        "emoji": "☕",
+        "description": "Fueling winter transit delays since 1964."
+      },
+      {
+        "id": "winter_jacket",
+        "name": "Expedition Parka Down Jacket",
+        "unitPrice": 1150.00,
+        "unitName": "Winter Parkas",
+        "emoji": "🧥",
+        "description": "Essential for surviving 6 months of -20°C."
+      }
+    ],
+    "satiricalNotes": {
+      "minRange": "Enough room for your snow boots. Leave your coat in the hallway.",
+      "midRange": "About the size of a snowbank outside Queen Station.",
+      "highRange": "You can pitch a micro-tent in Trinity Bellwoods Park."
+    }
+  },
+  {
+    "id": "vancouver",
+    "name": "Vancouver",
+    "country": "Canada",
+    "countryCode": "CA",
+    "flagEmoji": "🇨🇦",
+    "currency": "CAD",
+    "currencySymbol": "$",
+    "localCurrencyName": "Canadian Dollar",
+    "localCurrencyPrice": 12800,
+    "medianHousePrice": 1320000,
+    "pricePerSqm": 12800,
+    "averageHourlyWage": 33.50,
+    "standardDepositPercent": 0.20,
+    "hyperLocalItems": [
+      {
+        "id": "rain_poncho",
+        "name": "Gore-Tex Rain Shell",
+        "unitPrice": 450.00,
+        "unitName": "Gore-Tex Jackets",
+        "emoji": "🌧️",
+        "description": "Required attire for 200 days of Pacific rain."
+      },
+      {
+        "id": "oat_latte",
+        "name": "Artisanal Oat Matcha Latte in Kitsilano",
+        "unitPrice": 8.50,
+        "unitName": "Oat Lattes",
+        "emoji": "🥛",
+        "description": "Naturally sweetened with mountain air."
+      },
+      {
+        "id": "whistler_pass",
+        "name": "Whistler Blackcomb Single Day Pass",
+        "unitPrice": 239.00,
+        "unitName": "Whistler Lift Tickets",
+        "emoji": "🎿",
+        "description": "To escape the housing crisis for 6 hours."
+      }
+    ],
+    "satiricalNotes": {
+      "minRange": "You can stand in the rain without touching your neighbour's umbrella.",
+      "midRange": "About the size of a kayak rack on top of a Subaru.",
+      "highRange": "Nearly enough room for a yoga mat and a houseplant."
+    }
+  },
+  {
+    "id": "new_york",
+    "name": "New York",
+    "country": "United States",
+    "countryCode": "US",
+    "flagEmoji": "🇺🇸",
+    "currency": "USD",
+    "currencySymbol": "$",
+    "localCurrencyName": "US Dollar",
+    "localCurrencyPrice": 15500,
+    "medianHousePrice": 1450000,
+    "pricePerSqm": 15500,
+    "averageHourlyWage": 45.00,
+    "standardDepositPercent": 0.20,
+    "hyperLocalItems": [
+      {
+        "id": "pizza_slice",
+        "name": "Classic Corner Bodega Cheese Slice",
+        "unitPrice": 3.75,
+        "unitName": "Pizza Slices",
+        "emoji": "🍕",
+        "description": "Folded in half on a paper plate on 8th Avenue."
+      },
+      {
+        "id": "bagel_schmear",
+        "name": "Everything Bagel with Scallion Schmear",
+        "unitPrice": 6.50,
+        "unitName": "Everything Bagels",
+        "emoji": "🥯",
+        "description": "Chewy, dense, toasted with attitude."
+      },
+      {
+        "id": "mta_subway",
+        "name": "MTA MetroCard Single Ride",
+        "unitPrice": 2.90,
+        "unitName": "Subway Rides",
+        "emoji": "🚇",
+        "description": "Watch the closing doors."
+      }
+    ],
+    "satiricalNotes": {
+      "minRange": "Fabulous! You can stand next to the radiator without your knees burning.",
+      "midRange": "About the footprint of a Citi Bike dock in Bushwick.",
+      "highRange": "A studio alcove where your bed touches both the sink and the front door."
+    }
+  }
+]

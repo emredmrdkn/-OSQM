@@ -1,0 +1,87 @@
+[
+  {
+    "id": "prod_0sqm_tee_01",
+    "stripePriceId": "price_0sqm_tee_49aud",
+    "sku": "0SQM-TEE-001",
+    "title": "0 SQM OWNED™ TEE",
+    "slug": "0-sqm-owned-tee",
+    "tagline": "The flagship garment for the generation priced out of modern property.",
+    "price": 49,
+    "currency": "AUD",
+    "imageSrc": "/images/website-overview.jpg",
+    "badge": "DROP 01",
+    "colors": [
+      { "name": "Paper White", "hex": "#FFFFFF" },
+      { "name": "Washed Charcoal", "hex": "#1E1E1E" },
+      { "name": "Vintage Sand", "hex": "#EBE5D8" }
+    ],
+    "variants": [
+      { "id": "var_tee_s", "sku": "0SQM-TEE-S", "name": "Small", "size": "S", "color": "Paper White", "colorHex": "#FFFFFF", "inStock": true },
+      { "id": "var_tee_m", "sku": "0SQM-TEE-M", "name": "Medium", "size": "M", "color": "Paper White", "colorHex": "#FFFFFF", "inStock": true },
+      { "id": "var_tee_l", "sku": "0SQM-TEE-L", "name": "Large", "size": "L", "color": "Paper White", "colorHex": "#FFFFFF", "inStock": true },
+      { "id": "var_tee_xl", "sku": "0SQM-TEE-XL", "name": "X-Large", "size": "XL", "color": "Paper White", "colorHex": "#FFFFFF", "inStock": true }
+    ]
+  },
+  {
+    "id": "prod_0sqm_hoodie_01",
+    "stripePriceId": "price_0sqm_hoodie_89aud",
+    "sku": "0SQM-HD-001",
+    "title": "WEN 1M²? HOODIE",
+    "slug": "wen-1m2-hoodie",
+    "tagline": "500 GSM heavyweight French terry cotton. Warmer than your landlord's heart.",
+    "price": 89,
+    "currency": "AUD",
+    "imageSrc": "/images/website-overview.jpg",
+    "badge": "HEAVYWEIGHT",
+    "colors": [
+      { "name": "Pitch Black", "hex": "#141414" },
+      { "name": "Raw Stone", "hex": "#D1CCC0" },
+      { "name": "Olive Green", "hex": "#4A5340" }
+    ],
+    "variants": [
+      { "id": "var_hd_s", "sku": "0SQM-HD-S", "name": "Small", "size": "S", "color": "Pitch Black", "colorHex": "#141414", "inStock": true },
+      { "id": "var_hd_m", "sku": "0SQM-HD-M", "name": "Medium", "size": "M", "color": "Pitch Black", "colorHex": "#141414", "inStock": true },
+      { "id": "var_hd_l", "sku": "0SQM-HD-L", "name": "Large", "size": "L", "color": "Pitch Black", "colorHex": "#141414", "inStock": true },
+      { "id": "var_hd_xl", "sku": "0SQM-HD-XL", "name": "X-Large", "size": "XL", "color": "Pitch Black", "colorHex": "#141414", "inStock": true }
+    ]
+  },
+  {
+    "id": "prod_0sqm_cap_01",
+    "stripePriceId": "price_0sqm_cap_39aud",
+    "sku": "0SQM-CAP-001",
+    "title": "$0SQM DAD CAP",
+    "slug": "0sqm-dad-cap",
+    "tagline": "Unstructured 6-panel washed cotton twill with tonal embroidery.",
+    "price": 39,
+    "currency": "AUD",
+    "imageSrc": "/images/website-overview.jpg",
+    "badge": "LIMITED",
+    "colors": [
+      { "name": "Stealth Black", "hex": "#141414" },
+      { "name": "Bush Green", "hex": "#3E4935" },
+      { "name": "Harbour Navy", "hex": "#1F2B3E" }
+    ],
+    "variants": [
+      { "id": "var_cap_os", "sku": "0SQM-CAP-OS", "name": "One Size Fits All", "size": "M", "color": "Stealth Black", "colorHex": "#141414", "inStock": true }
+    ]
+  },
+  {
+    "id": "prod_0sqm_tote_01",
+    "stripePriceId": "price_0sqm_tote_29aud",
+    "sku": "0SQM-TOTE-001",
+    "title": "SAME DREAM TOTE",
+    "slug": "same-dream-tote",
+    "tagline": "16oz organic canvas. Holds groceries, laptops, and zero property deeds.",
+    "price": 29,
+    "currency": "AUD",
+    "imageSrc": "/images/website-overview.jpg",
+    "badge": "ECO CANVAS",
+    "colors": [
+      { "name": "Natural Unbleached", "hex": "#F4EFE6" },
+      { "name": "Midnight Ink", "hex": "#141414" }
+    ],
+    "variants": [
+      { "id": "var_tote_os", "sku": "0SQM-TOTE-OS", "name": "Standard Capacity", "size": "L", "color": "Natural Unbleached", "colorHex": "#F4EFE6", "inStock": true }
+    ]
+  }
+]
