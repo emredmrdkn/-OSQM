@@ -767,7 +767,7 @@ https://0sqm.fun
       {/* Hero Section */}
       <section
         id="home"
-        className="relative min-h-[520px] sm:min-h-[780px] lg:min-h-[720px] scroll-mt-16 overflow-hidden pt-16"
+        className="relative min-h-[450px] sm:min-h-[650px] lg:min-h-[720px] scroll-mt-16 overflow-hidden pt-16"
       >
         <img
           src={heroImage}
@@ -776,34 +776,11 @@ https://0sqm.fun
           height={1088}
           className="absolute inset-0 h-full w-full object-cover object-[27%_bottom] sm:object-[58%_center]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-transparent to-transparent sm:from-background/80 sm:via-background/35 sm:to-foreground/30 lg:bg-gradient-to-r lg:from-background/90 lg:via-background/30 lg:to-transparent" />
-        <div className="relative mx-auto flex min-h-[460px] sm:min-h-[700px] max-w-7xl items-start px-5 pt-12 sm:px-8 lg:items-center lg:pt-0">
-          <div className="min-w-0 max-w-xl">
-            <h1 className="hidden sm:block font-marker text-5xl font-bold leading-[0.83] min-[360px]:text-6xl sm:text-7xl lg:text-8xl">
-              $<span className="text-primary">0</span>SQM
-            </h1>
-            <p className="hidden sm:block mt-4 max-w-lg font-marker text-2xl font-bold uppercase leading-tight min-[360px]:text-3xl sm:text-4xl">
-              The Australian dream
-              <br />
-              still starts at <mark className="bg-primary px-2 text-foreground">0m²</mark>
-            </p>
-            <p className="hidden sm:block mt-5 max-w-sm text-sm font-semibold leading-relaxed sm:text-base">
-              Just a guy, a dog, and a very expensive housing market. Documenting the journey from 0.00m² to a place we can call home.
-            </p>
-            <div className="hidden sm:block mt-6">
-              <Button
-                variant="sunshine"
-                size="lg"
-                className="max-w-full px-5 text-xs min-[360px]:text-sm"
-                asChild
-              >
-                <a href="https://x.com/Own0SQM" target="_blank" rel="noreferrer">
-                  Follow the journey on X <ArrowRight className="size-4" />
-                </a>
-              </Button>
-            </div>
-          </div>
-        </div>
+        {/* Subtle vignette so the image looks natural and not washed out */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background/20 pointer-events-none" />
+        <h1 className="sr-only">
+          $0SQM — The Australian Dream Still Starts at 0m²
+        </h1>
       </section>
 
       {/* The Dream Section */}
