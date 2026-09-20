@@ -1,7 +1,8 @@
 'use client';
 
-import { ArrowRight, Check, ChevronLeft, ChevronRight, Copy, Menu, RotateCcw, Share2, Sparkles, X } from "lucide-react";
+import { ArrowRight, Calendar, Check, ChevronLeft, ChevronRight, Copy, Download, Home, MapPin, Menu, RotateCcw, Share2, Sparkles, Wallet, X } from "lucide-react";
 import { useState, useRef } from "react";
+import { toPng } from "html-to-image";
 import { Button } from "@/components/v2/ui/button";
 
 const heroImage = "/images/v2/sydney-hero.jpg";
@@ -410,6 +411,80 @@ export default function V2Page() {
   const [hasAudited, setHasAudited] = useState(false);
   const [auditShake, setAuditShake] = useState(false);
 
+  // Reality Score Card Ref and Download / Share states
+  const cardRef = useRef<HTMLDivElement>(null);
+  const savingsInputRef = useRef<HTMLInputElement>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [shareToast, setShareToast] = useState<string | null>(null);
+
+  const handleDownloadCard = async () => {
+    if (!cardRef.current) return;
+    try {
+      setIsDownloading(true);
+      const dataUrl = await toPng(cardRef.current, {
+        quality: 0.98,
+        pixelRatio: 2,
+        backgroundColor: '#FAF9F5',
+      });
+      const link = document.createElement('a');
+      link.download = `0sqm-reality-score-${currentCity.id || 'sydney'}.png`;
+      link.href = dataUrl;
+      link.click();
+      return dataUrl;
+    } catch (err) {
+      console.error('Failed to download card', err);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleShareOnX = async () => {
+    // 1. Download card PNG
+    await handleDownloadCard();
+
+    // 2. Try copying image to clipboard if supported
+    if (cardRef.current && navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+      try {
+        const blob = await new Promise<Blob | null>((resolve) => {
+          if (!cardRef.current) return resolve(null);
+          toPng(cardRef.current, { pixelRatio: 2, backgroundColor: '#FAF9F5' })
+            .then((url) => fetch(url))
+            .then((r) => r.blob())
+            .then(resolve)
+            .catch(() => resolve(null));
+        });
+        if (blob) {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          setShareToast("Card downloaded & copied to clipboard! Attach or paste it on X.");
+        } else {
+          setShareToast("Card image downloaded! Attach it to your post on X.");
+        }
+      } catch {
+        setShareToast("Card image downloaded! Attach it to your post on X.");
+      }
+    } else {
+      setShareToast("Card image downloaded! Attach it to your post on X.");
+    }
+
+    // 3. Open Twitter / X intent matching reference
+    const formattedSavings = `${currentCity.currencySymbol}${numericSavings.toLocaleString()}`;
+    const tweetText = `I saved ${formattedSavings} and officially own 0 SQM in ${currentCity.name} (${affordableSqm.toFixed(2)}m² theoretically).\n\nSame dream. Different budget.\n\n@Own0SQM #0SQM\nhttps://x.com/Own0SQM`;
+    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+    window.open(tweetUrl, '_blank', 'noopener,noreferrer');
+
+    setTimeout(() => setShareToast(null), 6000);
+  };
+
+  const handleTryAgain = () => {
+    if (savingsInputRef.current) {
+      savingsInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      savingsInputRef.current.focus();
+      savingsInputRef.current.select();
+    }
+  };
+
   // Sub-tabs under the calculator
   const [activeCalcTab, setActiveCalcTab] = useState<"receipt" | "boomer" | "auction">("receipt");
   const [copiedReceipt, setCopiedReceipt] = useState(false);
@@ -457,6 +532,11 @@ export default function V2Page() {
         setHasAudited(true);
         setAuditShake(true);
         setTimeout(() => setAuditShake(false), 800);
+        setTimeout(() => {
+          if (cardRef.current) {
+            cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
       }
     }, 320);
   };
@@ -845,7 +925,7 @@ https://0sqm.fun
             </span>
           </div>
 
-          <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[200px_minmax(0,1fr)_210px]">
+          <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
             {/* Cities Sidebar */}
             <div className="flex flex-col gap-2">
               {/* Category Switcher */}
@@ -902,645 +982,703 @@ https://0sqm.fun
               </div>
             </div>
 
-            {/* City Details & Calculator */}
-            <div className="min-w-0 rounded-lg border border-border bg-background p-4 shadow-sm sm:p-6">
-              <div className="border-b border-border pb-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-marker text-3xl font-bold uppercase">{currentCity.name}</h3>
-                    <p className="text-xs text-muted-foreground">{currentCity.country}</p>
-                  </div>
-                  <span className="rounded-full border border-foreground/20 bg-paper px-3 py-1 text-xs font-bold">
-                    {currentCity.flag} · {currentCity.currency} ({currentCity.currencySymbol})
-                  </span>
-                </div>
-                <div className="mt-5 grid min-w-0 grid-cols-1 gap-4 min-[350px]:grid-cols-2 md:grid-cols-4">
-                  {[
-                    ["Median House Price", currentCity.medianHousePrice],
-                    ["Land Value (per sqm)", currentCity.landValuePerSqm],
-                    ["Typical Deposit (20%)", currentCity.typicalDeposit],
-                    ["Average Full-time Salary", currentCity.averageSalary],
-                  ].map(([label, value]) => (
-                    <div key={label} className="border-l-2 border-primary pl-3">
-                      <p className="text-[11px] text-muted-foreground">{label}</p>
-                      <strong className="mt-1 block text-xl">{value}</strong>
+            {/* Main Area: City Details, Calculator Form & THE REALITY SCORE CARD */}
+            <div className="min-w-0 space-y-6">
+              {/* City Details & Input Controls */}
+              <div className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
+                <div className="border-b border-border pb-5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-marker text-3xl font-bold uppercase">{currentCity.name}</h3>
+                      <p className="text-xs text-muted-foreground">{currentCity.country}</p>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Calculator Form & Controls */}
-              <div className="pt-5 space-y-5">
-                <div>
-                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                    <h4 className="font-marker text-xl font-bold uppercase">
-                      How much of {currentCity.name} can you afford?
-                    </h4>
-                    <span className="text-[11px] font-semibold text-primary-foreground bg-primary px-2 py-0.5 rounded-xs">
-                      Theoretical Rate: {currentCity.landValuePerSqm}/m²
+                    <span className="rounded-full border border-foreground/20 bg-paper px-3 py-1 text-xs font-bold">
+                      {currentCity.flag} · {currentCity.currency} ({currentCity.currencySymbol})
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Enter your savings in {currentCity.currency} ({currentCity.currencySymbol}) or drag the slider to see how many square metres you theoretically afford.
-                  </p>
-
-                  <div className="mt-3 grid min-w-0 grid-cols-1 gap-2 min-[360px]:grid-cols-[minmax(0,1fr)_auto]">
-                    <label className="flex h-11 min-w-0 items-center rounded-md border border-input bg-paper px-3 focus-within:ring-2 focus-within:ring-primary">
-                      <span className="mr-2 font-bold text-muted-foreground">{currentCity.currencySymbol}</span>
-                      <input
-                        value={savings}
-                        onChange={(e) => setSavings(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === "Enter") calculate(); }}
-                        inputMode="decimal"
-                        aria-label="Savings amount"
-                        placeholder="e.g. 25000"
-                        className="w-full min-w-0 flex-1 bg-transparent outline-none font-medium text-base text-foreground"
-                      />
-                    </label>
-                    <Button
-                      variant="ink"
-                      className="h-11 w-full min-[360px]:w-auto cursor-pointer font-bold flex items-center justify-center gap-2 transition-transform active:scale-95"
-                      onClick={calculate}
-                      disabled={isAuditing}
-                    >
-                      {isAuditing ? (
-                        <>
-                          <div className="size-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
-                          <span>Auditing...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="size-4 text-amber-400" />
-                          <span>Calculate</span>
-                        </>
-                      )}
-                    </Button>
-                  </div>
-
-                  {/* Comedic Auditing Progress Banner */}
-                  {isAuditing && (
-                    <div className="mt-3 p-3 rounded-md bg-amber-500/15 border border-amber-500/30 text-xs font-mono text-foreground animate-in fade-in slide-in-from-top-1 duration-200">
-                      <div className="flex items-center justify-between mb-1.5 font-bold">
-                        <span className="flex items-center gap-2">
-                          <span className="size-2 rounded-full bg-amber-600 animate-ping" />
-                          <span>{auditMessages[auditStep]}</span>
-                        </span>
-                        <span className="text-[11px] text-muted-foreground">
-                          {Math.round(((auditStep + 1) / auditMessages.length) * 100)}%
-                        </span>
+                  <div className="mt-5 grid min-w-0 grid-cols-1 gap-4 min-[350px]:grid-cols-2 md:grid-cols-4">
+                    {[
+                      ["Median House Price", currentCity.medianHousePrice],
+                      ["Land Value (per sqm)", currentCity.landValuePerSqm],
+                      ["Typical Deposit (20%)", currentCity.typicalDeposit],
+                      ["Average Full-time Salary", currentCity.averageSalary],
+                    ].map(([label, value]) => (
+                      <div key={label} className="border-l-2 border-primary pl-3">
+                        <p className="text-[11px] text-muted-foreground">{label}</p>
+                        <strong className="mt-1 block text-xl">{value}</strong>
                       </div>
-                      <div className="w-full bg-neutral-200 h-1.5 rounded-full overflow-hidden">
-                        <div
-                          className="bg-amber-500 h-full transition-all duration-300 rounded-full"
-                          style={{ width: `${((auditStep + 1) / auditMessages.length) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Range Slider for immediate live interactive fun */}
-                  <div className="mt-3 flex items-center gap-3">
-                    <span className="text-[11px] font-bold text-muted-foreground">{currentCity.currencySymbol}0</span>
-                    <input
-                      type="range"
-                      min="0"
-                      max="150000"
-                      step="2500"
-                      value={Math.min(150000, numericSavings)}
-                      onChange={(e) => setSavings(e.target.value)}
-                      className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-amber-400"
-                      aria-label="Savings slider"
-                    />
-                    <span className="text-[11px] font-bold text-muted-foreground">{currentCity.currencySymbol}150k+</span>
-                  </div>
-
-                  {/* Dynamic Live Slider Roaster */}
-                  <div className="mt-2 flex items-center gap-2 rounded-md bg-amber-500/10 border border-amber-500/20 px-3 py-2 text-xs text-foreground transition-all">
-                    <span className="text-sm shrink-0">🔥</span>
-                    <span className="font-semibold italic leading-snug">
-                      {getSliderRoast(numericSavings, currentCity.currencySymbol)}
-                    </span>
-                  </div>
-
-                  {/* Quick Preset Chips */}
-                  <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                    <span className="text-[11px] font-semibold text-muted-foreground mr-1">Quick Presets:</span>
-                    {["5000", "25000", "50000", "100000", "250000"].map((preset) => (
-                      <button
-                        key={preset}
-                        type="button"
-                        onClick={() => handlePreset(preset)}
-                        className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold transition-colors cursor-pointer ${
-                          numericSavings === Number(preset)
-                            ? "bg-primary text-foreground border-foreground/30 font-bold"
-                            : "bg-paper hover:bg-muted text-muted-foreground border-border"
-                        }`}
-                      >
-                        {currentCity.currencySymbol}{Number(preset).toLocaleString()}
-                      </button>
                     ))}
                   </div>
                 </div>
 
-                {/* 20% Deposit Reality Progress Meter */}
-                <div className="rounded-md border border-border bg-paper p-3">
-                  <div className="flex justify-between items-center text-xs font-bold mb-1.5">
-                    <span className="text-foreground flex items-center gap-1">
-                      <span>🏦</span> Deposit Progress ({depositPercent.toFixed(1)}% of 20% downpayment)
-                    </span>
-                    <span className="text-muted-foreground font-mono">
-                      {currentCity.currencySymbol}{numericSavings.toLocaleString()} / {currentCity.typicalDeposit}
-                    </span>
-                  </div>
-                  <div className="w-full bg-neutral-200 h-2.5 rounded-full overflow-hidden">
-                    <div
-                      className="bg-primary h-full transition-all duration-300 rounded-full"
-                      style={{ width: `${depositPercent}%` }}
-                    />
-                  </div>
-                  <div className="mt-1.5 flex justify-between items-center text-[10px] text-muted-foreground">
-                    <span className="italic">
-                      {depositPercent < 10
-                        ? "Living rent-free in the comments 🛋️"
-                        : depositPercent < 30
-                        ? "One foot in the foyer (barefoot) 🦶"
-                        : depositPercent < 60
-                        ? "Halfway to an inspection brochure 📄"
-                        : depositPercent < 100
-                        ? "Your landlord is sweating 😰"
-                        : "Wait, you actually made it?! 🤯"}
-                    </span>
-                    <span className="font-semibold text-foreground">
-                      {numericSavings >= currentCity.rawDeposit
-                        ? "Deposit reached!"
-                        : `~${yearsToDeposit} yrs of saving needed`}
-                    </span>
-                  </div>
-                </div>
-
-                {/* 3-Column Satirical Breakdown */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {/* 1. Physical Reality */}
-                  <div className="rounded-md border border-border bg-paper/90 p-3 text-xs flex flex-col justify-between">
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
-                        📐 Physical Reality
+                {/* Calculator Form & Controls */}
+                <div className="pt-5 space-y-5">
+                  <div>
+                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                      <h4 className="font-marker text-xl font-bold uppercase">
+                        How much of {currentCity.name} can you afford?
+                      </h4>
+                      <span className="text-[11px] font-semibold text-primary-foreground bg-primary px-2 py-0.5 rounded-xs">
+                        Theoretical Rate: {currentCity.landValuePerSqm}/m²
                       </span>
-                      <strong className="text-sm font-marker text-foreground block">
-                        {metaphor.title}
-                      </strong>
-                      <p className="text-muted-foreground mt-1 italic leading-snug">
-                        &ldquo;{metaphor.desc}&rdquo;
-                      </p>
                     </div>
-                    <div className="mt-2 pt-2 border-t border-border/60 text-[10px] font-mono text-foreground font-semibold">
-                      {affordableSqm.toFixed(2)} m² (≈ {(affordableSqm * 10.764).toFixed(1)} sq ft)
-                    </div>
-                  </div>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Enter your savings in {currentCity.currency} ({currentCity.currencySymbol}) or drag the slider to see how many square metres you theoretically afford.
+                    </p>
 
-                  {/* 2. Boomer Currency Equivalent */}
-                  <div className="rounded-md border border-border bg-paper/90 p-3 text-xs flex flex-col justify-between">
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
-                        {currentCity.hyperLocal.emoji} Boomer Currency
-                      </span>
-                      <strong className="text-sm font-marker text-foreground block">
-                        {hyperLocalCount.toLocaleString()} {currentCity.hyperLocal.unit}
-                      </strong>
-                      <p className="text-muted-foreground mt-1 italic leading-snug">
-                        Or you could have bought {hyperLocalCount.toLocaleString()} {currentCity.hyperLocal.name}.
-                      </p>
-                    </div>
-                    <div className="mt-2 pt-2 border-t border-border/60 text-[10px] font-mono text-muted-foreground">
-                      {currentCity.currencySymbol}{currentCity.hyperLocal.price} per item
-                    </div>
-                  </div>
-
-                  {/* 3. Brutal Timeline */}
-                  <div className="rounded-md border border-border bg-paper/90 p-3 text-xs flex flex-col justify-between">
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
-                        ⏳ Brutal Timeline
-                      </span>
-                      <strong className="text-sm font-marker text-red-600 block">
-                        {hoursTo1Sqm.toLocaleString()} Working Hours
-                      </strong>
-                      <p className="text-muted-foreground mt-1 italic leading-snug">
-                        {monthsTo1Sqm} months of 100% saved salary to buy 1 m².
-                      </p>
-                    </div>
-                    <div className="mt-2 pt-2 border-t border-border/60 text-[10px] font-mono text-muted-foreground">
-                      Settlement: {numericSavings >= currentCity.rawDeposit ? "TODAY" : "NEVER ☺"}
-                    </div>
-                  </div>
-                </div>
-
-                {/* ========================================================================= */}
-                {/* NEW: Interactive Comedy Sub-Tabs (Receipt, Boomer Advice, Auction Simulator) */}
-                {/* ========================================================================= */}
-                <div className="mt-5 rounded-md border border-border bg-paper p-4">
-                  {/* Tab Selector Buttons */}
-                  <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
-                    <button
-                      type="button"
-                      onClick={() => setActiveCalcTab("receipt")}
-                      className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                        activeCalcTab === "receipt"
-                          ? "bg-foreground text-background shadow-xs"
-                          : "bg-muted hover:bg-neutral-200 text-muted-foreground"
-                      }`}
-                    >
-                      <span>🧾</span> Reality Receipt
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActiveCalcTab("boomer")}
-                      className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                        activeCalcTab === "boomer"
-                          ? "bg-foreground text-background shadow-xs"
-                          : "bg-muted hover:bg-neutral-200 text-muted-foreground"
-                      }`}
-                    >
-                      <span>🥑</span> Boomer Advice Simulator
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActiveCalcTab("auction")}
-                      className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                        activeCalcTab === "auction"
-                          ? "bg-foreground text-background shadow-xs"
-                          : "bg-muted hover:bg-neutral-200 text-muted-foreground"
-                      }`}
-                    >
-                      <span>🔨</span> Sydney Auction Simulator
-                    </button>
-                  </div>
-
-                  {/* Sub-tab 1: Thermal Reality Receipt */}
-                  {activeCalcTab === "receipt" && (
-                    <div className="mt-4 space-y-3 font-mono">
-                      <div className="rounded-sm border-2 border-dashed border-neutral-400 bg-white p-4 text-xs text-neutral-800 shadow-inner max-w-md mx-auto">
-                        <div className="text-center pb-2 border-b border-dashed border-neutral-300">
-                          <p className="font-bold text-sm uppercase tracking-widest">0 SQM REALTY PTY LTD</p>
-                          <p className="text-[10px] text-neutral-500">Official Settlement Tax Invoice</p>
-                          <p className="text-[10px] text-neutral-500 mt-1">
-                            Date: {new Date().toLocaleDateString()} · Buyer: Justin (or You)
-                          </p>
-                        </div>
-
-                        <div className="py-2.5 space-y-1.5 text-[11px] border-b border-dashed border-neutral-300">
-                          <div className="flex justify-between">
-                            <span>Base Land Acquired</span>
-                            <span className="font-bold">0.00 m² ($0.00)</span>
-                          </div>
-                          <div className="flex justify-between text-neutral-600">
-                            <span>Theoretical Land ({affordableSqm.toFixed(2)} m²)</span>
-                            <span>{currentCity.currencySymbol}{numericSavings.toLocaleString()}</span>
-                          </div>
-                          <div className="flex justify-between text-neutral-600">
-                            <span>Stamp Duty (on fresh air)</span>
-                            <span>{currentCity.currencySymbol}42,500.00</span>
-                          </div>
-                          <div className="flex justify-between text-neutral-600">
-                            <span>Strata Sinking Fund (broken lift)</span>
-                            <span>{currentCity.currencySymbol}3,400.00</span>
-                          </div>
-                          <div className="flex justify-between text-neutral-600">
-                            <span>Agent Cologne Surcharge</span>
-                            <span>{currentCity.currencySymbol}450.00</span>
-                          </div>
-                          <div className="flex justify-between text-neutral-600">
-                            <span>Landlord Mortgage Gratitude</span>
-                            <span>100%</span>
-                          </div>
-                          <div className="flex justify-between text-neutral-600">
-                            <span>Emotional Damage</span>
-                            <span className="text-green-600 font-bold">FREE</span>
-                          </div>
-                        </div>
-
-                        <div className="pt-2 flex justify-between text-xs font-black">
-                          <span>TOTAL EQUITY ACQUIRED:</span>
-                          <span className="text-red-600">0 SQM</span>
-                        </div>
-
-                        {/* Barcode & Slogan */}
-                        <div className="mt-3 pt-2 text-center border-t border-dashed border-neutral-300">
-                          <div className="h-6 mx-auto flex items-center justify-center gap-1 tracking-widest text-lg font-black text-neutral-600 select-none">
-                            |||| ||| |||||| || ||||| |||| |||
-                          </div>
-                          <p className="text-[10px] italic text-neutral-500 mt-1">
-                            &ldquo;Thank you for paying off someone else&apos;s mortgage!&rdquo;
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Receipt Action Buttons */}
-                      <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={handleCopyReceipt}
-                          className="h-8 text-xs font-bold cursor-pointer hover:bg-neutral-100"
-                        >
-                          {copiedReceipt ? (
-                            <>
-                              <Check className="size-3.5 text-green-600 mr-1" />
-                              <span className="text-green-600">Copied to Clipboard!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="size-3.5 mr-1" />
-                              <span>Copy Receipt</span>
-                            </>
-                          )}
-                        </Button>
-                        <a
-                          href={`https://twitter.com/intent/tweet?text=I%20just%20received%20my%20Official%200%20SQM%20Settlement%20Receipt%20for%20${currentCity.name}.%20Total%20equity%3A%200.00%20m%C2%B2.%20Same%20dream.%20Different%20budget.%20%40Own0SQM%20%230SQM&url=https://0sqm.fun`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-sm bg-foreground px-3 text-xs font-bold text-background shadow-xs hover:bg-neutral-800 transition-colors cursor-pointer"
-                        >
-                          <Share2 className="size-3.5" />
-                          <span>Tweet Receipt</span>
-                        </a>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Sub-tab 2: Boomer Advice Simulator */}
-                  {activeCalcTab === "boomer" && (
-                    <div className="mt-4 space-y-4">
-                      <div>
-                        <h5 className="font-marker text-base font-bold text-foreground">
-                          Boomer Financial Wisdom: How to Buy 1 m²
-                        </h5>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          Check off the lifestyle sacrifices boomers recommend to see how many decades it shaves off your first square metre.
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                        {boomerItems.map((item) => {
-                          const isChecked = boomerSacrifices[item.key];
-                          return (
-                            <label
-                              key={item.key}
-                              className={`flex items-start gap-2.5 p-2.5 rounded-sm border cursor-pointer transition-all ${
-                                isChecked
-                                  ? "bg-amber-500/10 border-amber-500/40 text-foreground"
-                                  : "bg-paper/80 border-border text-muted-foreground hover:bg-muted/50"
-                              }`}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={(e) =>
-                                  setBoomerSacrifices((prev) => ({
-                                    ...prev,
-                                    [item.key]: e.target.checked,
-                                  }))
-                                }
-                                className="mt-0.5 size-4 rounded accent-amber-500 cursor-pointer"
-                              />
-                              <div className="text-xs">
-                                <strong className="block font-medium text-foreground">{item.label}</strong>
-                                <span className="text-[11px] font-mono text-muted-foreground">
-                                  {item.desc} (saves ~${item.saving.toLocaleString()}/yr)
-                                </span>
-                              </div>
-                            </label>
-                          );
-                        })}
-                      </div>
-
-                      {/* Dynamic Boomer Sacrifice Output */}
-                      <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-3 text-xs space-y-2">
-                        <div className="flex justify-between items-center font-mono">
-                          <span className="font-bold text-foreground">Total Annual Sacrifices:</span>
-                          <span className="font-black text-sm text-green-700">
-                            +${totalBoomerSaving.toLocaleString()} / year
-                          </span>
-                        </div>
-
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground">Months of 100% saving to 1 m²:</span>
-                          <span className="font-bold text-foreground">
-                            {monthsWithSacrifices} months (was {monthsTo1Sqm} months)
-                          </span>
-                        </div>
-
-                        {/* Boomer Approval Meter */}
-                        <div className="pt-1">
-                          <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-1">
-                            <span>BOOMER APPROVAL RATING: {boomerApprovalScore}%</span>
-                            <span>
-                              {boomerApprovalScore < 30
-                                ? "Unforgivable Avocado Addict 🥑"
-                                : boomerApprovalScore < 70
-                                ? "Acceptable, but cut the sourdough 🍞"
-                                : "Certified 1982 Hard Worker 👴"}
-                            </span>
-                          </div>
-                          <div className="w-full bg-neutral-200 h-2 rounded-full overflow-hidden">
-                            <div
-                              className="bg-amber-500 h-full transition-all duration-300 rounded-full"
-                              style={{ width: `${boomerApprovalScore}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        <p className="text-[11px] italic text-muted-foreground pt-1 border-t border-amber-500/20">
-                          &ldquo;Back in 1982, interest rates were 17.5% and we walked uphill both ways to the bank! If you just stop breathing restaurant air, you will afford a studio by 2145.&rdquo;
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Sub-tab 3: Live Sydney Auction Simulator */}
-                  {activeCalcTab === "auction" && (
-                    <div className="mt-4 space-y-4">
-                      <div>
-                        <h5 className="font-marker text-base font-bold text-foreground">
-                          Sydney Saturday 11 AM Auction Simulator
-                        </h5>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          Experience the thrill of raising your bidder paddle with {currentCity.currencySymbol}
-                          {numericSavings > 0 ? numericSavings.toLocaleString() : "25,000"} in hand against cash syndicates.
-                        </p>
-                      </div>
-
-                      {/* Auction Stage Display */}
-                      <div className="min-h-[140px] rounded-sm border border-border bg-paper/90 p-3 text-xs space-y-2 font-mono">
-                        {auctionLog.length === 0 ? (
-                          <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
-                            <span className="text-3xl mb-1">🔨</span>
-                            <p className="font-bold">The front lawn is packed. 42 people registered.</p>
-                            <p className="text-[11px] mt-0.5">Click below to raise your paddle and make your opening bid.</p>
-                          </div>
+                    <div className="mt-3 grid min-w-0 grid-cols-1 gap-2 min-[360px]:grid-cols-[minmax(0,1fr)_auto]">
+                      <label className="flex h-11 min-w-0 items-center rounded-md border border-input bg-paper px-3 focus-within:ring-2 focus-within:ring-primary">
+                        <span className="mr-2 font-bold text-muted-foreground">{currentCity.currencySymbol}</span>
+                        <input
+                          ref={savingsInputRef}
+                          value={savings}
+                          onChange={(e) => setSavings(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === "Enter") calculate(); }}
+                          inputMode="decimal"
+                          aria-label="Savings amount"
+                          placeholder="e.g. 25000"
+                          className="w-full min-w-0 flex-1 bg-transparent outline-none font-medium text-base text-foreground"
+                        />
+                      </label>
+                      <Button
+                        variant="ink"
+                        className="h-11 w-full min-[360px]:w-auto cursor-pointer font-bold flex items-center justify-center gap-2 transition-transform active:scale-95"
+                        onClick={calculate}
+                        disabled={isAuditing}
+                      >
+                        {isAuditing ? (
+                          <>
+                            <div className="size-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                            <span>Auditing...</span>
+                          </>
                         ) : (
-                          auctionLog.map((line, idx) => (
-                            <div
-                              key={idx}
-                              className={`p-2 rounded-xs animate-in fade-in slide-in-from-bottom-1 duration-200 ${
-                                line.includes("SOLD")
-                                  ? "bg-red-500/15 text-red-700 font-bold border border-red-500/30"
-                                  : line.includes("GAVEL")
-                                  ? "bg-amber-500/15 text-foreground font-black"
-                                  : "bg-white text-neutral-800 border border-neutral-200"
-                              }`}
-                            >
-                              {line}
-                            </div>
-                          ))
+                          <>
+                            <Sparkles className="size-4 text-amber-400" />
+                            <span>Calculate</span>
+                          </>
                         )}
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="ink"
-                          onClick={runAuctionSimulation}
-                          disabled={auctionState === "bidding" || auctionState === "outbid"}
-                          className="h-10 text-xs font-bold cursor-pointer flex items-center gap-2"
-                        >
-                          {auctionState === "bidding" || auctionState === "outbid" ? (
-                            <>
-                              <div className="size-3.5 border-2 border-background border-t-transparent rounded-full animate-spin" />
-                              <span>Auction in Progress...</span>
-                            </>
-                          ) : auctionState === "sold" ? (
-                            <>
-                              <RotateCcw className="size-3.5" />
-                              <span>Bid Again (Glutton for punishment)</span>
-                            </>
-                          ) : (
-                            <>
-                              <span>🙋 Raise Paddle (Bid {currentCity.currencySymbol}{numericSavings > 0 ? numericSavings.toLocaleString() : "25,000"})</span>
-                            </>
-                          )}
-                        </Button>
-                        {auctionState === "sold" && (
-                          <span className="text-xs font-marker text-red-600 animate-in fade-in">
-                            Outcome: 0 SQM won! ☺
-                          </span>
-                        )}
-                      </div>
+                      </Button>
                     </div>
-                  )}
-                </div>
-              </div>
-            </div>
 
-            {/* Sticky Yellow Reality Note */}
-            <aside
-              className={`relative min-w-0 self-start rounded-sm bg-primary p-5 text-center shadow-xl sm:rotate-1 border border-foreground/10 flex flex-col justify-between transition-transform duration-300 ${
-                auditShake ? "scale-105 rotate-2" : ""
-              }`}
-            >
-              {/* Masking tape on top */}
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 masking-tape -rotate-2 z-20 pointer-events-none rounded-xs" />
+                    {/* Comedic Auditing Progress Banner */}
+                    {isAuditing && (
+                      <div className="mt-3 p-3 rounded-md bg-amber-500/15 border border-amber-500/30 text-xs font-mono text-foreground animate-in fade-in slide-in-from-top-1 duration-200">
+                        <div className="flex items-center justify-between mb-1.5 font-bold">
+                          <span className="flex items-center gap-2">
+                            <span className="size-2 rounded-full bg-amber-600 animate-ping" />
+                            <span>{auditMessages[auditStep]}</span>
+                          </span>
+                          <span className="text-[11px] text-muted-foreground">
+                            {Math.round(((auditStep + 1) / auditMessages.length) * 100)}%
+                          </span>
+                        </div>
+                        <div className="w-full bg-neutral-200 h-1.5 rounded-full overflow-hidden">
+                          <div
+                            className="bg-amber-500 h-full transition-all duration-300 rounded-full"
+                            style={{ width: `${((auditStep + 1) / auditMessages.length) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
 
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-[9px] font-black uppercase tracking-wider text-foreground/75 block">
-                    Official Reality Audit
-                  </span>
-                  {hasAudited && (
-                    <span className="font-mono text-[8px] bg-foreground text-background px-1.5 py-0.5 rounded-xs font-bold uppercase">
-                      AUDIT COMPLETE
-                    </span>
-                  )}
-                </div>
+                    {/* Range Slider */}
+                    <div className="mt-3 flex items-center gap-3">
+                      <span className="text-[11px] font-bold text-muted-foreground">{currentCity.currencySymbol}0</span>
+                      <input
+                        type="range"
+                        min="0"
+                        max="150000"
+                        step="2500"
+                        value={Math.min(150000, numericSavings)}
+                        onChange={(e) => setSavings(e.target.value)}
+                        className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                        aria-label="Savings slider"
+                      />
+                      <span className="text-[11px] font-bold text-muted-foreground">{currentCity.currencySymbol}150k+</span>
+                    </div>
 
-                <p className="mt-1 font-marker text-xl font-bold uppercase text-foreground">
-                  In Reality, You Own
-                </p>
-
-                {/* The 0 SQM Punchline with Stamp */}
-                <div className="relative my-2 py-3 bg-background/30 rounded-xs border border-foreground/15 overflow-hidden">
-                  {isAuditing ? (
-                    <div className="py-4 flex flex-col items-center justify-center min-h-[96px]">
-                      <div className="size-6 border-2 border-foreground border-t-transparent rounded-full animate-spin mb-2" />
-                      <span className="font-mono text-xs font-bold text-foreground animate-pulse">
-                        AUDITING REALITY...
+                    {/* Dynamic Live Slider Roaster */}
+                    <div className="mt-2 flex items-center gap-2 rounded-md bg-amber-500/10 border border-amber-500/20 px-3 py-2 text-xs text-foreground transition-all">
+                      <span className="text-sm shrink-0">🔥</span>
+                      <span className="font-semibold italic leading-snug">
+                        {getSliderRoast(numericSavings, currentCity.currencySymbol)}
                       </span>
                     </div>
-                  ) : (
-                    <>
-                      <strong className="block font-marker text-6xl leading-none text-foreground">
-                        0
-                      </strong>
-                      <p className="font-marker text-2xl font-bold text-foreground tracking-wider">
-                        SQM
-                      </p>
 
-                      {/* Red Rubber Stamp */}
-                      {hasAudited && (
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-3 border-red-600 text-red-600 font-marker px-3 py-1 text-sm uppercase -rotate-12 rounded-xs shadow-md tracking-wider pointer-events-none animate-in zoom-in-75 duration-200 select-none bg-paper/90">
-                          REJECTED: 0 SQM
+                    {/* Quick Preset Chips */}
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                      <span className="text-[11px] font-semibold text-muted-foreground mr-1">Quick Presets:</span>
+                      {["5000", "25000", "50000", "100000", "250000"].map((preset) => (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() => handlePreset(preset)}
+                          className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold transition-colors cursor-pointer ${
+                            numericSavings === Number(preset)
+                              ? "bg-primary text-foreground border-foreground/30 font-bold"
+                              : "bg-paper hover:bg-muted text-muted-foreground border-border"
+                          }`}
+                        >
+                          {currentCity.currencySymbol}{Number(preset).toLocaleString()}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ========================================================================= */}
+              {/* THE REALITY SCORE CARD (WhatsApp Image 2026-09-20 at 17.08.25.jpeg) */}
+              {/* ========================================================================= */}
+              <div className="flex justify-center w-full">
+                <div
+                  ref={cardRef}
+                  id="reality-score-card"
+                  className={`w-full max-w-2xl rounded-[28px] border border-[#E7E5DC] bg-[#FAF9F5] p-5 sm:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.06)] text-[#141414] transition-all duration-300 relative ${
+                    auditShake ? "scale-[1.02] ring-4 ring-amber-400/40" : ""
+                  }`}
+                >
+                  {/* Card Header */}
+                  <div className="flex items-start justify-between gap-4 pb-5 sm:pb-6">
+                    {/* Left: Logo & Subtitle */}
+                    <div>
+                      <div className="flex items-center text-3xl sm:text-4xl font-marker font-bold tracking-tight">
+                        <span className="text-neutral-900">$</span>
+                        <span className="text-[#F5C842]">0</span>
+                        <span className="text-neutral-900">SQM</span>
+                      </div>
+                      <p className="text-[10px] sm:text-[11px] font-mono font-bold tracking-wider text-neutral-500 uppercase mt-0.5">
+                        REAL DATA. REAL PRICES. SAME RESULT.
+                      </p>
+                    </div>
+
+                    {/* Right: Slogan with yellow underline */}
+                    <div className="text-right">
+                      <p className="font-marker text-xs sm:text-sm font-bold tracking-wide text-neutral-800 uppercase leading-tight">
+                        THE AUSTRALIAN DREAM
+                      </p>
+                      <div className="inline-block relative">
+                        <p className="font-marker text-xs sm:text-sm font-bold tracking-wide text-neutral-800 uppercase leading-tight">
+                          STILL STARTS AT 0M².
+                        </p>
+                        <div className="h-1 bg-[#F5C842] rounded-full w-full -mt-0.5" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Upper Section: Reality Score Flip Counter + Metadata Details */}
+                  <div className="grid grid-cols-1 sm:grid-cols-[1.3fr_1fr] gap-3 sm:gap-4">
+                    {/* Upper Left: Reality Score & Flip Counter */}
+                    <div className="rounded-2xl border border-black/[0.05] bg-[#F4F3ED] p-4 sm:p-5 flex flex-col justify-between">
+                      <div className="flex items-center justify-between text-xs font-mono font-bold uppercase">
+                        <span className="text-neutral-800 tracking-wider">YOUR REALITY SCORE</span>
+                        <span className="text-neutral-500 text-[11px]">
+                          {currentCity.name.toUpperCase()}, {currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : "AU"}
+                        </span>
+                      </div>
+
+                      {/* Mechanical Flip Counter */}
+                      <div className="flex items-center gap-1.5 sm:gap-2 my-3 sm:my-4">
+                        {/* Tile 1: 0 */}
+                        <div className="relative w-13 h-18 sm:w-16 sm:h-22 bg-[#181A1D] rounded-[10px] sm:rounded-[12px] flex items-center justify-center shadow-md overflow-hidden select-none border border-black/30">
+                          <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">0</span>
+                          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-[#0C0E10] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2 sm:h-2.5 bg-[#0C0E10] rounded-r-xs" />
+                          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2 sm:h-2.5 bg-[#0C0E10] rounded-l-xs" />
                         </div>
-                      )}
-                    </>
-                  )}
+
+                        {/* Dot */}
+                        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#181A1D] self-end mb-3 sm:mb-4 mx-0.5" />
+
+                        {/* Tile 2: 0 */}
+                        <div className="relative w-13 h-18 sm:w-16 sm:h-22 bg-[#181A1D] rounded-[10px] sm:rounded-[12px] flex items-center justify-center shadow-md overflow-hidden select-none border border-black/30">
+                          <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">0</span>
+                          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-[#0C0E10] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2 sm:h-2.5 bg-[#0C0E10] rounded-r-xs" />
+                          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2 sm:h-2.5 bg-[#0C0E10] rounded-l-xs" />
+                        </div>
+
+                        {/* Tile 3: 0 */}
+                        <div className="relative w-13 h-18 sm:w-16 sm:h-22 bg-[#181A1D] rounded-[10px] sm:rounded-[12px] flex items-center justify-center shadow-md overflow-hidden select-none border border-black/30">
+                          <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">0</span>
+                          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-[#0C0E10] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2 sm:h-2.5 bg-[#0C0E10] rounded-r-xs" />
+                          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2 sm:h-2.5 bg-[#0C0E10] rounded-l-xs" />
+                        </div>
+
+                        {/* m² */}
+                        <span className="font-bold text-3xl sm:text-5xl text-neutral-900 ml-2 sm:ml-3 self-center select-none">
+                          m²
+                        </span>
+                      </div>
+
+                      <div>
+                        <p className="font-bold text-base sm:text-lg text-neutral-900">
+                          You own 0 square metres.
+                        </p>
+                        <p className="text-xs sm:text-sm text-neutral-500 font-medium mt-0.5">
+                          But hey, at least the views are free.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Upper Right: Metadata Details */}
+                    <div className="rounded-2xl border border-black/[0.05] bg-[#F4F3ED] p-4 sm:p-5 flex flex-col justify-between gap-3">
+                      {/* Location */}
+                      <div className="flex items-start gap-3">
+                        <MapPin className="size-4 text-neutral-800 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">
+                            LOCATION
+                          </span>
+                          <strong className="text-xs sm:text-sm font-bold text-neutral-900">
+                            {currentCity.name}, {currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : currentCity.country}
+                          </strong>
+                        </div>
+                      </div>
+
+                      {/* Date */}
+                      <div className="flex items-start gap-3">
+                        <Calendar className="size-4 text-neutral-800 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">
+                            DATE
+                          </span>
+                          <strong className="text-xs sm:text-sm font-bold text-neutral-900">
+                            20 Sep 2026
+                          </strong>
+                        </div>
+                      </div>
+
+                      {/* Property Type */}
+                      <div className="flex items-start gap-3">
+                        <Home className="size-4 text-neutral-800 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">
+                            PROPERTY TYPE
+                          </span>
+                          <strong className="text-xs sm:text-sm font-bold text-neutral-900">
+                            Theoretical Land
+                          </strong>
+                        </div>
+                      </div>
+
+                      {/* Your Savings */}
+                      <div className="flex items-start gap-3">
+                        <Wallet className="size-4 text-neutral-800 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">
+                            YOUR SAVINGS
+                          </span>
+                          <strong className="text-xs sm:text-sm font-bold text-neutral-900">
+                            {currentCity.currencySymbol}{numericSavings.toLocaleString()}
+                          </strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Lower Section: Cost Breakdown + Renty Quote & Action Buttons */}
+                  <div className="grid grid-cols-1 sm:grid-cols-[1.3fr_1fr] gap-3 sm:gap-4 mt-3 sm:mt-4">
+                    {/* Lower Left: Cost Breakdown */}
+                    <div className="rounded-2xl border border-black/[0.05] bg-white/80 p-4 sm:p-5 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between text-xs font-mono font-bold uppercase">
+                          <span className="text-neutral-800 tracking-wider">COST BREAKDOWN</span>
+                          <span className="text-neutral-400 text-[10px]">{currentCity.currency} ({currentCity.currencySymbol})</span>
+                        </div>
+
+                        <div className="border-b border-neutral-200/80 my-2.5" />
+
+                        <div className="space-y-1.5 font-mono text-[11px] sm:text-xs">
+                          <div className="flex justify-between text-neutral-700">
+                            <span>Land Value ({affordableSqm.toFixed(2)} m²)</span>
+                            <span className="font-semibold">{currentCity.currencySymbol}{numericSavings.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between text-neutral-700">
+                            <span>Stamp Duty (on fresh air)</span>
+                            <span className="font-semibold">{currentCity.currencySymbol}42,500</span>
+                          </div>
+                          <div className="flex justify-between text-neutral-700">
+                            <span>Strata Sinking Fund (broken lift)</span>
+                            <span className="font-semibold">{currentCity.currencySymbol}3,400</span>
+                          </div>
+                          <div className="flex justify-between text-neutral-700">
+                            <span>Agent Cologne Surcharge</span>
+                            <span className="font-semibold">{currentCity.currencySymbol}450</span>
+                          </div>
+                          <div className="flex justify-between text-neutral-700">
+                            <span>Landlord Mortgage Gratitude</span>
+                            <span className="font-semibold">100%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-neutral-700">Emotional Damage</span>
+                            <span className="text-emerald-600 font-bold">FREE</span>
+                          </div>
+                        </div>
+
+                        <div className="border-b border-neutral-200/80 my-2.5" />
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="text-xs font-mono font-black tracking-wider text-neutral-900 uppercase">
+                          TOTAL EQUITY ACQUIRED
+                        </span>
+                        <div className="rounded-lg border border-[#FDD835]/40 bg-[#FEEA85] px-3.5 py-1 text-base sm:text-lg font-black text-neutral-900 shadow-xs">
+                          0 m²
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Lower Right: Renty Quote & Action Buttons */}
+                    <div className="flex flex-col justify-between gap-3">
+                      {/* Yellow Quote Box */}
+                      <div className="rounded-2xl border border-[#FDE68A] bg-[#FEF3C7] p-4 sm:p-5 flex flex-col justify-between">
+                        <div>
+                          <span className="font-serif text-2xl leading-none text-neutral-800 select-none block -mb-2">“</span>
+                          <p className="font-marker font-bold text-xs sm:text-[13px] leading-snug tracking-wide text-neutral-900 uppercase">
+                            {currentCity.satiricalNote.toUpperCase()}
+                          </p>
+                        </div>
+                        <span className="text-right font-mono text-[10px] font-bold tracking-wider text-neutral-700 uppercase mt-2">
+                          — RENTY
+                        </span>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="space-y-2">
+                        {/* Share on X Button */}
+                        <button
+                          type="button"
+                          onClick={handleShareOnX}
+                          disabled={isDownloading}
+                          className="w-full h-11 rounded-xl bg-[#0F1419] hover:bg-black active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
+                        >
+                          <svg className="size-4 fill-current" viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                          </svg>
+                          <span>Share on X</span>
+                        </button>
+
+                        {/* Download & Try Again Buttons */}
+                        <div className="grid grid-cols-2 gap-2">
+                          <button
+                            type="button"
+                            onClick={handleDownloadCard}
+                            disabled={isDownloading}
+                            className="h-10 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                          >
+                            <Download className="size-3.5" />
+                            <span>{isDownloading ? "Saving..." : "Download"}</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleTryAgain}
+                            className="h-10 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                          >
+                            <RotateCcw className="size-3.5" />
+                            <span>Try Again</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Footer */}
+                  <div className="flex items-center justify-between pt-4 mt-4 border-t border-neutral-200/80 text-[10px] font-mono">
+                    <span className="font-bold tracking-widest text-neutral-600 uppercase">
+                      0SQM.COM.AU
+                    </span>
+                    <div className="flex-1 h-[1px] bg-neutral-300/60 mx-4 max-w-xs" />
+                    <span className="text-neutral-500 tracking-wider uppercase">
+                      DIFFERENT CITIES. SAME PORTFOLIO. ☺
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 20% Deposit Reality Progress Meter */}
+              <div className="rounded-2xl border border-border bg-background p-4 sm:p-6 shadow-sm">
+                <div className="flex justify-between items-center text-xs font-bold mb-1.5">
+                  <span className="text-foreground flex items-center gap-1">
+                    <span>🏦</span> Deposit Progress ({depositPercent.toFixed(1)}% of 20% downpayment)
+                  </span>
+                  <span className="text-muted-foreground font-mono">
+                    {currentCity.currencySymbol}{numericSavings.toLocaleString()} / {currentCity.typicalDeposit}
+                  </span>
+                </div>
+                <div className="w-full bg-neutral-200 h-2.5 rounded-full overflow-hidden">
+                  <div
+                    className="bg-primary h-full transition-all duration-300 rounded-full"
+                    style={{ width: `${depositPercent}%` }}
+                  />
+                </div>
+                <div className="mt-1.5 flex justify-between items-center text-[10px] text-muted-foreground">
+                  <span className="italic">
+                    {depositPercent < 10
+                      ? "Living rent-free in the comments 🛋️"
+                      : depositPercent < 30
+                      ? "One foot in the foyer (barefoot) 🦶"
+                      : depositPercent < 60
+                      ? "Halfway to an inspection brochure 📄"
+                      : depositPercent < 100
+                      ? "Your landlord is sweating 😰"
+                      : "Wait, you actually made it?! 🤯"}
+                  </span>
+                  <span className="font-semibold text-foreground">
+                    {numericSavings >= currentCity.rawDeposit
+                      ? "Deposit reached!"
+                      : `~${yearsToDeposit} yrs of saving needed`}
+                  </span>
+                </div>
+              </div>
+
+              {/* 3-Column Satirical Breakdown */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {/* 1. Physical Reality */}
+                <div className="rounded-xl border border-border bg-paper/90 p-4 text-xs flex flex-col justify-between shadow-xs">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
+                      📐 Physical Reality
+                    </span>
+                    <strong className="text-sm font-marker text-foreground block">
+                      {metaphor.title}
+                    </strong>
+                    <p className="text-muted-foreground mt-1 italic leading-snug">
+                      &ldquo;{metaphor.desc}&rdquo;
+                    </p>
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-border/60 text-[10px] font-mono text-foreground font-semibold">
+                    {affordableSqm.toFixed(2)} m² (≈ {(affordableSqm * 10.764).toFixed(1)} sq ft)
+                  </div>
                 </div>
 
-                {/* Theoretical vs Reality */}
-                <p className="text-xs font-bold text-foreground">
-                  Theoretically: <span className="underline decoration-2 font-black">{affordableSqm.toFixed(2)} m²</span>
-                </p>
-                <p className="text-[11px] text-foreground/80 italic mt-0.5 leading-tight">
-                  {numericSavings >= currentCity.rawDeposit
-                    ? "Wait, you actually have a 20% deposit?! Why are you here?!"
-                    : `Bank verdict: "Come back when you have ${currentCity.typicalDeposit}."`}
-                </p>
-              </div>
-
-              {/* Satirical Roast Quote */}
-              <div className="my-3 border-y border-foreground/15 py-2.5">
-                <p className="font-marker text-base sm:text-lg leading-tight text-foreground">
-                  &ldquo;{currentCity.satiricalNote}&rdquo;
-                </p>
-              </div>
-
-              {/* Share Reality on X Button */}
-              <div className="space-y-2">
-                <a
-                  href={`https://twitter.com/intent/tweet?text=I%20saved%20${currentCity.currencySymbol}${numericSavings.toLocaleString()}%20and%20officially%20own%200%20SQM%20in%20${currentCity.name}%20(${affordableSqm.toFixed(2)}m%C2%B2%20theoretically).%20Same%20dream.%20Different%20budget.%20%40Own0SQM%20%230SQM&url=https://x.com/Own0SQM`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex w-full items-center justify-center gap-1.5 rounded-xs bg-foreground px-3 py-2 text-xs font-bold text-background shadow-xs hover:bg-neutral-800 transition-colors cursor-pointer"
-                >
-                  <svg className="size-3.5 fill-current" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                  <span>Share Reality on X</span>
-                </a>
-                <p className="font-marker text-xs text-foreground/75">
-                  Different cities. Same portfolio. ☺
-                </p>
-              </div>
-
-              {/* Interactive Ask Renty (Justin's Corgi) Card */}
-              <div className="mt-4 pt-3 border-t border-foreground/15 text-left">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className={`text-xl transition-transform ${rentyBarking ? "scale-125 rotate-12" : ""}`}>🐕</span>
-                    <strong className="text-[11px] font-marker text-foreground block">Renty&apos;s Wisdom</strong>
+                {/* 2. Boomer Currency Equivalent */}
+                <div className="rounded-xl border border-border bg-paper/90 p-4 text-xs flex flex-col justify-between shadow-xs">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
+                      {currentCity.hyperLocal.emoji} Boomer Currency
+                    </span>
+                    <strong className="text-sm font-marker text-foreground block">
+                      {hyperLocalCount.toLocaleString()} {currentCity.hyperLocal.unit}
+                    </strong>
+                    <p className="text-muted-foreground mt-1 italic leading-snug">
+                      Or you could have bought {hyperLocalCount.toLocaleString()} {currentCity.hyperLocal.name}.
+                    </p>
                   </div>
+                  <div className="mt-2 pt-2 border-t border-border/60 text-[10px] font-mono text-muted-foreground">
+                    {currentCity.currencySymbol}{currentCity.hyperLocal.price} per item
+                  </div>
+                </div>
+
+                {/* 3. Brutal Timeline */}
+                <div className="rounded-xl border border-border bg-paper/90 p-4 text-xs flex flex-col justify-between shadow-xs">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
+                      ⏳ Brutal Timeline
+                    </span>
+                    <strong className="text-sm font-marker text-red-600 block">
+                      {hoursTo1Sqm.toLocaleString()} Working Hours
+                    </strong>
+                    <p className="text-muted-foreground mt-1 italic leading-snug">
+                      {monthsTo1Sqm} months of 100% saved salary to buy 1 m².
+                    </p>
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-border/60 text-[10px] font-mono text-muted-foreground">
+                    Settlement: {numericSavings >= currentCity.rawDeposit ? "TODAY" : "NEVER ☺"}
+                  </div>
+                </div>
+              </div>
+
+              {/* Interactive Comedy Sub-Tabs (Boomer Advice, Auction Simulator) */}
+              <div className="rounded-2xl border border-border bg-paper p-4 sm:p-6 shadow-sm">
+                {/* Tab Selector Buttons */}
+                <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
                   <button
                     type="button"
-                    onClick={handleAskRenty}
-                    className="text-[10px] font-bold bg-foreground text-background px-2 py-0.5 rounded-xs cursor-pointer hover:bg-neutral-800 transition-colors"
+                    onClick={() => setActiveCalcTab("boomer")}
+                    className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                      activeCalcTab === "boomer"
+                        ? "bg-foreground text-background shadow-xs"
+                        : "bg-muted hover:bg-neutral-200 text-muted-foreground"
+                    }`}
                   >
-                    Bark 🐾
+                    <span>🥑</span> Boomer Advice Simulator
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveCalcTab("auction")}
+                    className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                      activeCalcTab === "auction"
+                        ? "bg-foreground text-background shadow-xs"
+                        : "bg-muted hover:bg-neutral-200 text-muted-foreground"
+                    }`}
+                  >
+                    <span>🔨</span> Sydney Auction Simulator
                   </button>
                 </div>
-                <div className="mt-2 rounded-xs bg-background/50 p-2 border border-foreground/10 text-[11px] italic text-foreground flex items-start gap-1.5">
-                  <span className="text-sm shrink-0">{rentyQuotes[rentyIndex].emoji}</span>
-                  <p className="leading-snug">&ldquo;{rentyQuotes[rentyIndex].text}&rdquo;</p>
-                </div>
+
+                {/* Sub-tab: Boomer Advice Simulator */}
+                {activeCalcTab === "boomer" && (
+                  <div className="mt-4 space-y-4">
+                    <div>
+                      <h5 className="font-marker text-base font-bold text-foreground">
+                        Boomer Financial Wisdom: How to Buy 1 m²
+                      </h5>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Check off the lifestyle sacrifices boomers recommend to see how many decades it shaves off your first square metre.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {boomerItems.map((item) => {
+                        const isChecked = boomerSacrifices[item.key];
+                        return (
+                          <label
+                            key={item.key}
+                            className={`flex items-start gap-2.5 p-2.5 rounded-sm border cursor-pointer transition-all ${
+                              isChecked
+                                ? "bg-amber-500/10 border-amber-500/40 text-foreground"
+                                : "bg-paper/80 border-border text-muted-foreground hover:bg-muted/50"
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={(e) =>
+                                setBoomerSacrifices((prev) => ({
+                                  ...prev,
+                                  [item.key]: e.target.checked,
+                                }))
+                              }
+                              className="mt-0.5 size-4 rounded accent-amber-500 cursor-pointer"
+                            />
+                            <div className="text-xs">
+                              <strong className="block font-medium text-foreground">{item.label}</strong>
+                              <span className="text-[11px] font-mono text-muted-foreground">
+                                {item.desc} (saves ~${item.saving.toLocaleString()}/yr)
+                              </span>
+                            </div>
+                          </label>
+                        );
+                      })}
+                    </div>
+
+                    {/* Dynamic Boomer Sacrifice Output */}
+                    <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-3 text-xs space-y-2">
+                      <div className="flex justify-between items-center font-mono">
+                        <span className="font-bold text-foreground">Total Annual Sacrifices:</span>
+                        <span className="font-black text-sm text-green-700">
+                          +${totalBoomerSaving.toLocaleString()} / year
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center text-[11px]">
+                        <span className="text-muted-foreground">Months of 100% saving to 1 m²:</span>
+                        <span className="font-bold text-foreground">
+                          {monthsWithSacrifices} months (was {monthsTo1Sqm} months)
+                        </span>
+                      </div>
+
+                      {/* Boomer Approval Meter */}
+                      <div className="pt-1">
+                        <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-1">
+                          <span>BOOMER APPROVAL RATING: {boomerApprovalScore}%</span>
+                          <span>
+                            {boomerApprovalScore < 30
+                              ? "Unforgivable Avocado Addict 🥑"
+                              : boomerApprovalScore < 70
+                              ? "Acceptable, but cut the sourdough 🍞"
+                              : "Certified 1982 Hard Worker 👴"}
+                          </span>
+                        </div>
+                        <div className="w-full bg-neutral-200 h-2 rounded-full overflow-hidden">
+                          <div
+                            className="bg-amber-500 h-full transition-all duration-300 rounded-full"
+                            style={{ width: `${boomerApprovalScore}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      <p className="text-[11px] italic text-muted-foreground pt-1 border-t border-amber-500/20">
+                        &ldquo;Back in 1982, interest rates were 17.5% and we walked uphill both ways to the bank! If you just stop breathing restaurant air, you will afford a studio by 2145.&rdquo;
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Sub-tab: Live Sydney Auction Simulator */}
+                {activeCalcTab === "auction" && (
+                  <div className="mt-4 space-y-4">
+                    <div>
+                      <h5 className="font-marker text-base font-bold text-foreground">
+                        Sydney Saturday 11 AM Auction Simulator
+                      </h5>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Experience the thrill of raising your bidder paddle with {currentCity.currencySymbol}
+                        {numericSavings > 0 ? numericSavings.toLocaleString() : "25,000"} in hand against cash syndicates.
+                      </p>
+                    </div>
+
+                    {/* Auction Stage Display */}
+                    <div className="min-h-[140px] rounded-sm border border-border bg-paper/90 p-3 text-xs space-y-2 font-mono">
+                      {auctionLog.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
+                          <span className="text-3xl mb-1">🔨</span>
+                          <p className="font-bold">The front lawn is packed. 42 people registered.</p>
+                          <p className="text-[11px] mt-0.5">Click below to raise your paddle and make your opening bid.</p>
+                        </div>
+                      ) : (
+                        auctionLog.map((line, idx) => (
+                          <div
+                            key={idx}
+                            className={`p-2 rounded-xs animate-in fade-in slide-in-from-bottom-1 duration-200 ${
+                              line.includes("SOLD")
+                                ? "bg-red-500/15 text-red-700 font-bold border border-red-500/30"
+                                : line.includes("GAVEL")
+                                ? "bg-amber-500/15 text-foreground font-black"
+                                : "bg-white text-neutral-800 border border-neutral-200"
+                            }`}
+                          >
+                            {line}
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ink"
+                        onClick={runAuctionSimulation}
+                        disabled={auctionState === "bidding" || auctionState === "outbid"}
+                        className="h-10 text-xs font-bold cursor-pointer flex items-center gap-2"
+                      >
+                        {auctionState === "bidding" || auctionState === "outbid" ? (
+                          <>
+                            <div className="size-3.5 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                            <span>Auction in Progress...</span>
+                          </>
+                        ) : auctionState === "sold" ? (
+                          <>
+                            <RotateCcw className="size-3.5" />
+                            <span>Bid Again (Glutton for punishment)</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>🙋 Raise Paddle (Bid {currentCity.currencySymbol}{numericSavings > 0 ? numericSavings.toLocaleString() : "25,000"})</span>
+                          </>
+                        )}
+                      </Button>
+                      {auctionState === "sold" && (
+                        <span className="text-xs font-marker text-red-600 animate-in fade-in">
+                          Outcome: 0 SQM won! ☺
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
-            </aside>
+            </div>
           </div>
         </div>
       </section>
@@ -1908,6 +2046,14 @@ https://0sqm.fun
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Share / Download Toast Notification */}
+      {shareToast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#0F1419] text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-2 text-xs sm:text-sm font-semibold animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <Sparkles className="size-4 text-amber-400 shrink-0" />
+          <span>{shareToast}</span>
         </div>
       )}
     </main>
