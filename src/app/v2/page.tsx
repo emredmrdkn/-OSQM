@@ -777,10 +777,31 @@ https://0sqm.fun
           className="absolute inset-0 h-full w-full object-cover object-[27%_bottom] sm:object-[58%_center]"
         />
         {/* Subtle vignette so the image looks natural and not washed out */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/20 pointer-events-none" />
         <h1 className="sr-only">
           $0SQM — The Australian Dream Still Starts at 0m²
         </h1>
+
+        {/* Mobile Hero Content (Just a guy... & Follow on X button) */}
+        <div className="relative mx-auto flex min-h-[380px] max-w-7xl items-start px-5 pt-8 sm:px-8 sm:hidden">
+          <div className="min-w-0 max-w-sm">
+            <p className="max-w-sm text-xs min-[360px]:text-sm font-semibold leading-relaxed text-foreground drop-shadow-xs">
+              Just a guy, a dog, and a very expensive housing market. Documenting the journey from 0.00m² to a place we can call home.
+            </p>
+            <div className="mt-4">
+              <Button
+                variant="sunshine"
+                size="default"
+                className="px-5 text-xs min-[360px]:text-sm cursor-pointer shadow-md font-bold"
+                asChild
+              >
+                <a href="https://x.com/Own0SQM" target="_blank" rel="noreferrer">
+                  Follow the journey on X <ArrowRight className="size-4" />
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* The Dream Section */}
