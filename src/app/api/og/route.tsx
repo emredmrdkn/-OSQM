@@ -17,6 +17,13 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
       searchParams.get('note') ??
       'CONGRATULATIONS. YOU OWN ENOUGH SYDNEY REAL ESTATE TO PARK HALF A CORGI.';
 
+    const numSqm = parseFloat(sqm) || 0;
+    const [intPart, decPart = '00'] = numSqm.toFixed(2).split('.');
+    const rawSavings = parseFloat(savings.replace(/,/g, '')) || 25000;
+    const stampDuty = searchParams.get('stampDuty') ?? Math.round(rawSavings * 1.7).toLocaleString();
+    const strata = searchParams.get('strata') ?? Math.round(rawSavings * 0.136).toLocaleString();
+    const cologne = searchParams.get('cologne') ?? Math.round(rawSavings * 0.018).toLocaleString();
+
     return new ImageResponse(
       (
         <div
@@ -108,7 +115,8 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                   {/* Tile 1 */}
                   <div
                     style={{
-                      width: '48px',
+                      minWidth: '48px',
+                      padding: '0 8px',
                       height: '64px',
                       backgroundColor: '#121417',
                       borderRadius: '8px',
@@ -121,7 +129,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                       position: 'relative',
                     }}
                   >
-                    <span>0</span>
+                    <span>{intPart}</span>
                     <div style={{ display: 'flex', position: 'absolute', left: 0, right: 0, top: '50%', height: '1.5px', backgroundColor: '#0A0C0E' }} />
                   </div>
 
@@ -143,7 +151,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                       position: 'relative',
                     }}
                   >
-                    <span>0</span>
+                    <span>{decPart[0] || '0'}</span>
                     <div style={{ display: 'flex', position: 'absolute', left: 0, right: 0, top: '50%', height: '1.5px', backgroundColor: '#0A0C0E' }} />
                   </div>
 
@@ -163,7 +171,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                       position: 'relative',
                     }}
                   >
-                    <span>0</span>
+                    <span>{decPart[1] || '0'}</span>
                     <div style={{ display: 'flex', position: 'absolute', left: 0, right: 0, top: '50%', height: '1.5px', backgroundColor: '#0A0C0E' }} />
                   </div>
 
@@ -194,11 +202,11 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', marginTop: '8px' }}>
-                  <div style={{ display: 'flex', fontSize: '15px', fontWeight: 800, color: '#141414' }}>
-                    You own 0 square metres.
+                  <div style={{ display: 'flex', fontSize: '13px', fontWeight: 900, color: '#141414' }}>
+                    {numSqm.toFixed(2)}m² in theory. <span style={{ color: '#D97706', marginLeft: '4px' }}>0m² in reality.</span>
                   </div>
-                  <div style={{ display: 'flex', fontSize: '11px', color: '#666', marginTop: '1px' }}>
-                    But hey, at least the views are free.
+                  <div style={{ display: 'flex', fontSize: '10px', color: '#666', marginTop: '1px' }}>
+                    You own 0 square metres. But hey, at least the views are free.
                   </div>
                 </div>
               </div>
@@ -258,20 +266,20 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '10px', color: '#333' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>Land Value ({sqm} m²)</span>
+                    <span>Land Value ({numSqm.toFixed(2)} m²)</span>
                     <span style={{ fontWeight: 700 }}>{currencySymbol}{savings}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Stamp Duty (on fresh air)</span>
-                    <span style={{ fontWeight: 700 }}>{currencySymbol}42,500</span>
+                    <span style={{ fontWeight: 700 }}>{currencySymbol}{stampDuty}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Strata Sinking Fund (broken lift)</span>
-                    <span style={{ fontWeight: 700 }}>{currencySymbol}3,400</span>
+                    <span style={{ fontWeight: 700 }}>{currencySymbol}{strata}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Agent Cologne Surcharge</span>
-                    <span style={{ fontWeight: 700 }}>{currencySymbol}450</span>
+                    <span style={{ fontWeight: 700 }}>{currencySymbol}{cologne}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Landlord Mortgage Gratitude</span>

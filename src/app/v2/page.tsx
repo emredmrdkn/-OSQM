@@ -398,6 +398,15 @@ export default function V2Page() {
   const affordableSqm = currentCity.pricePerSqm > 0 ? numericSavings / currentCity.pricePerSqm : 0;
   const metaphor = getMetaphor(affordableSqm);
 
+  // Dynamic values for card & breakdown
+  const [intPart, decPart = "00"] = affordableSqm.toFixed(2).split(".");
+  const dynamicStampDuty = Math.round(currentCity.rawMedianPrice * 0.045);
+  const dynamicStrata = Math.round(currentCity.rawMedianPrice * 0.0028);
+  const dynamicAgentCologne = Math.round(currentCity.pricePerSqm * 0.09);
+  const dynamicStickyNote = affordableSqm < 0.1
+    ? currentCity.satiricalNote
+    : `Congratulations. You own enough ${currentCity.name} real estate for: ${metaphor.title}. Reality: still 0m²!`;
+
   // Satirical Calculations
   const depositPercent = Math.min(100, (numericSavings / Math.max(1, currentCity.rawDeposit)) * 100);
   const hyperLocalCount = Math.floor(numericSavings / Math.max(0.01, currentCity.hyperLocal.price));
@@ -440,16 +449,18 @@ export default function V2Page() {
 
   const handleShareOnX = () => {
     // 1. Determine site URL (use live deployed origin so Twitter can crawl card, fallback to production domain)
-    let siteUrl = 'https://0sqm.com.au';
+    let origin = 'https://0sqm.com.au';
     if (typeof window !== 'undefined' && window.location.origin) {
       if (!window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1')) {
-        siteUrl = window.location.origin;
+        origin = window.location.origin;
       }
     }
 
+    const shareUrl = `${origin}/share?city=${encodeURIComponent(currentCity.name)}&state=${encodeURIComponent(currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : 'NSW')}&sqm=${encodeURIComponent(affordableSqm.toFixed(2))}&savings=${encodeURIComponent(numericSavings.toLocaleString())}&currency=${encodeURIComponent(currentCity.currency)}&symbol=${encodeURIComponent(currentCity.currencySymbol)}&note=${encodeURIComponent(dynamicStickyNote)}`;
+
     // 2. Open Twitter / X intent IMMEDIATELY in user gesture so browser popup blocker does NOT block it!
     const tweetText = `My ${currentCity.name} Reality Score: 0 SQM.\n${affordableSqm.toFixed(2)}m² in theory. 0m² in reality.\nDifferent city. Same portfolio. 🙂\n#0SQM`;
-    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(siteUrl)}`;
+    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
     const win = window.open(tweetUrl, '_blank', 'noopener,noreferrer');
     if (!win) {
       window.location.href = tweetUrl;
@@ -468,7 +479,7 @@ export default function V2Page() {
             await navigator.clipboard.write([
               new ClipboardItem({ 'image/png': blob })
             ]);
-            setShareToast("📸 Kart görseli indirildi ve panoya kopyalandı! X açıldığında görseli yapıştırabilir veya ekleyebilirsiniz.");
+            setShareToast("📸 Kart görseli indirildi ve panoya kopyalandı! X açıldığında görseli yapıştırabilir veya önizleme kartı olarak paylaşabilirsiniz.");
           } else {
             setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
           }
@@ -1223,9 +1234,9 @@ https://0sqm.fun
                           {/* Left: Split-Flap Flip Counter */}
                           <div>
                             <div className="flex items-center gap-1 sm:gap-1.5 my-1">
-                              {/* Tile 1: 0 */}
-                              <div className="relative w-12 h-18 sm:w-15 sm:h-22 bg-[#121417] rounded-[8px] sm:rounded-[10px] flex items-center justify-center shadow-lg border border-black/50 overflow-hidden select-none">
-                                <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">0</span>
+                              {/* Tile 1 */}
+                              <div className="relative w-auto min-w-12 h-18 sm:min-w-15 sm:h-22 px-2 bg-[#121417] rounded-[8px] sm:rounded-[10px] flex items-center justify-center shadow-lg border border-black/50 overflow-hidden select-none">
+                                <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">{intPart}</span>
                                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
                                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-r-xs" />
                                 <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-l-xs" />
@@ -1234,17 +1245,17 @@ https://0sqm.fun
                               {/* Dot */}
                               <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#121417] self-end mb-3 sm:mb-4 mx-0.5 shadow-sm" />
 
-                              {/* Tile 2: 0 */}
+                              {/* Tile 2 */}
                               <div className="relative w-12 h-18 sm:w-15 sm:h-22 bg-[#121417] rounded-[8px] sm:rounded-[10px] flex items-center justify-center shadow-lg border border-black/50 overflow-hidden select-none">
-                                <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">0</span>
+                                <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">{decPart[0] || "0"}</span>
                                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
                                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-r-xs" />
                                 <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-l-xs" />
                               </div>
 
-                              {/* Tile 3: 0 */}
+                              {/* Tile 3 */}
                               <div className="relative w-12 h-18 sm:w-15 sm:h-22 bg-[#121417] rounded-[8px] sm:rounded-[10px] flex items-center justify-center shadow-lg border border-black/50 overflow-hidden select-none">
-                                <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">0</span>
+                                <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">{decPart[1] || "0"}</span>
                                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
                                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-r-xs" />
                                 <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-l-xs" />
@@ -1264,10 +1275,10 @@ https://0sqm.fun
 
                             <div className="mt-3">
                               <p className="font-bold text-base sm:text-xl text-white leading-tight">
-                                You own 0 square metres.
+                                {affordableSqm.toFixed(2)} m² in theory. <span className="text-[#F5C842]">0 m² in reality.</span>
                               </p>
                               <p className="text-xs sm:text-sm text-neutral-400 font-medium mt-0.5">
-                                But hey, at least the views are free.
+                                You own 0 square metres. But hey, at least the views are free.
                               </p>
                             </div>
                           </div>
@@ -1355,21 +1366,21 @@ https://0sqm.fun
                                     <FileText className="size-3 text-neutral-600 shrink-0" />
                                     <span>Stamp Duty (on fresh air)</span>
                                   </span>
-                                  <span className="font-semibold">{currentCity.currencySymbol}42,500</span>
+                                  <span className="font-semibold">{currentCity.currencySymbol}{dynamicStampDuty.toLocaleString()}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-neutral-800">
                                   <span className="flex items-center gap-1.5">
                                     <Wrench className="size-3 text-neutral-600 shrink-0" />
                                     <span>Strata Sinking Fund (broken lift)</span>
                                   </span>
-                                  <span className="font-semibold">{currentCity.currencySymbol}3,400</span>
+                                  <span className="font-semibold">{currentCity.currencySymbol}{dynamicStrata.toLocaleString()}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-neutral-800">
                                   <span className="flex items-center gap-1.5">
                                     <User className="size-3 text-neutral-600 shrink-0" />
                                     <span>Agent Cologne Surcharge</span>
                                   </span>
-                                  <span className="font-semibold">{currentCity.currencySymbol}450</span>
+                                  <span className="font-semibold">{currentCity.currencySymbol}{dynamicAgentCologne.toLocaleString()}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-neutral-800">
                                   <span className="flex items-center gap-1.5">
@@ -1407,7 +1418,7 @@ https://0sqm.fun
                               <div>
                                 <span className="font-serif text-3xl leading-none text-neutral-800 select-none block -mb-2">“</span>
                                 <p className="font-marker font-bold text-xs sm:text-[13px] leading-snug tracking-wide text-neutral-900 uppercase">
-                                  {currentCity.satiricalNote.toUpperCase()}
+                                  {dynamicStickyNote.toUpperCase()}
                                 </p>
                               </div>
                               <span className="text-right font-mono text-[10px] font-bold tracking-wider text-neutral-800 uppercase mt-2">
