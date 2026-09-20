@@ -782,17 +782,17 @@ https://0sqm.fun
           $0SQM — The Australian Dream Still Starts at 0m²
         </h1>
 
-        {/* Mobile Hero Content (Just a guy... & Follow on X button) */}
-        <div className="relative mx-auto flex min-h-[380px] max-w-7xl items-start px-5 pt-8 sm:px-8 sm:hidden">
-          <div className="min-w-0 max-w-sm">
-            <p className="max-w-sm text-xs min-[360px]:text-sm font-semibold leading-relaxed text-foreground drop-shadow-xs">
+        {/* Hero Content (Just a guy... & Follow on X button) */}
+        <div className="relative mx-auto flex min-h-[380px] sm:min-h-[550px] lg:min-h-[620px] max-w-7xl items-start px-5 pt-8 sm:px-8 sm:pt-12 lg:pt-16">
+          <div className="min-w-0 max-w-sm sm:max-w-md lg:max-w-lg">
+            <p className="max-w-sm sm:max-w-md lg:max-w-lg text-xs min-[360px]:text-sm sm:text-lg lg:text-xl font-semibold sm:font-bold leading-relaxed text-foreground drop-shadow-xs">
               Just a guy, a dog, and a very expensive housing market. Documenting the journey from 0.00m² to a place we can call home.
             </p>
-            <div className="mt-4">
+            <div className="mt-4 sm:mt-6">
               <Button
                 variant="sunshine"
                 size="default"
-                className="px-5 text-xs min-[360px]:text-sm cursor-pointer shadow-md font-bold"
+                className="px-5 py-2 sm:px-7 sm:py-3.5 text-xs min-[360px]:text-sm sm:text-base cursor-pointer shadow-md font-bold"
                 asChild
               >
                 <a href="https://x.com/Own0SQM" target="_blank" rel="noreferrer">
