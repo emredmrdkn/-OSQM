@@ -468,11 +468,10 @@ export default function V2Page() {
       setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
     }
 
-    // 3. Open Twitter / X intent with website link so Twitter renders the card!
-    const formattedSavings = `${currentCity.currencySymbol}${numericSavings.toLocaleString()}`;
-    const siteUrl = `https://0sqm.com.au`;
-    const tweetText = `I saved ${formattedSavings} and officially own 0 SQM in ${currentCity.name} (${affordableSqm.toFixed(2)}m² theoretically).\n\nSame dream. Different budget.\n\n@Own0SQM #0SQM\n${siteUrl}`;
-    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+    // 3. Open Twitter / X intent with requested text and site URL for card preview
+    const siteUrl = 'https://0sqm.com.au';
+    const tweetText = `My ${currentCity.name} Reality Score: 0 SQM.\nDifferent budget. Same portfolio. 🙂\n#0SQM`;
+    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(siteUrl)}`;
     window.open(tweetUrl, '_blank', 'noopener,noreferrer');
 
     setTimeout(() => setShareToast(null), 7000);

@@ -10,12 +10,11 @@ export function getTwitterShareUrl(result: RealityCheckResult, siteUrl?: string)
   const localItem = result.primaryHyperLocal.item.unitName;
   const localCount = result.primaryHyperLocal.count.toLocaleString();
 
-  const tweetText = `I just ran the @0SQM Reality Check.\n\nMy life savings gets me exactly ${sqm} of ${city} (or ${localCount} ${localItem}).\n\nCheck how much microscopic land you can afford:`;
+  const tweetText = `My ${city} Reality Score: 0 SQM.\nDifferent budget. Same portfolio. 🙂\n#0SQM`;
   
   const shareParams = new URLSearchParams({
     text: tweetText,
-    url: `${url}?city=${result.city.id}&sqm=${result.affordableSqm}&deposit=${result.savingsAmount}`,
-    hashtags: '0SQM,HousingCrisis,TheAustralianDream,RealEstate',
+    url: `${url}`,
   });
 
   return `https://twitter.com/intent/tweet?${shareParams.toString()}`;
