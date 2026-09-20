@@ -470,7 +470,7 @@ export default function V2Page() {
 
     // 3. Open Twitter / X intent with requested text and site URL for card preview
     const siteUrl = 'https://0sqm.com.au';
-    const tweetText = `My ${currentCity.name} Reality Score: 0 SQM.\nDifferent budget. Same portfolio. 🙂\n#0SQM`;
+    const tweetText = `My ${currentCity.name} Reality Score: 0 SQM.\n${affordableSqm.toFixed(2)}m² in theory. 0m² in reality.\nDifferent city. Same portfolio. 🙂\n#0SQM`;
     const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(siteUrl)}`;
     window.open(tweetUrl, '_blank', 'noopener,noreferrer');
 

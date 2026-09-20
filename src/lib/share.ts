@@ -10,7 +10,7 @@ export function getTwitterShareUrl(result: RealityCheckResult, siteUrl?: string)
   const localItem = result.primaryHyperLocal.item.unitName;
   const localCount = result.primaryHyperLocal.count.toLocaleString();
 
-  const tweetText = `My ${city} Reality Score: 0 SQM.\nDifferent budget. Same portfolio. 🙂\n#0SQM`;
+  const tweetText = `My ${city} Reality Score: 0 SQM.\n${sqm} in theory. 0m² in reality.\nDifferent city. Same portfolio. 🙂\n#0SQM`;
   
   const shareParams = new URLSearchParams({
     text: tweetText,
