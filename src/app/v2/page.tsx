@@ -1178,7 +1178,7 @@ https://0sqm.fun
                   {/* THE BILLBOARD CONTAINER */}
                   <div className="relative z-20 mt-4 sm:mt-6">
                     {/* Renty Peeking over Billboard with Sunglasses & "RENTY APPROVES." */}
-                    <div className="absolute -top-[70px] sm:-top-[90px] md:-top-[110px] right-4 sm:right-10 md:right-14 z-30 flex items-end select-none pointer-events-none">
+                    <div className="absolute top-0 -translate-y-[calc(100%-6px)] sm:-translate-y-[calc(100%-8px)] md:-translate-y-[calc(100%-10px)] right-4 sm:right-10 md:right-14 z-30 flex items-end select-none pointer-events-none">
                       <img
                         src="/images/v2/renty-peeking.png"
                         alt="Renty the Corgi Approves"
