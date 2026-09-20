@@ -457,24 +457,25 @@ export default function V2Page() {
           await navigator.clipboard.write([
             new ClipboardItem({ 'image/png': blob })
           ]);
-          setShareToast("Card downloaded & copied to clipboard! Attach or paste it on X.");
+          setShareToast("📸 Kart görseli indirildi ve panoya kopyalandı! X açıldığında görseli yapıştırabilir veya ekleyebilirsiniz.");
         } else {
-          setShareToast("Card image downloaded! Attach it to your post on X.");
+          setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
         }
       } catch {
-        setShareToast("Card image downloaded! Attach it to your post on X.");
+        setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
       }
     } else {
-      setShareToast("Card image downloaded! Attach it to your post on X.");
+      setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
     }
 
-    // 3. Open Twitter / X intent matching reference
+    // 3. Open Twitter / X intent with website link so Twitter renders the card!
     const formattedSavings = `${currentCity.currencySymbol}${numericSavings.toLocaleString()}`;
-    const tweetText = `I saved ${formattedSavings} and officially own 0 SQM in ${currentCity.name} (${affordableSqm.toFixed(2)}m² theoretically).\n\nSame dream. Different budget.\n\n@Own0SQM #0SQM\nhttps://x.com/Own0SQM`;
+    const siteUrl = `https://0sqm.com.au`;
+    const tweetText = `I saved ${formattedSavings} and officially own 0 SQM in ${currentCity.name} (${affordableSqm.toFixed(2)}m² theoretically).\n\nSame dream. Different budget.\n\n@Own0SQM #0SQM\n${siteUrl}`;
     const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(tweetUrl, '_blank', 'noopener,noreferrer');
 
-    setTimeout(() => setShareToast(null), 6000);
+    setTimeout(() => setShareToast(null), 7000);
   };
 
   const handleTryAgain = () => {

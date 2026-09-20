@@ -37,18 +37,30 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: '$0SQM — The Zero Square Metre Generation',
-  description: 'Same dream. Different budget. The viral satirical housing reality calculator and streetwear drop.',
+  metadataBase: new URL('https://0sqm.com.au'),
+  title: '$0SQM — The Australian Dream Still Starts at 0m²',
+  description: 'Real data. Real prices. Same result. The viral Australian housing reality check.',
   openGraph: {
-    title: '$0SQM — The Zero Square Metre Generation',
-    description: 'Calculate how many microscopic square metres your life savings affords in Sydney, London, NYC and more.',
+    title: '$0SQM — The Australian Dream Still Starts at 0m²',
+    description: 'Calculate how many microscopic square metres your life savings affords in Sydney and beyond.',
     siteName: '$0SQM',
     type: 'website',
+    images: [
+      {
+        url: '/api/og',
+        width: 1200,
+        height: 630,
+        alt: '$0SQM Reality Score Card',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: '$0SQM — The Zero Square Metre Generation',
-    description: 'Same dream. Different budget. Calculate your reality.',
+    title: '$0SQM — The Australian Dream Still Starts at 0m²',
+    description: 'I saved $25,000 and officially own 0 SQM in Sydney. Same dream. Different budget.',
+    site: '@Own0SQM',
+    creator: '@Own0SQM',
+    images: ['/api/og'],
   },
 };
 

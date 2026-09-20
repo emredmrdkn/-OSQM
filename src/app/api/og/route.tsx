@@ -8,14 +8,14 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
     const { searchParams } = new URL(request.url);
 
     const city = searchParams.get('city') ?? 'Sydney';
-    const sqm = searchParams.get('sqm') ?? '1.55';
-    const deposit = searchParams.get('deposit') ?? '50,000';
+    const state = searchParams.get('state') ?? 'NSW';
+    const sqm = searchParams.get('sqm') ?? '5.21';
+    const savings = searchParams.get('savings') ?? '25,000';
     const currency = searchParams.get('currency') ?? 'AUD';
-    const punchline =
-      searchParams.get('punchline') ??
-      "Congratulations. That's almost a hallway.";
-    const metaphor = searchParams.get('metaphor') ?? 'A single yoga mat';
-    const toast = searchParams.get('toast') ?? '2,272 toasts';
+    const currencySymbol = searchParams.get('symbol') ?? '$';
+    const note =
+      searchParams.get('note') ??
+      'CONGRATULATIONS. YOU OWN ENOUGH SYDNEY REAL ESTATE TO PARK HALF A CORGI.';
 
     return new ImageResponse(
       (
@@ -26,231 +26,329 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            backgroundColor: '#F8F6F0',
-            padding: '48px',
-            border: '16px solid #141414',
+            backgroundColor: '#FAF9F5',
+            padding: '24px 32px',
             fontFamily: 'sans-serif',
+            color: '#141414',
           }}
         >
-          {/* Header Bar */}
+          {/* Card Wrapper */}
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottom: '4px solid #141414',
-              paddingBottom: '20px',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div
-                style={{
-                  backgroundColor: '#FFE600',
-                  color: '#141414',
-                  fontWeight: 900,
-                  fontSize: '28px',
-                  padding: '8px 16px',
-                  border: '3px solid #141414',
-                  boxShadow: '4px 4px 0px #141414',
-                  letterSpacing: '2px',
-                }}
-              >
-                $0SQM
-              </div>
-              <div
-                style={{
-                  fontSize: '20px',
-                  fontWeight: 800,
-                  color: '#141414',
-                  letterSpacing: '1px',
-                }}
-              >
-                OFFICIAL HOUSING REALITY CHECK™
-              </div>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: '#141414',
-                color: '#FFE600',
-                padding: '6px 14px',
-                fontSize: '16px',
-                fontWeight: 800,
-                letterSpacing: '1px',
-              }}
-            >
-              CERTIFIED RESULT
-            </div>
-          </div>
-
-          {/* Main Calculation Roast Area */}
-          <div
-            style={{
+              height: '100%',
+              width: '100%',
               display: 'flex',
               flexDirection: 'column',
-              gap: '16px',
-              margin: '20px 0',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '24px',
-                fontWeight: 800,
-                color: '#666666',
-                letterSpacing: '2px',
-              }}
-            >
-              WITH A DEPOSIT OF {currency} {deposit}, YOU CAN AFFORD:
-            </div>
-
-            {/* Huge SQM Number Display */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'baseline',
-                gap: '24px',
-              }}
-            >
-              <div
-                style={{
-                  backgroundColor: '#FFE600',
-                  color: '#141414',
-                  fontSize: '96px',
-                  fontWeight: 900,
-                  padding: '0 32px',
-                  border: '6px solid #141414',
-                  boxShadow: '8px 8px 0px #141414',
-                  lineHeight: '1.1',
-                }}
-              >
-                {sqm} m²
-              </div>
-              <div
-                style={{
-                  fontSize: '44px',
-                  fontWeight: 900,
-                  color: '#141414',
-                  textTransform: 'uppercase',
-                }}
-              >
-                OF {city}
-              </div>
-            </div>
-
-            {/* Roast Punchline */}
-            <div
-              style={{
-                backgroundColor: '#FFFFFF',
-                border: '3px solid #141414',
-                padding: '16px 24px',
-                boxShadow: '4px 4px 0px #141414',
-                fontSize: '22px',
-                fontWeight: 700,
-                color: '#141414',
-                fontStyle: 'italic',
-                maxWidth: '900px',
-              }}
-            >
-              &ldquo;{punchline}&rdquo;
-            </div>
-          </div>
-
-          {/* Breakdown / Culture Index Footer */}
-          <div
-            style={{
-              display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              borderTop: '4px solid #141414',
-              paddingTop: '20px',
+              backgroundColor: '#FFFFFF',
+              borderRadius: '20px',
+              border: '2px solid #E6E2D8',
+              padding: '20px 28px',
             }}
           >
-            <div style={{ display: 'flex', gap: '32px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span
-                  style={{
-                    fontSize: '13px',
-                    fontWeight: 800,
-                    color: '#666666',
-                    letterSpacing: '1px',
-                  }}
-                >
-                  SPATIAL REALITY
-                </span>
-                <span
-                  style={{
-                    fontSize: '18px',
-                    fontWeight: 800,
-                    color: '#141414',
-                  }}
-                >
-                  {metaphor}
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span
-                  style={{
-                    fontSize: '13px',
-                    fontWeight: 800,
-                    color: '#666666',
-                    letterSpacing: '1px',
-                  }}
-                >
-                  LOCAL CURRENCY EQUIVALENT
-                </span>
-                <span
-                  style={{
-                    fontSize: '18px',
-                    fontWeight: 800,
-                    color: '#141414',
-                  }}
-                >
-                  {toast}
-                </span>
-              </div>
-            </div>
-
-            {/* Stamp Box */}
+            {/* Top Header */}
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                border: '4px dashed #141414',
-                padding: '8px 20px',
-                transform: 'rotate(-2deg)',
-                backgroundColor: '#FFF176',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                paddingBottom: '12px',
               }}
             >
+              {/* Left Logo */}
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', alignItems: 'center', fontSize: '32px', fontWeight: 900 }}>
+                  <span>$</span>
+                  <span style={{ color: '#F5C842' }}>0</span>
+                  <span>SQM</span>
+                </div>
+                <span style={{ fontSize: '9px', fontWeight: 700, color: '#666', marginTop: '2px' }}>
+                  REAL DATA. REAL PRICES. SAME RESULT.
+                </span>
+              </div>
+
+              {/* Right Slogan */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                <span style={{ fontSize: '11px', fontWeight: 900, color: '#141414' }}>
+                  THE AUSTRALIAN DREAM
+                </span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 900, color: '#141414' }}>
+                    STILL STARTS AT 0M².
+                  </span>
+                  <div style={{ display: 'flex', height: '3px', width: '100%', backgroundColor: '#F5C842', borderRadius: '2px' }} />
+                </div>
+              </div>
+            </div>
+
+            {/* Middle Section: Reality Score & Metadata */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '16px',
+                backgroundColor: '#F7F5EE',
+                borderRadius: '14px',
+                border: '1px solid #E2DED4',
+                padding: '14px 18px',
+              }}
+            >
+              {/* Left: Counter & Roast */}
+              <div style={{ display: 'flex', flexDirection: 'column', flex: 1.4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '10px', fontWeight: 800, color: '#666' }}>
+                    YOUR REALITY SCORE
+                  </span>
+                  <span style={{ fontSize: '10px', fontWeight: 700, color: '#888' }}>
+                    {city.toUpperCase()}, {state}
+                  </span>
+                </div>
+
+                {/* Flip Counter Tiles */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  {/* Tile 1 */}
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '64px',
+                      backgroundColor: '#121417',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '44px',
+                      fontWeight: 900,
+                      color: '#FFFFFF',
+                      position: 'relative',
+                    }}
+                  >
+                    <span>0</span>
+                    <div style={{ display: 'flex', position: 'absolute', left: 0, right: 0, top: '50%', height: '1.5px', backgroundColor: '#0A0C0E' }} />
+                  </div>
+
+                  <div style={{ display: 'flex', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#121417', marginBottom: '10px' }} />
+
+                  {/* Tile 2 */}
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '64px',
+                      backgroundColor: '#121417',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '44px',
+                      fontWeight: 900,
+                      color: '#FFFFFF',
+                      position: 'relative',
+                    }}
+                  >
+                    <span>0</span>
+                    <div style={{ display: 'flex', position: 'absolute', left: 0, right: 0, top: '50%', height: '1.5px', backgroundColor: '#0A0C0E' }} />
+                  </div>
+
+                  {/* Tile 3 */}
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '64px',
+                      backgroundColor: '#121417',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '44px',
+                      fontWeight: 900,
+                      color: '#FFFFFF',
+                      position: 'relative',
+                    }}
+                  >
+                    <span>0</span>
+                    <div style={{ display: 'flex', position: 'absolute', left: 0, right: 0, top: '50%', height: '1.5px', backgroundColor: '#0A0C0E' }} />
+                  </div>
+
+                  {/* Tile 4: m² */}
+                  <div
+                    style={{
+                      width: '68px',
+                      height: '64px',
+                      backgroundColor: '#121417',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '34px',
+                      fontWeight: 900,
+                      color: '#FFFFFF',
+                      position: 'relative',
+                      marginLeft: '4px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <span>m²</span>
+                      <div style={{ display: 'flex', height: '3px', width: '38px', backgroundColor: '#F5C842', borderRadius: '2px' }} />
+                    </div>
+                    <div style={{ display: 'flex', position: 'absolute', left: 0, right: 0, top: '50%', height: '1.5px', backgroundColor: '#0A0C0E' }} />
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', marginTop: '8px' }}>
+                  <div style={{ display: 'flex', fontSize: '15px', fontWeight: 800, color: '#141414' }}>
+                    You own 0 square metres.
+                  </div>
+                  <div style={{ display: 'flex', fontSize: '11px', color: '#666', marginTop: '1px' }}>
+                    But hey, at least the views are free.
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Metadata Box */}
               <div
                 style={{
-                  fontSize: '12px',
-                  fontWeight: 900,
-                  letterSpacing: '1px',
-                  color: '#141414',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flex: 1,
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: '10px',
+                  border: '1px solid #E2DED4',
+                  padding: '10px 14px',
+                  justifyContent: 'space-between',
+                  gap: '6px',
                 }}
               >
-                CFO CORGI APPROVED
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '8px', fontWeight: 800, color: '#888' }}>LOCATION</span>
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#141414' }}>{city}, {state}</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '8px', fontWeight: 800, color: '#888' }}>DATE</span>
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#141414' }}>20 Sep 2026</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '8px', fontWeight: 800, color: '#888' }}>PROPERTY TYPE</span>
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#141414' }}>Theoretical Land</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '8px', fontWeight: 800, color: '#888' }}>YOUR SAVINGS</span>
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#141414' }}>{currencySymbol}{savings}</span>
+                </div>
               </div>
+            </div>
+
+            {/* Lower Section: Cost Breakdown & Sticky Note */}
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'stretch' }}>
+              {/* Left: Cost Breakdown */}
               <div
                 style={{
-                  fontSize: '18px',
-                  fontWeight: 900,
-                  color: '#D32F2F',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flex: 1.4,
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: '12px',
+                  border: '1px solid #E2DED4',
+                  padding: '10px 14px',
+                  justifyContent: 'space-between',
                 }}
               >
-                0% HOPE / 100% STYLE
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontWeight: 800, color: '#666', borderBottom: '1px solid #EAE6DC', paddingBottom: '4px', marginBottom: '6px' }}>
+                  <span>COST BREAKDOWN</span>
+                  <span>{currency} ({currencySymbol})</span>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '10px', color: '#333' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Land Value ({sqm} m²)</span>
+                    <span style={{ fontWeight: 700 }}>{currencySymbol}{savings}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Stamp Duty (on fresh air)</span>
+                    <span style={{ fontWeight: 700 }}>{currencySymbol}42,500</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Strata Sinking Fund (broken lift)</span>
+                    <span style={{ fontWeight: 700 }}>{currencySymbol}3,400</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Agent Cologne Surcharge</span>
+                    <span style={{ fontWeight: 700 }}>{currencySymbol}450</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Landlord Mortgage Gratitude</span>
+                    <span style={{ fontWeight: 700 }}>100%</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Emotional Damage</span>
+                    <span style={{ fontWeight: 800, color: '#16A34A' }}>FREE</span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #EAE6DC', paddingTop: '6px', marginTop: '6px' }}>
+                  <span style={{ fontSize: '10px', fontWeight: 900, color: '#141414' }}>TOTAL EQUITY ACQUIRED</span>
+                  <div style={{ display: 'flex', backgroundColor: '#FFE243', padding: '2px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: 900, color: '#141414' }}>
+                    0 m²
+                  </div>
+                </div>
               </div>
-              <div
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: '#141414',
-                }}
-              >
-                0sqm.club
+
+              {/* Right: Sticky Note & Action Buttons */}
+              <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '8px' }}>
+                {/* Yellow Sticky Note */}
+                <div
+                  style={{
+                    backgroundColor: '#FFDE43',
+                    border: '1px solid #E5C300',
+                    borderRadius: '10px',
+                    padding: '10px 12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    flex: 1,
+                  }}
+                >
+                  <div style={{ display: 'flex', fontSize: '10px', fontWeight: 900, lineHeight: '1.3', color: '#141414' }}>
+                    &ldquo;{note}&rdquo;
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '8px', fontWeight: 800, color: '#333', marginTop: '4px' }}>
+                    — RENTY
+                  </div>
+                </div>
+
+                {/* Share on X Simulated Button */}
+                <div
+                  style={{
+                    backgroundColor: '#0F1419',
+                    borderRadius: '8px',
+                    height: '28px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#FFFFFF',
+                    fontSize: '10px',
+                    fontWeight: 800,
+                    gap: '6px',
+                  }}
+                >
+                  <span>𝕏 Share on X</span>
+                </div>
               </div>
+            </div>
+
+            {/* Bottom Footer */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderTop: '1px solid #EAE6DC',
+                paddingTop: '8px',
+                fontSize: '9px',
+                fontWeight: 800,
+                color: '#888',
+              }}
+            >
+              <span>0SQM.COM.AU</span>
+              <span>DIFFERENT CITIES. SAME PORTFOLIO. ☺</span>
             </div>
           </div>
         </div>
