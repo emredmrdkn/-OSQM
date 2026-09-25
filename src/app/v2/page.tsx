@@ -1,13 +1,241 @@
 'use client';
 
-import { ArrowRight, Calendar, Check, ChevronLeft, ChevronRight, Copy, Download, FileText, Heart, Home, MapPin, Menu, Percent, RotateCcw, Share2, Sparkles, Tag, User, Wallet, Wrench, X } from "lucide-react";
-import { useState, useRef } from "react";
+import { ArrowRight, Calendar, Check, ChevronLeft, ChevronRight, Copy, Download, Eye, FileText, Filter, Heart, Home, Layers, MapPin, Menu, Percent, RotateCcw, Share2, ShoppingBag, Sparkles, Tag, User, Wallet, Wrench, X, ZoomIn } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { Button } from "@/components/v2/ui/button";
 
 const heroImage = "/images/v2/sydney-hero.jpg";
 const justinImage = "/images/v2/justin-dog.jpg";
 const merchImage = "/images/v2/merch-lineup.jpg";
+const merchCollectionPoster = "/images/v2/collection-poster.jpg";
+const merchLookbook = "/images/v2/lookbook-editorial.jpg";
+const merchTee = "/images/v2/tee-presentation.jpg";
+
+const merchShowcaseTabs = [
+  {
+    id: "collection",
+    title: "Collection Poster",
+    label: "Full Lineup",
+    subtitle: "10 Pieces + Fabric & Macro Details",
+    image: merchCollectionPoster,
+    alt: "0SQM Full Streetwear Collection Poster — 10 pieces and macro details",
+    badge: "Official Lineup",
+    headline: "0SQM™ WEAR THE REALITY",
+    tagline: "Same people. Smaller spaces. Bigger dreams.",
+    quote: "Less square metres. More meaning. Good people. Small spaces. Brighter tomorrows.",
+    specs: [
+      "10 Signature Silhouettes & Everyday Essentials",
+      "280 GSM Heavyweight Combed Cotton Tees",
+      "420 GSM Brushed Fleece Oversized Hoodies",
+      "Custom Woven Labels & 3D Embroidery",
+    ],
+  },
+  {
+    id: "lookbook",
+    title: "Editorial Lookbook",
+    label: "Street & Studio",
+    subtitle: "Sydney Streetwear Editorial Shoot",
+    image: merchLookbook,
+    alt: "0SQM Editorial Lookbook featuring models in washed charcoal hoodies and tees",
+    badge: "Lookbook Shoot",
+    headline: "SAME CITY. DIFFERENT PERSPECTIVE.",
+    tagline: "Real People. Real Progress. 0 Square Meters. Still Here.",
+    quote: "A streetwear brand for a generation that's building more than just a wardrobe.",
+    specs: [
+      "Boxy drop-shoulder cut with sleeve detail: 'Portfolio: 0m²'",
+      "Vintage washed charcoal & distressed black tones",
+      "Breathable high-density water-based screenprint",
+      "Unisex fit engineered for everyday street wear",
+    ],
+  },
+  {
+    id: "tee",
+    title: "Signature 'Same Dream' Tee",
+    label: "Hero Deep-Dive",
+    subtitle: "Justin & Koogee Signature Presentation",
+    image: merchTee,
+    alt: "0SQM Signature Same Dream Different Budget T-shirt presentation",
+    badge: "Hero Piece",
+    headline: "SAME DREAM. DIFFERENT BUDGET.",
+    tagline: "Justin & Koogee overlooking Sydney Harbour.",
+    quote: "Streetwear for real plans. Less square metres. More life.",
+    specs: [
+      "280 GSM premium heavyweight combed cotton",
+      "Hand-drawn illustrative back print built to last",
+      "Reinforced ribbed collar that never sags",
+      "Custom woven interior collar label",
+    ],
+  },
+];
+
+const merchProducts = [
+  {
+    id: "same-dream-tee",
+    number: "01",
+    name: '"Same Dream. Different Budget." Tee',
+    price: "AUD $65.00",
+    category: "tees",
+    badge: "Signature Hero",
+    gsm: "280 GSM Cotton",
+    color: "Natural Cream",
+    colorHex: "#F2EFE9",
+    fit: "Boxy Streetwear Fit",
+    image: "/images/v2/products/clean/hero_tee_clean.jpg",
+    angles: [
+      { id: "back", label: "Back Artwork", image: "/images/v2/products/clean/hero_tee_clean.jpg", caption: "Justin & Koogee Signature Back Artwork (280 GSM)" },
+      { id: "front", label: "Front Chest", image: "/images/v2/products/clean/tee_same_dream_front.jpg", caption: "Minimalist Left-Chest 0SQM Branding" },
+      { id: "collar", label: "Woven Tag", image: "/images/v2/products/macro_label.jpg", caption: "Custom Woven Neck Label & Ribbed Collar" },
+    ],
+    description: "Justin & Koogee illustrative back graphic with clean left-chest 0SQM branding. Combed heavy cotton with custom woven neck tag and reinforced collar.",
+    tagline: "Streetwear for real plans",
+  },
+  {
+    id: "still-0sqm-hoodie",
+    number: "02",
+    name: '"Still 0 SQM." Vintage Wash Hoodie',
+    price: "AUD $120.00",
+    category: "hoodies",
+    badge: "Heavyweight 420 GSM",
+    gsm: "420 GSM Fleece",
+    color: "Washed Charcoal",
+    colorHex: "#353434",
+    fit: "Oversized Streetwear Silhouette",
+    image: "/images/v2/products/clean/hero_hoodie_clean.jpg",
+    angles: [
+      { id: "studio", label: "Studio Cut", image: "/images/v2/products/clean/hero_hoodie_clean.jpg", caption: "Washed Charcoal 420 GSM Brushed Fleece" },
+      { id: "editorial", label: "Street Lookbook", image: "/images/v2/products/editorial-male-hoodie.jpg", caption: "On-Street Styling — Boxy Drop Shoulder Cut" },
+    ],
+    description: "Ultra-heavy brushed fleece with front kangaroo pocket, tonal chest logo, and sleeve detail: 'Portfolio: 0m²'. Garment washed for vintage texture.",
+    tagline: "Same city. Different perspective.",
+  },
+  {
+    id: "wen-1sqm-tee",
+    number: "03",
+    name: '"Wen 1m²?" Skyline Graphic Tee',
+    price: "AUD $65.00",
+    category: "tees",
+    badge: "Back Print Graphic",
+    gsm: "280 GSM Cotton",
+    color: "Jet Black",
+    colorHex: "#181818",
+    fit: "Heavyweight Boxy Fit",
+    image: "/images/v2/products/clean/hero_wen_1m2_clean.jpg",
+    angles: [
+      { id: "back", label: "Skyline Graphic", image: "/images/v2/products/clean/hero_wen_1m2_clean.jpg", caption: "Sydney Skyline Back Print — 'Same People Bigger Horizons'" },
+    ],
+    description: "Back print with city skyline silhouette and '0SQM SAME PEOPLE BIGGER HORIZONS'. Minimal front logo on vintage black cotton.",
+    tagline: "Same people. Bigger horizons.",
+  },
+  {
+    id: "i-own-0sqm-tee",
+    number: "04",
+    name: '"I Own 0 SQM." Vintage Black Tee',
+    price: "AUD $65.00",
+    category: "tees",
+    badge: "Essential Statement",
+    gsm: "280 GSM Cotton",
+    color: "Vintage Black",
+    colorHex: "#222222",
+    fit: "Relaxed Drop-Shoulder",
+    image: "/images/v2/products/clean/hero_i_own_0sqm_clean.jpg",
+    angles: [
+      { id: "front", label: "Studio Front", image: "/images/v2/products/clean/hero_i_own_0sqm_clean.jpg", caption: "I Own 0 SQM Bold Statement Tee (280 GSM)" },
+    ],
+    description: "Minimalist bold front statement tee with distressed typography. Thick ribbed collar that won't lose shape wash after wash.",
+    tagline: "Wear the reality",
+  },
+  {
+    id: "wen-house-tee",
+    number: "05",
+    name: '"Wen House?" Washed Olive Tee',
+    price: "AUD $65.00",
+    category: "tees",
+    badge: "Signature Color",
+    gsm: "280 GSM Cotton",
+    color: "Washed Olive",
+    colorHex: "#4E5343",
+    fit: "Relaxed Drop-Shoulder",
+    image: "/images/v2/products/clean/hero_wen_house_clean.jpg",
+    angles: [
+      { id: "front", label: "Studio Front", image: "/images/v2/products/clean/hero_wen_house_clean.jpg", caption: "Handwritten Script on Vintage Washed Olive" },
+    ],
+    description: "Handwritten script front graphic printed on premium washed olive cotton. The million dollar question on every renter's mind.",
+    tagline: "The million dollar question",
+  },
+  {
+    id: "0-today-tee",
+    number: "06",
+    name: '"0 Today. 1m² Someday." Tee',
+    price: "AUD $65.00",
+    category: "tees",
+    badge: "Manifesting",
+    gsm: "280 GSM Cotton",
+    color: "Off-White Cream",
+    colorHex: "#EFECE4",
+    fit: "Classic Streetwear Fit",
+    image: "/images/v2/products/clean/hero_0_today_clean.jpg",
+    angles: [
+      { id: "front", label: "Studio Front", image: "/images/v2/products/clean/hero_0_today_clean.jpg", caption: "0 Today. 1m² Someday. Typographic Front Print" },
+    ],
+    description: "Typographic front print celebrating the daily grind. Combed heavyweight cotton built to endure daily wear.",
+    tagline: "Progress over perfection",
+  },
+  {
+    id: "wear-reality-cap",
+    number: "07",
+    name: '"0SQM" Washed Cotton Dad Cap',
+    price: "AUD $45.00",
+    category: "accessories",
+    badge: "3D Embroidery",
+    gsm: "Washed Cotton Twill",
+    color: "Washed Charcoal",
+    colorHex: "#2E2D2B",
+    fit: "Adjustable Brass Clasp",
+    image: "/images/v2/products/clean/cap_ultra_hd.png",
+    angles: [
+      { id: "cap", label: "Studio Cap", image: "/images/v2/products/clean/cap_ultra_hd.png", caption: "6-Panel Low Profile Washed Cotton Twill with 3D Embroidery" },
+    ],
+    description: "Low-profile 6-panel cap with high-density tonal 3D embroidery. Vintage washed finish with custom antiqued brass buckle.",
+    tagline: "Quiet statement",
+  },
+  {
+    id: "wear-reality-tote",
+    number: "08",
+    name: '"Wear The Reality." Canvas Tote',
+    price: "AUD $40.00",
+    category: "accessories",
+    badge: "Heavy Canvas",
+    gsm: "380 GSM Heavy Canvas",
+    color: "Natural Ecru",
+    colorHex: "#ECE7DA",
+    fit: "Reinforced Handles",
+    image: "/images/v2/products/clean/hero_tote_clean.jpg",
+    angles: [
+      { id: "tote", label: "Studio Tote", image: "/images/v2/products/clean/hero_tote_clean.jpg", caption: "380 GSM Heavyweight Natural Canvas with Cross-Stitch Handles" },
+    ],
+    description: "Heavy-duty 100% natural cotton canvas with bold typography. Big enough for groceries, laptops, and broken housing dreams.",
+    tagline: "Everyday essentials",
+  },
+  {
+    id: "mugs-set",
+    number: "09",
+    name: '"Still 0 SQM" Ceramic Mug Duo',
+    price: "AUD $35.00",
+    category: "accessories",
+    badge: "Ceramic Duo",
+    gsm: "350ml Ceramic",
+    color: "Off-White / Matte Black",
+    colorHex: "#1C1C1C",
+    fit: "Microwave & Dishwasher Safe",
+    image: "/images/v2/products/clean/hero_mugs_clean.jpg",
+    angles: [
+      { id: "mugs", label: "Studio Duo", image: "/images/v2/products/clean/hero_mugs_clean.jpg", caption: "Off-White & Matte Black 350ml Ceramic Duo" },
+    ],
+    description: "Available in Off-White ('STILL 0 SQM.') and Matte Black ('Good Coffee. Bigger Dreams.'). Fuel for the morning reality check.",
+    tagline: "Good coffee, bigger dreams",
+  },
+];
 
 const australianCapitals = [
   {
@@ -420,11 +648,42 @@ export default function V2Page() {
   const [hasAudited, setHasAudited] = useState(false);
   const [auditShake, setAuditShake] = useState(false);
 
-  // Reality Score Card Ref and Download / Share states
+  // Reality Score Card Ref, Pre-rendered Blob Ref and Download / Share states
   const cardRef = useRef<HTMLDivElement>(null);
   const savingsInputRef = useRef<HTMLInputElement>(null);
+  const preRenderedBlobRef = useRef<Blob | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [shareToast, setShareToast] = useState<string | null>(null);
+
+  // Pre-render the card to a PNG Blob as soon as result is calculated so click handler runs synchronously
+  useEffect(() => {
+    if (!cardRef.current || !hasAudited) return;
+    let isCancelled = false;
+
+    const timer = setTimeout(() => {
+      if (!cardRef.current || isCancelled) return;
+      toPng(cardRef.current, {
+        quality: 0.98,
+        pixelRatio: 2,
+        backgroundColor: '#FAF9F5',
+      })
+        .then((url) => fetch(url))
+        .then((res) => res.blob())
+        .then((blob) => {
+          if (!isCancelled) {
+            preRenderedBlobRef.current = blob;
+          }
+        })
+        .catch((err) => {
+          console.warn('Pre-render blob error:', err);
+        });
+    }, 200);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+    };
+  }, [hasAudited, affordableSqm, currentCity.id, numericSavings]);
 
   const handleDownloadCard = async () => {
     if (!cardRef.current) return;
@@ -448,50 +707,67 @@ export default function V2Page() {
   };
 
   const handleShareOnX = () => {
-    // 1. Determine site URL (use live deployed origin so Twitter can crawl card, fallback to production domain)
-    let origin = 'https://0sqm.com.au';
-    if (typeof window !== 'undefined' && window.location.origin) {
+    // 1. Determine site URL from env or window
+    let origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://0sqm.com.au';
+    if (!process.env.NEXT_PUBLIC_SITE_URL && typeof window !== 'undefined' && window.location.origin) {
       if (!window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1')) {
         origin = window.location.origin;
       }
     }
 
-    const shareUrl = `${origin}/share?city=${encodeURIComponent(currentCity.name)}&state=${encodeURIComponent(currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : 'NSW')}&sqm=${encodeURIComponent(affordableSqm.toFixed(2))}&savings=${encodeURIComponent(numericSavings.toLocaleString())}&currency=${encodeURIComponent(currentCity.currency)}&symbol=${encodeURIComponent(currentCity.currencySymbol)}&note=${encodeURIComponent(dynamicStickyNote)}`;
+    const cleanCity = currentCity.name;
+    const cleanState = currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : 'NSW';
+    const cleanSqm = affordableSqm.toFixed(2);
+    const cleanSavings = numericSavings.toString();
+    const cleanCurrency = currentCity.currency;
+    const cleanSymbol = currentCity.currencySymbol;
 
-    // 2. Open Twitter / X intent IMMEDIATELY in user gesture so browser popup blocker does NOT block it!
-    const tweetText = `My ${currentCity.name} Reality Score: 0 SQM.\n${affordableSqm.toFixed(2)}m² in theory. 0m² in reality.\nDifferent city. Same portfolio. 🙂\n#0SQM`;
-    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
-    const win = window.open(tweetUrl, '_blank', 'noopener,noreferrer');
-    if (!win) {
-      window.location.href = tweetUrl;
+    const query = new URLSearchParams({
+      city: cleanCity,
+      state: cleanState,
+      sqm: cleanSqm,
+      savings: cleanSavings,
+      currency: cleanCurrency,
+      symbol: cleanSymbol,
+    }).toString();
+
+    const shareUrl = `${origin}/share?${query}`;
+    const tweetText = `My ${cleanCity} Reality Score: 0 SQM.\n${cleanSqm}m² in theory. 0m² in reality.\nDifferent city. Same portfolio. 🙂\n#0SQM`;
+
+    const pngBlob = preRenderedBlobRef.current;
+    const imageFile = pngBlob ? new File([pngBlob], `0sqm-reality-score-${currentCity.id || 'sydney'}.png`, { type: 'image/png' }) : null;
+
+    // a) Mobile: If on mobile and navigator.canShare({files:[file]}) is true
+    if (imageFile && typeof navigator !== 'undefined' && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
+      navigator.share({
+        files: [imageFile],
+        text: `${tweetText}\n${shareUrl}`,
+      }).catch((err) => {
+        if (err.name !== 'AbortError') console.error('Mobile share failed', err);
+      });
+      return;
     }
 
-    // 3. Download card PNG in background for user
-    handleDownloadCard().catch(console.error);
+    // b) Otherwise (desktop):
+    // In the SAME TICK (synchronously inside user gesture): call window.open in new tab
+    const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(tweetUrl, '_blank', 'noopener,noreferrer');
 
-    // 4. Try copying image to clipboard if supported
-    if (cardRef.current && navigator.clipboard && typeof ClipboardItem !== 'undefined') {
-      toPng(cardRef.current, { pixelRatio: 2, backgroundColor: '#FAF9F5' })
-        .then((url) => fetch(url))
-        .then((r) => r.blob())
-        .then(async (blob) => {
-          if (blob) {
-            await navigator.clipboard.write([
-              new ClipboardItem({ 'image/png': blob })
-            ]);
-            setShareToast("📸 Kart görseli indirildi ve panoya kopyalandı! X açıldığında görseli yapıştırabilir veya önizleme kartı olarak paylaşabilirsiniz.");
-          } else {
-            setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
-          }
-        })
-        .catch(() => {
-          setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
-        });
+    // Start clipboard write and show toast
+    if (pngBlob && typeof navigator !== 'undefined' && navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+      navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': pngBlob })
+      ]).then(() => {
+        setShareToast("📸 Image copied — press Ctrl+V (Cmd+V on Mac) in the post to attach it.");
+      }).catch((err) => {
+        console.warn('Clipboard write failed, link card will provide the image preview', err);
+        setShareToast("Opening X in a new tab...");
+      });
     } else {
-      setShareToast("📸 Kart görseli indirildi! X gönderinize ekleyebilirsiniz.");
+      setShareToast("Opening X in a new tab...");
     }
 
-    setTimeout(() => setShareToast(null), 7000);
+    setTimeout(() => setShareToast(null), 6000);
   };
 
   const handleTryAgain = () => {
@@ -675,12 +951,18 @@ https://0sqm.fun
     alt: string;
   } | null>(null);
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
+  const [merchTab, setMerchTab] = useState<string>("collection");
+  const [merchCategory, setMerchCategory] = useState<string>("all");
+  const [waitlistProduct, setWaitlistProduct] = useState<(typeof merchProducts)[0] | null>(null);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistSize, setWaitlistSize] = useState("L");
+  const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
 
   const justinPolaroids = [
     {
       id: "same-dream",
       image: "/images/v2/justin-laptop-harbour.jpg",
-      alt: "Justin and Renty checking the $0SQM Reality Check on their laptop at Sydney Harbour",
+      alt: "Justin and Koogee checking the $0SQM Reality Check on their laptop at Sydney Harbour",
       caption: "Same dream. Different budget.",
       rotation: "-rotate-2",
       tapeRotation: "rotate-2",
@@ -698,7 +980,7 @@ https://0sqm.fun
     {
       id: "open-home",
       image: "/images/v2/justin-open-home.jpg",
-      alt: "Justin and Renty queuing outside an open home",
+      alt: "Justin and Koogee queuing outside an open home",
       caption: "First open home. How bad could it be?",
       rotation: "-rotate-1",
       tapeRotation: "rotate-3",
@@ -707,7 +989,7 @@ https://0sqm.fun
     {
       id: "brochure",
       image: "/images/v2/justin-brochure.jpg",
-      alt: "Justin and Renty looking at a $1,850,000 property brochure",
+      alt: "Justin and Koogee looking at a $1,850,000 property brochure",
       caption: "$1.85M for 607m². Endless potential.",
       rotation: "rotate-2",
       tapeRotation: "-rotate-2",
@@ -728,12 +1010,13 @@ https://0sqm.fun
               ["The Dream", "#dream"],
               ["Reality Check", "#reality"],
               ["The Journey", "#journey"],
-              ["Community", "#cities"],
+              ["Community", "/community"],
               ["Merch", "#merch"],
             ].map(([label, href]) => (
               <a
                 key={label}
                 href={href}
+                {...(href.startsWith("/") ? { target: "_blank", rel: "noreferrer" } : {})}
                 className="hover:underline decoration-primary decoration-4 underline-offset-8"
               >
                 {label}
@@ -761,6 +1044,7 @@ https://0sqm.fun
               ["The Dream", "#dream"],
               ["Reality Check", "#reality"],
               ["The Journey", "#journey"],
+              ["Community", "/community"],
               ["Merch", "#merch"],
             ].map(([label, href]) => (
               <a
@@ -784,32 +1068,31 @@ https://0sqm.fun
       {/* Hero Section */}
       <section
         id="home"
-        className="relative min-h-[450px] sm:min-h-[650px] lg:min-h-[720px] scroll-mt-16 overflow-hidden pt-16"
+        className="relative min-h-[480px] sm:min-h-[620px] lg:min-h-[720px] scroll-mt-16 overflow-hidden pt-16"
       >
         <img
           src={heroImage}
-          alt="A man and his dog looking across Sydney Harbour"
-          width={1920}
-          height={1088}
-          className="absolute inset-0 h-full w-full object-cover object-[27%_bottom] sm:object-[58%_center]"
+          alt="Justin and Koogee looking across Sydney Harbour towards the Opera House and Harbour Bridge"
+          width={1672}
+          height={941}
+          loading="eager"
+          className="absolute inset-0 h-full w-full object-cover object-[35%_bottom] sm:object-[center_bottom]"
         />
-        {/* Subtle vignette so the image looks natural and not washed out */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/20 pointer-events-none" />
         <h1 className="sr-only">
           $0SQM — The Australian Dream Still Starts at 0m²
         </h1>
 
         {/* Hero Content (Just a guy... & Follow on X button) */}
-        <div className="relative mx-auto flex min-h-[380px] sm:min-h-[550px] lg:min-h-[620px] max-w-7xl items-start px-5 pt-8 sm:px-8 sm:pt-12 lg:pt-16">
-          <div className="min-w-0 max-w-sm sm:max-w-md lg:max-w-lg">
-            <p className="max-w-sm sm:max-w-md lg:max-w-lg text-xs min-[360px]:text-sm sm:text-lg lg:text-xl font-semibold sm:font-bold leading-relaxed text-foreground drop-shadow-xs">
+        <div className="relative mx-auto flex min-h-[400px] sm:min-h-[540px] lg:min-h-[620px] max-w-7xl items-start px-5 pt-8 sm:px-8 sm:pt-12 lg:pt-16">
+          <div className="min-w-0 max-w-sm sm:max-w-md lg:max-w-lg bg-background/85 backdrop-blur-xs p-4 sm:p-5 rounded-xl border border-foreground/10 shadow-lg">
+            <p className="text-xs min-[360px]:text-sm sm:text-base lg:text-lg font-bold leading-relaxed text-foreground">
               Just a guy, a dog, and a very expensive housing market. Documenting the journey from 0.00m² to a place we can call home.
             </p>
-            <div className="mt-4 sm:mt-6">
+            <div className="mt-3.5 sm:mt-4">
               <Button
                 variant="sunshine"
                 size="default"
-                className="px-5 py-2 sm:px-7 sm:py-3.5 text-xs min-[360px]:text-sm sm:text-base cursor-pointer shadow-md font-bold"
+                className="px-5 py-2 sm:px-7 sm:py-3 text-xs min-[360px]:text-sm sm:text-base cursor-pointer shadow-md font-bold"
                 asChild
               >
                 <a href="https://x.com/Own0SQM" target="_blank" rel="noreferrer">
@@ -832,18 +1115,18 @@ https://0sqm.fun
                   setActivePhoto({
                     image: "/images/v2/justin-laptop-harbour.jpg",
                     caption: "Better views. Smaller budgets. — Sydney Harbour, 2026",
-                    alt: "Justin and Renty checking the $0SQM Reality Check at Sydney Harbour",
+                    alt: "Justin and Koogee checking the $0SQM Reality Check at Sydney Harbour",
                   })
                 }
                 className="group relative bg-paper p-3 pb-4 shadow-2xl border border-border rounded-xs sm:-rotate-1 hover:rotate-0 hover:scale-[1.01] transition-all duration-300 cursor-pointer"
               >
                 {/* Masking tape top-center */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-6 masking-tape -rotate-2 z-20 pointer-events-none rounded-xs" />
-                
+
                 <div className="relative aspect-[1024/839] w-full overflow-hidden rounded-xs bg-neutral-100">
                   <img
                     src="/images/v2/justin-laptop-harbour.jpg"
-                    alt="Justin and Renty checking $0SQM on their laptop overlooking Sydney Harbour"
+                    alt="Justin and Koogee checking $0SQM on their laptop overlooking Sydney Harbour"
                     className="h-full w-full object-cover group-hover:scale-102 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
@@ -875,7 +1158,7 @@ https://0sqm.fun
                 </h2>
                 <p className="mt-3 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
                   You don&apos;t need a $6,350,000 mortgage to sit on a park bench and watch the sunset over the Opera House.
-                  Justin and Renty are proving that owning <strong>0 SQM</strong> doesn&apos;t mean having 0 ambition.
+                  Justin and Koogee are proving that owning <strong>0 SQM</strong> doesn&apos;t mean having 0 ambition.
                 </p>
               </div>
 
@@ -893,7 +1176,7 @@ https://0sqm.fun
                     ["☑", "Find cheaper suburb (now 4 hours away)"],
                     ["☑", "Go to more open homes (for the free pens)"],
                     ["☑", "Get 1 m² of land (the dream)"],
-                    ["☑", "More walks with Renty"],
+                    ["☑", "More walks with Koogee"],
                     ["☐", "Don't give up ☺"],
                   ].map(([check, item]) => (
                     <li key={item} className="flex items-center gap-2">
@@ -924,7 +1207,7 @@ https://0sqm.fun
       </section>
 
       {/* Reality Check Section */}
-      <section id="reality" className="paper-grid relative scroll-mt-16 bg-paper px-4 py-12 sm:px-6 lg:px-8">
+      <section id="reality" className="relative scroll-mt-16 bg-background px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-7 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
             <div className="min-w-0">
@@ -951,11 +1234,10 @@ https://0sqm.fun
                     setCalculatorTab("australia");
                     setSelectedCityIndex(0);
                   }}
-                  className={`rounded-xs py-1.5 px-2 text-center text-xs font-bold transition-all cursor-pointer ${
-                    calculatorTab === "australia"
+                  className={`rounded-xs py-1.5 px-2 text-center text-xs font-bold transition-all cursor-pointer ${calculatorTab === "australia"
                       ? "bg-primary text-foreground shadow-xs font-black"
                       : "text-muted-foreground hover:text-foreground"
-                  }`}
+                    }`}
                 >
                   🇦🇺 Australia
                 </button>
@@ -965,11 +1247,10 @@ https://0sqm.fun
                     setCalculatorTab("global");
                     setSelectedCityIndex(0);
                   }}
-                  className={`rounded-xs py-1.5 px-2 text-center text-xs font-bold transition-all cursor-pointer ${
-                    calculatorTab === "global"
+                  className={`rounded-xs py-1.5 px-2 text-center text-xs font-bold transition-all cursor-pointer ${calculatorTab === "global"
                       ? "bg-primary text-foreground shadow-xs font-black"
                       : "text-muted-foreground hover:text-foreground"
-                  }`}
+                    }`}
                 >
                   🌍 Global
                 </button>
@@ -982,11 +1263,10 @@ https://0sqm.fun
                     variant={index === selectedCityIndex ? "sunshine" : "ghost"}
                     key={city.name}
                     onClick={() => setSelectedCityIndex(index)}
-                    className={`h-auto min-w-0 justify-start px-3 py-3 text-left text-xs min-[360px]:text-sm cursor-pointer transition-all duration-150 ${
-                      index === selectedCityIndex
+                    className={`h-auto min-w-0 justify-start px-3 py-3 text-left text-xs min-[360px]:text-sm cursor-pointer transition-all duration-150 ${index === selectedCityIndex
                         ? "font-bold shadow-xs scale-[1.02] border border-foreground/30"
                         : "hover:bg-muted/80 text-foreground"
-                    } ${index === activeCities.length - 1 ? "col-span-2 sm:col-span-1" : ""}`}
+                      } ${index === activeCities.length - 1 ? "col-span-2 sm:col-span-1" : ""}`}
                   >
                     <span className="grid size-7 shrink-0 place-items-center rounded-sm border border-foreground/20 bg-background text-[10px] font-black">
                       {city.flag}
@@ -1128,11 +1408,10 @@ https://0sqm.fun
                           key={preset}
                           type="button"
                           onClick={() => handlePreset(preset)}
-                          className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold transition-colors cursor-pointer ${
-                            numericSavings === Number(preset)
+                          className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold transition-colors cursor-pointer ${numericSavings === Number(preset)
                               ? "bg-primary text-foreground border-foreground/30 font-bold"
                               : "bg-paper hover:bg-muted text-muted-foreground border-border"
-                          }`}
+                            }`}
                         >
                           {currentCity.currencySymbol}{Number(preset).toLocaleString()}
                         </button>
@@ -1149,9 +1428,8 @@ https://0sqm.fun
                 <div
                   ref={cardRef}
                   id="reality-score-card"
-                  className={`w-full max-w-3xl rounded-[32px] sm:rounded-[40px] border border-neutral-300 shadow-2xl p-4 sm:p-6 md:p-8 relative overflow-hidden transition-all duration-300 ${
-                    auditShake ? "scale-[1.02] ring-4 ring-amber-400/40" : ""
-                  }`}
+                  className={`w-full max-w-3xl rounded-[32px] sm:rounded-[40px] border border-neutral-300 shadow-2xl p-4 sm:p-6 md:p-8 relative overflow-hidden transition-all duration-300 ${auditShake ? "scale-[1.02] ring-4 ring-amber-400/40" : ""
+                    }`}
                   style={{
                     backgroundImage: "url('/images/v2/cities/sydney.jpg')",
                     backgroundSize: "cover",
@@ -1194,16 +1472,16 @@ https://0sqm.fun
 
                   {/* THE BILLBOARD CONTAINER */}
                   <div className="relative z-20 mt-4 sm:mt-6">
-                    {/* Renty Peeking over Billboard with Sunglasses & "RENTY APPROVES." */}
+                    {/* Koogee Peeking over Billboard with Sunglasses & "KOOGEE APPROVES." */}
                     <div className="absolute top-0 -translate-y-[calc(100%-6px)] sm:-translate-y-[calc(100%-8px)] md:-translate-y-[calc(100%-10px)] right-4 sm:right-10 md:right-14 z-30 flex items-end select-none pointer-events-none">
                       <img
                         src="/images/v2/renty-peeking.png"
-                        alt="Renty the Corgi Approves"
+                        alt="Koogee the Corgi Approves"
                         className="w-28 sm:w-36 md:w-44 object-contain drop-shadow-2xl"
                       />
                       <div className="flex flex-col items-start -ml-1 sm:-ml-2 mb-6 sm:mb-10 select-none">
                         <span className="font-marker text-[10px] sm:text-xs md:text-sm font-bold text-neutral-900 -rotate-6 leading-tight whitespace-nowrap drop-shadow-xs">
-                          RENTY
+                          KOOGEE
                           <br />
                           APPROVES.
                         </span>
@@ -1422,7 +1700,7 @@ https://0sqm.fun
                                 </p>
                               </div>
                               <span className="text-right font-mono text-[10px] font-bold tracking-wider text-neutral-800 uppercase mt-2">
-                                — RENTY
+                                — KOOGEE
                               </span>
                             </div>
 
@@ -1509,12 +1787,12 @@ https://0sqm.fun
                     {depositPercent < 10
                       ? "Living rent-free in the comments 🛋️"
                       : depositPercent < 30
-                      ? "One foot in the foyer (barefoot) 🦶"
-                      : depositPercent < 60
-                      ? "Halfway to an inspection brochure 📄"
-                      : depositPercent < 100
-                      ? "Your landlord is sweating 😰"
-                      : "Wait, you actually made it?! 🤯"}
+                        ? "One foot in the foyer (barefoot) 🦶"
+                        : depositPercent < 60
+                          ? "Halfway to an inspection brochure 📄"
+                          : depositPercent < 100
+                            ? "Your landlord is sweating 😰"
+                            : "Wait, you actually made it?! 🤯"}
                   </span>
                   <span className="font-semibold text-foreground">
                     {numericSavings >= currentCity.rawDeposit
@@ -1588,22 +1866,20 @@ https://0sqm.fun
                   <button
                     type="button"
                     onClick={() => setActiveCalcTab("boomer")}
-                    className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                      activeCalcTab === "boomer"
+                    className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${activeCalcTab === "boomer"
                         ? "bg-foreground text-background shadow-xs"
                         : "bg-muted hover:bg-neutral-200 text-muted-foreground"
-                    }`}
+                      }`}
                   >
                     <span>🥑</span> Boomer Advice Simulator
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveCalcTab("auction")}
-                    className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                      activeCalcTab === "auction"
+                    className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${activeCalcTab === "auction"
                         ? "bg-foreground text-background shadow-xs"
                         : "bg-muted hover:bg-neutral-200 text-muted-foreground"
-                    }`}
+                      }`}
                   >
                     <span>🔨</span> Sydney Auction Simulator
                   </button>
@@ -1627,11 +1903,10 @@ https://0sqm.fun
                         return (
                           <label
                             key={item.key}
-                            className={`flex items-start gap-2.5 p-2.5 rounded-sm border cursor-pointer transition-all ${
-                              isChecked
+                            className={`flex items-start gap-2.5 p-2.5 rounded-sm border cursor-pointer transition-all ${isChecked
                                 ? "bg-amber-500/10 border-amber-500/40 text-foreground"
                                 : "bg-paper/80 border-border text-muted-foreground hover:bg-muted/50"
-                            }`}
+                              }`}
                           >
                             <input
                               type="checkbox"
@@ -1679,8 +1954,8 @@ https://0sqm.fun
                             {boomerApprovalScore < 30
                               ? "Unforgivable Avocado Addict 🥑"
                               : boomerApprovalScore < 70
-                              ? "Acceptable, but cut the sourdough 🍞"
-                              : "Certified 1982 Hard Worker 👴"}
+                                ? "Acceptable, but cut the sourdough 🍞"
+                                : "Certified 1982 Hard Worker 👴"}
                           </span>
                         </div>
                         <div className="w-full bg-neutral-200 h-2 rounded-full overflow-hidden">
@@ -1723,13 +1998,12 @@ https://0sqm.fun
                         auctionLog.map((line, idx) => (
                           <div
                             key={idx}
-                            className={`p-2 rounded-xs animate-in fade-in slide-in-from-bottom-1 duration-200 ${
-                              line.includes("SOLD")
+                            className={`p-2 rounded-xs animate-in fade-in slide-in-from-bottom-1 duration-200 ${line.includes("SOLD")
                                 ? "bg-red-500/15 text-red-700 font-bold border border-red-500/30"
                                 : line.includes("GAVEL")
-                                ? "bg-amber-500/15 text-foreground font-black"
-                                : "bg-white text-neutral-800 border border-neutral-200"
-                            }`}
+                                  ? "bg-amber-500/15 text-foreground font-black"
+                                  : "bg-white text-neutral-800 border border-neutral-200"
+                              }`}
                           >
                             {line}
                           </div>
@@ -1838,16 +2112,16 @@ https://0sqm.fun
                 </div>
               </div>
 
-              {/* CFO */}
+              {/* Koogee */}
               <div className="flex flex-col justify-between">
                 <div className="flex items-start gap-4 sm:gap-5">
                   <img
                     src="/images/v2/team-cfo.jpg"
-                    alt="CFO - Chief Financial Officer"
+                    alt="Koogee - Chief Financial Officer"
                     className="size-24 sm:size-28 md:size-32 rounded-2xl object-cover shrink-0 border border-foreground/10 shadow-sm"
                   />
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-bold text-xl sm:text-2xl text-foreground leading-tight">CFO</h3>
+                    <h3 className="font-bold text-xl sm:text-2xl text-foreground leading-tight">Koogee</h3>
                     <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-0.5">Chief Financial Officer</p>
                     <div className="w-full h-px bg-border/80 my-2.5" />
                     <ul className="space-y-1.5 text-xs sm:text-sm text-foreground/90 font-medium">
@@ -1879,67 +2153,67 @@ https://0sqm.fun
             </div>
           </div>
 
-            {/* 4 Polaroid Kartı (Yatayda Serbestçe Kaydırılabilir & Ortalanmış) */}
-            <div className="relative min-w-0 max-w-5xl lg:max-w-6xl mx-auto">
-              {/* Yatay Kaydırma Kontrolleri */}
-              <div className="flex items-center justify-between pb-2 px-2 sm:px-4">
-                <span className="text-[11px] font-mono font-semibold text-muted-foreground">
-                  ← 4 Polaroid • Kaydırarak incele →
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => scrollPolaroids("left")}
-                    aria-label="Önceki görsel"
-                    className="grid size-8 place-items-center rounded-full border border-border bg-paper hover:bg-muted text-foreground shadow-xs transition-colors cursor-pointer"
-                  >
-                    <ChevronLeft className="size-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => scrollPolaroids("right")}
-                    aria-label="Sonraki görsel"
-                    className="grid size-8 place-items-center rounded-full border border-border bg-paper hover:bg-muted text-foreground shadow-xs transition-colors cursor-pointer"
-                  >
-                    <ChevronRight className="size-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Polaroid Listesi */}
-              <div
-                ref={polaroidScrollRef}
-                className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 pt-4 px-4 sm:px-6 items-center justify-start min-[1080px]:justify-center scroll-smooth snap-x snap-mandatory"
-              >
-                {justinPolaroids.map((polaroid, idx) => (
-                  <figure
-                    key={polaroid.id}
-                    onClick={() => setActivePhoto(polaroid)}
-                    className={`relative w-[220px] sm:w-[240px] shrink-0 snap-center bg-paper p-3 pb-4 shadow-xl border border-border rounded-xs cursor-pointer ${polaroid.rotation} hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-30 transition-all duration-300 group`}
-                  >
-                    {/* Masking Tape Effect on Top */}
-                    <div
-                      className={`absolute ${polaroid.tapePosition} w-20 h-6 masking-tape ${polaroid.tapeRotation} z-20 pointer-events-none rounded-xs`}
-                    />
-
-                    {/* Fotoğraf */}
-                    <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-100 rounded-xs">
-                      <img
-                        src={polaroid.image}
-                        alt={polaroid.alt}
-                        loading="lazy"
-                        className="h-full w-full object-cover object-center group-hover:scale-102 transition-transform duration-300"
-                      />
-                    </div>
-
-                    {/* El Yazısı Açıklama */}
-                    <figcaption className="pt-3 text-center font-marker text-base sm:text-lg leading-tight text-neutral-900">
-                      {polaroid.caption}
-                    </figcaption>
-                  </figure>
-                ))}
+          {/* 4 Polaroid Kartı (Yatayda Serbestçe Kaydırılabilir & Ortalanmış) */}
+          <div className="relative min-w-0 max-w-5xl lg:max-w-6xl mx-auto">
+            {/* Horizontal Scroll Controls */}
+            <div className="flex items-center justify-between pb-2 px-2 sm:px-4">
+              <span className="text-[11px] font-mono font-semibold text-muted-foreground">
+                ← 4 Polaroids • Scroll to explore →
+              </span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => scrollPolaroids("left")}
+                  aria-label="Previous photo"
+                  className="grid size-8 place-items-center rounded-full border border-border bg-paper hover:bg-muted text-foreground shadow-xs transition-colors cursor-pointer"
+                >
+                  <ChevronLeft className="size-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollPolaroids("right")}
+                  aria-label="Next photo"
+                  className="grid size-8 place-items-center rounded-full border border-border bg-paper hover:bg-muted text-foreground shadow-xs transition-colors cursor-pointer"
+                >
+                  <ChevronRight className="size-4" />
+                </button>
               </div>
             </div>
+
+            {/* Polaroid Listesi */}
+            <div
+              ref={polaroidScrollRef}
+              className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 pt-4 px-4 sm:px-6 items-center justify-start min-[1080px]:justify-center scroll-smooth snap-x snap-mandatory"
+            >
+              {justinPolaroids.map((polaroid, idx) => (
+                <figure
+                  key={polaroid.id}
+                  onClick={() => setActivePhoto(polaroid)}
+                  className={`relative w-[220px] sm:w-[240px] shrink-0 snap-center bg-paper p-3 pb-4 shadow-xl border border-border rounded-xs cursor-pointer ${polaroid.rotation} hover:rotate-0 hover:scale-105 hover:shadow-2xl hover:z-30 transition-all duration-300 group`}
+                >
+                  {/* Masking Tape Effect on Top */}
+                  <div
+                    className={`absolute ${polaroid.tapePosition} w-20 h-6 masking-tape ${polaroid.tapeRotation} z-20 pointer-events-none rounded-xs`}
+                  />
+
+                  {/* Fotoğraf */}
+                  <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-100 rounded-xs">
+                    <img
+                      src={polaroid.image}
+                      alt={polaroid.alt}
+                      loading="lazy"
+                      className="h-full w-full object-cover object-center group-hover:scale-102 transition-transform duration-300"
+                    />
+                  </div>
+
+                  {/* El Yazısı Açıklama */}
+                  <figcaption className="pt-3 text-center font-marker text-base sm:text-lg leading-tight text-neutral-900">
+                    {polaroid.caption}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
 
           {/* Alt Kısım: Same Cities Grid */}
           <div id="cities" className="mt-14 pt-10 border-t border-border/80">
@@ -1993,30 +2267,323 @@ https://0sqm.fun
         </div>
       </section>
 
-      {/* Merch Section */}
-      <section id="merch" className="torn-top scroll-mt-16 bg-muted px-4 pb-12 pt-20 sm:px-6 lg:px-8">
-        <div className="mx-auto grid min-w-0 max-w-7xl grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-center">
-          <div>
-            <h2 className="text-5xl font-black uppercase leading-[0.9]">
-              Wear
-              <br />
-              the reality.
-            </h2>
-            <p className="mt-4 text-sm font-medium">
-              Merch for the generation that&apos;s priced out.
-            </p>
-            <Button variant="sunshine" className="mt-5 cursor-pointer">
-              Visit Merch Store <ArrowRight className="size-4" />
-            </Button>
+      {/* ==================== 0SQM STREETWEAR & MERCH SECTION ==================== */}
+      <section id="merch" className="torn-top scroll-mt-16 bg-[#FAF7F2] text-neutral-900 px-4 pb-20 pt-20 sm:px-6 lg:px-8 border-b border-[#E5E0D4] relative">
+        <div className="mx-auto max-w-7xl">
+          {/* Section Header */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-12 border-b border-neutral-300/70">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFD452] text-neutral-950 text-xs font-black tracking-wider uppercase mb-4 shadow-xs">
+                <Sparkles className="size-3.5 fill-current" />
+                <span>0SQM™ Apparel &amp; Goods // Drop 01</span>
+              </div>
+              <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[0.9] text-neutral-950">
+                WEAR THE
+                <br />
+                <span className="text-[#C69200]">REALITY.</span>
+              </h2>
+              <p className="font-caveat text-2xl sm:text-3xl text-neutral-600 mt-2">
+                &ldquo;Same people. Smaller spaces. Bigger dreams.&rdquo;
+              </p>
+            </div>
+
+            {/* Hand-drawn tape note directly inspired by the original design mock */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 max-w-xl">
+              <div className="relative rotate-1 bg-white p-5 rounded-sm shadow-md border border-neutral-200/90 max-w-xs shrink-0">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-5 bg-[#FFD452]/50 backdrop-blur-xs -rotate-2 border border-[#E5BE3A]/40" />
+                <p className="font-marker text-lg sm:text-xl text-neutral-900 leading-snug">
+                  &ldquo;Can&apos;t wear a house.
+                  <br />
+                  Can wear this.&rdquo; ↘
+                </p>
+                <div className="mt-3 flex items-center justify-between text-[11px] text-neutral-500 font-bold uppercase tracking-wider">
+                  <span>Sydney • Drop 01</span>
+                  <span className="font-marker text-lg text-neutral-900">☺</span>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                  A streetwear collection engineered for a generation priced out of 100m² blocks, but rich in perspective. Standalone heavyweight silhouettes, vintage washes, and water-based prints that outlast any 30-year mortgage.
+                </p>
+                <div className="flex flex-wrap gap-1.5 text-[11px] font-bold text-neutral-700">
+                  <span className="bg-white px-2.5 py-1 rounded-sm border border-neutral-200 shadow-2xs">280 GSM Heavy Tees</span>
+                  <span className="bg-white px-2.5 py-1 rounded-sm border border-neutral-200 shadow-2xs">420 GSM Hoodies</span>
+                  <span className="bg-white px-2.5 py-1 rounded-sm border border-neutral-200 shadow-2xs">3D Embroidery</span>
+                  <span className="bg-[#FFD452]/20 text-neutral-900 px-2.5 py-1 rounded-sm border border-[#FFD452]/40 font-black">Drop 01 Allocation</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <img
-            src={merchImage}
-            alt="$0SQM clothing and accessories"
-            loading="lazy"
-            width={1600}
-            height={912}
-            className="h-auto min-w-0 max-w-full rounded-md mix-blend-multiply"
-          />
+
+          {/* ==================== 1. CORE APPAREL & GOODS (TEKİL ÜRÜN KARTLARI) ==================== */}
+          <div className="mt-12">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4">
+              <div>
+                <span className="text-xs font-black tracking-widest uppercase text-[#C69200]">
+                  Standalone Garments &amp; Goods
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-black uppercase text-neutral-950 mt-1">
+                  THE DROP 01 CAPSULE
+                </h3>
+                <p className="text-xs text-neutral-500 mt-1">
+                  Individual studio garments engineered from heavyweight cotton and brushed fleece.
+                </p>
+              </div>
+
+              {/* Category Filter Pills */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                {[
+                  { id: "all", label: `All (${merchProducts.length})` },
+                  { id: "tees", label: "Tees (5)" },
+                  { id: "hoodies", label: "Hoodie (1)" },
+                  { id: "accessories", label: "Goods (3)" },
+                ].map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setMerchCategory(cat.id)}
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                      merchCategory === cat.id
+                        ? "bg-neutral-950 text-white font-black shadow-sm"
+                        : "bg-white text-neutral-600 hover:text-neutral-950 border border-neutral-200 shadow-2xs"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Individual Product Studio Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {merchProducts
+                .filter((p) => merchCategory === "all" || p.category === merchCategory)
+                .map((product) => {
+                  return (
+                    <article
+                      key={product.id}
+                      className="group flex flex-col justify-between bg-white rounded-2xl overflow-hidden border border-neutral-200/90 shadow-sm hover:shadow-xl hover:border-neutral-300 transition-all duration-300"
+                    >
+                      {/* Individual Studio Image Container */}
+                      <div
+                        onClick={() => setActivePhoto({
+                          image: product.image,
+                          caption: `${product.name} — ${product.tagline} (${product.gsm})`,
+                          alt: product.name,
+                        })}
+                        className="relative aspect-square bg-[#F0ECE4]/70 overflow-hidden flex items-center justify-center p-6 cursor-pointer border-b border-neutral-100"
+                      >
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          loading="lazy"
+                          className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-neutral-900 border border-neutral-200 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-sm shadow-2xs">
+                          PIECE #{product.number}
+                        </span>
+                        <span className="absolute top-3 right-3 bg-[#FFD452] text-neutral-950 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-sm shadow-2xs">
+                          {product.badge}
+                        </span>
+                        <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-xs text-neutral-700 text-[11px] font-bold px-2.5 py-1 rounded-sm border border-neutral-200 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 shadow-xs">
+                          <ZoomIn className="size-3 text-[#C69200]" />
+                          <span>Inspect</span>
+                        </div>
+                      </div>
+
+                      {/* Content Info */}
+                      <div className="p-5 flex-1 flex flex-col justify-between bg-white">
+                        <div>
+                          <div className="flex items-center justify-between text-xs text-neutral-500 mb-1.5 font-medium">
+                            <span className="flex items-center gap-1.5">
+                              <span
+                                className="size-2.5 rounded-full border border-neutral-300 inline-block shrink-0"
+                                style={{ backgroundColor: product.colorHex }}
+                              />
+                              <span>{product.color}</span>
+                            </span>
+                            <span className="font-mono text-[11px] text-neutral-400 font-bold">{product.gsm}</span>
+                          </div>
+
+                          <h4 className="text-base font-black text-neutral-950 group-hover:text-[#C69200] transition-colors leading-snug">
+                            {product.name}
+                          </h4>
+
+                          <p className="mt-1.5 text-xs text-neutral-500 line-clamp-2 leading-relaxed">
+                            {product.description}
+                          </p>
+                        </div>
+
+                        <div className="mt-5 pt-3.5 border-t border-neutral-100 flex items-center justify-between gap-3">
+                          <div>
+                            <span className="text-sm font-black text-neutral-950">
+                              {product.price}
+                            </span>
+                            <span className="block text-[10px] text-neutral-400 font-medium">Pre-order Drop 01</span>
+                          </div>
+
+                          <Button
+                            variant="sunshine"
+                            size="sm"
+                            onClick={() => {
+                              setWaitlistProduct(product);
+                              setWaitlistSubmitted(false);
+                            }}
+                            className="cursor-pointer text-xs font-black flex items-center gap-1.5 px-3.5 py-2 shadow-xs hover:shadow-md"
+                          >
+                            <ShoppingBag className="size-3.5" />
+                            <span>Pre-order</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+            </div>
+          </div>
+
+          {/* ==================== 2. EDITORIAL LOOKBOOK & MASTER POSTERS ==================== */}
+          <div className="mt-20 pt-14 border-t border-neutral-300/70">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+              <div>
+                <span className="text-xs font-black tracking-widest uppercase text-[#C69200]">
+                  Official Campaign Archive
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-black uppercase text-neutral-950 mt-1">
+                  OFFICIAL EDITORIAL POSTERS &amp; LOOKBOOK
+                </h3>
+                <p className="text-xs text-neutral-500 mt-1">
+                  Full campaign photography, street styling in Sydney, and collection blueprints. Click any poster for full-screen inspection.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Poster 1: Lookbook Editorial */}
+              <div
+                onClick={() => setActivePhoto({
+                  image: merchLookbook,
+                  caption: "0SQM Editorial Streetwear Lookbook — Street & Studio Styling (Drop 01)",
+                  alt: "0SQM Editorial Lookbook Shoot",
+                })}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl bg-white border border-neutral-200/90 hover:border-neutral-400 hover:shadow-xl transition-all duration-300 shadow-sm"
+              >
+                <div className="aspect-[4/5] overflow-hidden bg-[#F0ECE4] flex items-center justify-center relative">
+                  <img
+                    src={merchLookbook}
+                    alt="Editorial Streetwear Lookbook"
+                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                    <span className="text-xs font-black text-[#FFD452] flex items-center gap-1.5 bg-neutral-950/80 px-3 py-1.5 rounded-full backdrop-blur-xs">
+                      <ZoomIn className="size-4" />
+                      <span>View Full Lookbook Poster</span>
+                    </span>
+                  </div>
+                </div>
+                <div className="p-4 bg-white border-t border-neutral-100 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C69200]">Poster 01 // Editorial</span>
+                    <h5 className="text-sm font-bold text-neutral-950 group-hover:text-[#C69200] transition-colors">
+                      Sydney Street &amp; Studio Editorial
+                    </h5>
+                  </div>
+                  <ArrowRight className="size-4 text-neutral-400 group-hover:text-neutral-950 group-hover:translate-x-1 transition-all" />
+                </div>
+              </div>
+
+              {/* Poster 2: Signature 'Same Dream' Presentation */}
+              <div
+                onClick={() => setActivePhoto({
+                  image: merchTee,
+                  caption: "0SQM Signature 'Same Dream. Different Budget.' Heavyweight Tee Blueprint",
+                  alt: "Signature Same Dream Tee Presentation",
+                })}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl bg-white border border-neutral-200/90 hover:border-neutral-400 hover:shadow-xl transition-all duration-300 shadow-sm"
+              >
+                <div className="aspect-[4/5] overflow-hidden bg-[#F0ECE4] flex items-center justify-center relative">
+                  <img
+                    src={merchTee}
+                    alt="Signature Same Dream Tee Presentation"
+                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                    <span className="text-xs font-black text-[#FFD452] flex items-center gap-1.5 bg-neutral-950/80 px-3 py-1.5 rounded-full backdrop-blur-xs">
+                      <ZoomIn className="size-4" />
+                      <span>View Full Tee Blueprint</span>
+                    </span>
+                  </div>
+                </div>
+                <div className="p-4 bg-white border-t border-neutral-100 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C69200]">Poster 02 // Hero Piece</span>
+                    <h5 className="text-sm font-bold text-neutral-950 group-hover:text-[#C69200] transition-colors">
+                      Signature Hero Tee Blueprint
+                    </h5>
+                  </div>
+                  <ArrowRight className="size-4 text-neutral-400 group-hover:text-neutral-950 group-hover:translate-x-1 transition-all" />
+                </div>
+              </div>
+
+              {/* Poster 3: Full Collection Poster */}
+              <div
+                onClick={() => setActivePhoto({
+                  image: merchCollectionPoster,
+                  caption: "0SQM Full Collection Overview Poster — All 10 Designs, Labels & Fabric Specs",
+                  alt: "0SQM Full Collection Poster",
+                })}
+                className="group relative cursor-pointer overflow-hidden rounded-2xl bg-white border border-neutral-200/90 hover:border-neutral-400 hover:shadow-xl transition-all duration-300 shadow-sm"
+              >
+                <div className="aspect-[4/5] overflow-hidden bg-[#F0ECE4] flex items-center justify-center relative">
+                  <img
+                    src={merchCollectionPoster}
+                    alt="Full Collection Overview Poster"
+                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                    <span className="text-xs font-black text-[#FFD452] flex items-center gap-1.5 bg-neutral-950/80 px-3 py-1.5 rounded-full backdrop-blur-xs">
+                      <ZoomIn className="size-4" />
+                      <span>View Full Collection Lineup</span>
+                    </span>
+                  </div>
+                </div>
+                <div className="p-4 bg-white border-t border-neutral-100 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C69200]">Poster 03 // Master Lineup</span>
+                    <h5 className="text-sm font-bold text-neutral-950 group-hover:text-[#C69200] transition-colors">
+                      Full Collection Lineup &amp; Details
+                    </h5>
+                  </div>
+                  <ArrowRight className="size-4 text-neutral-400 group-hover:text-neutral-950 group-hover:translate-x-1 transition-all" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quality Banner & Guarantee */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-white/80 rounded-2xl border border-neutral-200/90 text-center shadow-xs">
+            <div className="space-y-1">
+              <span className="text-2xl font-black text-neutral-950">280 GSM</span>
+              <p className="text-xs font-bold uppercase text-neutral-800">Heavy Combed Cotton</p>
+              <p className="text-[11px] text-neutral-500">Dense weave, zero transparency</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-2xl font-black text-neutral-950">420 GSM</span>
+              <p className="text-xs font-bold uppercase text-neutral-800">Brushed Fleece</p>
+              <p className="text-[11px] text-neutral-500">Oversized silhouette &amp; vintage wash</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-2xl font-black text-neutral-950">100%</span>
+              <p className="text-xs font-bold uppercase text-neutral-800">Water-Based Ink</p>
+              <p className="text-[11px] text-neutral-500">Soft touch, won&apos;t crack or peel</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-2xl font-black text-[#C69200]">0 SQM</span>
+              <p className="text-xs font-bold uppercase text-neutral-800">Reality Guaranteed</p>
+              <p className="text-[11px] text-neutral-500">Free theoretical land certificate</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -2053,36 +2620,171 @@ https://0sqm.fun
         </div>
       </footer>
 
-      {/* ==================== POLAROID LIGHTBOX MODAL ==================== */}
+      {/* ==================== POLAROID & LOOKBOOK LIGHTBOX MODAL ==================== */}
       {activePhoto && (
         <div
           role="dialog"
           aria-modal="true"
           onClick={() => setActivePhoto(null)}
-          className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-md w-full bg-paper p-4 pb-6 rounded-sm shadow-2xl border border-border animate-in zoom-in-95 duration-200"
+            className="relative max-w-4xl w-full max-h-[92vh] bg-paper p-4 sm:p-6 pb-6 rounded-md shadow-2xl border border-border animate-in zoom-in-95 duration-200 flex flex-col items-center"
           >
             <button
               type="button"
               onClick={() => setActivePhoto(null)}
               aria-label="Close photo modal"
-              className="absolute top-2 right-2 text-neutral-500 hover:text-neutral-950 p-1.5 rounded-full hover:bg-neutral-200 transition-colors cursor-pointer"
+              className="absolute top-3 right-3 text-neutral-500 hover:text-neutral-950 p-2 rounded-full hover:bg-neutral-200 transition-colors cursor-pointer z-10 bg-paper/90 shadow-xs"
             >
               <X className="size-6" />
             </button>
-            <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-100 rounded-xs mt-4">
+            <div className="relative w-full flex-1 min-h-0 overflow-auto flex items-center justify-center bg-neutral-950/5 rounded-sm p-1">
               <img
                 src={activePhoto.image}
                 alt={activePhoto.alt}
-                className="h-full w-full object-cover"
+                className="max-h-[76vh] w-auto max-w-full object-contain rounded-xs shadow-sm"
               />
             </div>
-            <p className="mt-4 text-center font-marker text-2xl text-neutral-900">
+            <p className="mt-4 text-center font-marker text-xl sm:text-2xl text-neutral-900 shrink-0">
               {activePhoto.caption}
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* ==================== DROP 01 PRE-ORDER / WAITLIST MODAL ==================== */}
+      {waitlistProduct && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setWaitlistProduct(null)}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#181818] text-[#F5F2EB] max-w-md w-full rounded-2xl p-6 sm:p-8 shadow-2xl border border-neutral-750 relative animate-in zoom-in-95 duration-200"
+          >
+            <button
+              type="button"
+              onClick={() => setWaitlistProduct(null)}
+              aria-label="Close pre-order modal"
+              className="absolute top-4 right-4 text-neutral-400 hover:text-white p-1 rounded-full hover:bg-neutral-800 transition-colors cursor-pointer"
+            >
+              <X className="size-6" />
+            </button>
+
+            {!waitlistSubmitted ? (
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-[#FFD452] text-neutral-950 px-2 py-0.5 rounded-xs">
+                    Drop 01 Pre-order
+                  </span>
+                  <span className="text-xs font-semibold text-neutral-400">
+                    {waitlistProduct.gsm}
+                  </span>
+                </div>
+
+                <h3 className="text-2xl font-black text-white leading-tight">
+                  {waitlistProduct.name}
+                </h3>
+                <p className="text-xs text-neutral-400 mt-1">
+                  Color: <strong className="text-neutral-200">{waitlistProduct.color}</strong> • {waitlistProduct.fit}
+                </p>
+
+                <div className="mt-4 aspect-[16/9] w-full bg-neutral-950 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-neutral-800">
+                  <img
+                    src={waitlistProduct.image}
+                    alt={waitlistProduct.name}
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+
+                {/* Size selector if it's apparel */}
+                {waitlistProduct.category !== "accessories" && (
+                  <div className="mt-4">
+                    <label className="block text-xs font-black uppercase tracking-wider text-neutral-300 mb-2">
+                      Select Preferred Size:
+                    </label>
+                    <div className="grid grid-cols-5 gap-2">
+                      {["S", "M", "L", "XL", "XXL"].map((sz) => (
+                        <button
+                          key={sz}
+                          type="button"
+                          onClick={() => setWaitlistSize(sz)}
+                          className={`py-2 text-xs font-bold rounded-md border cursor-pointer transition-all ${
+                            waitlistSize === sz
+                              ? "bg-[#FFD452] text-neutral-950 border-[#FFD452] font-black"
+                              : "bg-neutral-900 text-neutral-300 border-neutral-700 hover:border-neutral-500"
+                          }`}
+                        >
+                          {sz}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Email submission form */}
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (waitlistEmail.trim()) {
+                      setWaitlistSubmitted(true);
+                    }
+                  }}
+                  className="mt-5 space-y-3"
+                >
+                  <label htmlFor="waitlist-email" className="block text-xs font-black uppercase tracking-wider text-neutral-300">
+                    Your Email (First access &amp; free sticker pack):
+                  </label>
+                  <input
+                    id="waitlist-email"
+                    type="email"
+                    required
+                    value={waitlistEmail}
+                    onChange={(e) => setWaitlistEmail(e.target.value)}
+                    placeholder="justin@0sqm.com.au"
+                    className="w-full px-4 py-2.5 rounded-lg bg-neutral-900 border border-neutral-700 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-[#FFD452]"
+                  />
+                  <Button
+                    type="submit"
+                    variant="sunshine"
+                    className="w-full cursor-pointer py-3 text-sm font-black flex items-center justify-center gap-2"
+                  >
+                    <span>Secure Priority Waitlist Spot</span>
+                    <ArrowRight className="size-4" />
+                  </Button>
+                </form>
+
+                <p className="mt-3 text-[11px] text-center text-neutral-500">
+                  No spam. We&apos;ll notify you the exact minute Drop 01 goes live.
+                </p>
+              </div>
+            ) : (
+              <div className="text-center py-6 space-y-4">
+                <div className="size-14 rounded-full bg-[#FFD452]/20 border border-[#FFD452] text-[#FFD452] flex items-center justify-center mx-auto">
+                  <Check className="size-8" />
+                </div>
+                <h3 className="text-2xl font-black text-white">
+                  YOU&apos;RE ON THE LIST!
+                </h3>
+                <p className="text-sm text-neutral-300 max-w-xs mx-auto leading-relaxed">
+                  We&apos;ve registered <span className="text-[#FFD452] font-bold">{waitlistEmail}</span> for priority access to <strong>{waitlistProduct.name}</strong>.
+                </p>
+                <div className="bg-neutral-900 p-3 rounded-lg border border-neutral-800 text-xs text-neutral-400">
+                  Drop 01 includes custom woven label, sticker pack &amp; 0SQM certificate.
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setWaitlistProduct(null)}
+                  className="mt-4 px-6 py-2.5 rounded-lg bg-neutral-800 text-white text-xs font-bold hover:bg-neutral-700 cursor-pointer transition-colors"
+                >
+                  Back to Showroom
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

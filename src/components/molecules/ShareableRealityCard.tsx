@@ -23,15 +23,6 @@ export const ShareableRealityCard = React.forwardRef<HTMLDivElement, ShareableRe
           className
         )}
       >
-        {/* Subtle Background Paper Grid Pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage:
-              'linear-gradient(#141414 1px, transparent 1px), linear-gradient(90deg, #141414 1px, transparent 1px)',
-            backgroundSize: '20px 20px',
-          }}
-        />
 
         {/* Top Header Bar */}
         <div className="flex items-center justify-between z-10 border-b-2 border-[#141414] pb-3">
@@ -114,7 +105,7 @@ export const ShareableRealityCard = React.forwardRef<HTMLDivElement, ShareableRe
         {/* Bottom Footer Watermark */}
         <div className="flex items-center justify-between text-[10px] md:text-xs font-bold text-[#666666] z-10 pt-2">
           <span className="flex items-center gap-1">
-            <span>Approved by CFO Renty</span>
+            <span>Approved by Koogee</span>
             <span className="text-amber-500">🐶 (Stress: 0%)</span>
           </span>
           <span className="font-mono uppercase tracking-wider text-[#141414] font-black">

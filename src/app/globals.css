@@ -422,10 +422,6 @@ img {
   color: var(--foreground);
 }
 
-.paper-grid {
-  background-image: linear-gradient(to right, oklch(0.14 0.01 65 / 0.035) 1px, transparent 1px), linear-gradient(to bottom, oklch(0.14 0.01 65 / 0.035) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
 
 .torn-top {
   clip-path: polygon(0 13px, 4% 6px, 9% 11px, 15% 4px, 22% 10px, 29% 3px, 36% 9px, 44% 2px, 52% 10px, 60% 4px, 68% 11px, 77% 3px, 85% 9px, 93% 4px, 100% 10px, 100% 100%, 0 100%);

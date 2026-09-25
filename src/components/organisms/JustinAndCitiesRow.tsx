@@ -79,7 +79,7 @@ export const JustinAndCitiesRow: React.FC = () => {
             <div className="relative aspect-4/5 w-full overflow-hidden bg-gray-100 rounded-xs">
               <Image
                 src="/images/justin-corgi-harbour.jpg"
-                alt="Justin and Renty"
+                alt="Justin and Koogee"
                 fill
                 className="object-cover"
                 sizes="120px"

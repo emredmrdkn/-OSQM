@@ -26,7 +26,7 @@ export const StageHero: React.FC = () => {
       <div className="hero-photo-box">
         <Image
           src="/images/design/hero.jpg"
-          alt="Justin and Renty the Corgi looking over Sydney Harbour - $0SQM"
+          alt="Justin and Koogee the Corgi looking over Sydney Harbour - $0SQM"
           fill
           priority
           unoptimized

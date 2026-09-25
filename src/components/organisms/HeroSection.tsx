@@ -46,7 +46,7 @@ export const HeroSection: React.FC = () => {
       <div className="relative w-full flex-1 min-h-[140px] sm:min-h-[180px] overflow-hidden rounded-xl border border-gray-200 shadow-xs">
         <Image
           src="/images/hero-sydney.jpg"
-          alt="Justin and Renty the Corgi looking over Sydney Harbour"
+          alt="Justin and Koogee the Corgi looking over Sydney Harbour"
           fill
           priority
           className="object-cover object-[center_35%]"

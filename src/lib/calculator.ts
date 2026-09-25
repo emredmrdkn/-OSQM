@@ -56,7 +56,7 @@ export const PHYSICAL_METAPHORS: PhysicalMetaphor[] = [
     rangeMin: 2.00,
     rangeMax: 3.50,
     title: 'A Standard Double Mattress',
-    description: 'Hope you and your CFO Corgi enjoy sleeping upright.',
+    description: 'Hope you and Koogee enjoy sleeping upright.',
     iconName: 'Bed',
   },
   {

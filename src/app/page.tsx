@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import V2Page from './v2/page';
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://0sqm.com.au';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://0sqm.com.au'),
+  metadataBase: new URL(siteUrl),
   title: '$0SQM — The Australian Dream Still Starts at 0m²',
   description: 'Real data. Real prices. Same result. The viral Australian housing reality check.',
   openGraph: {

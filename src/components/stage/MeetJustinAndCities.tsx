@@ -100,7 +100,7 @@ export const StageMeetJustinAndCities: React.FC = () => {
             <div className="relative w-full h-[180px] overflow-hidden bg-neutral-100 rounded-xs">
               <Image
                 src="/images/design/justin-polaroid.jpg"
-                alt="Justin and Renty the Corgi overlooking Sydney Harbour"
+                alt="Justin and Koogee the Corgi overlooking Sydney Harbour"
                 fill
                 unoptimized
                 priority

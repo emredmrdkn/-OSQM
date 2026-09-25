@@ -35,14 +35,14 @@ export const JustinStorySection: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column: Taped Polaroid Photo of Justin & Renty (md:col-span-5) */}
+            {/* Right Column: Taped Polaroid Photo of Justin & Koogee (md:col-span-5) */}
             <div className="md:col-span-5 flex justify-center">
               <div className="relative -rotate-2 rounded-sm bg-white p-3.5 pb-7 shadow-lg border border-gray-100 max-w-xs w-full transition-transform hover:rotate-0 duration-200">
                 <Tape variant="kraft" position="top-left" className="-top-3 left-4 z-10" />
                 <div className="relative aspect-4/5 w-full overflow-hidden bg-gray-100 rounded-xs">
                   <Image
                     src="/images/justin-corgi-harbour.jpg"
-                    alt="Justin and Renty looking over Sydney Harbour"
+                    alt="Justin and Koogee looking over Sydney Harbour"
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 320px"

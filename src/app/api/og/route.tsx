@@ -318,7 +318,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                     &ldquo;{note}&rdquo;
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '8px', fontWeight: 800, color: '#333', marginTop: '4px' }}>
-                    — RENTY
+                    — KOOGEE
                   </div>
                 </div>
 
@@ -364,6 +364,10 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
       {
         width: 1200,
         height: 630,
+        headers: {
+          'Content-Type': 'image/png',
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
       }
     );
   } catch (e: unknown) {

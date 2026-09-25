@@ -121,7 +121,7 @@ export const WaitlistModal: React.FC = () => {
                   REALITY CHECKED
                 </span>
                 <div className="border-t-2 border-dashed border-[#D32F2F] pt-1 font-mono text-xs font-black uppercase tracking-widest text-[#D32F2F]">
-                  CFO CORGI SEAL OF ZERO DEBT
+                  KOOGEE CORGI SEAL OF ZERO DEBT
                 </div>
               </div>
 
