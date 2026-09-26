@@ -72,7 +72,8 @@ export async function triggerNativeShare(
       url: shareUrl,
     });
     return true;
-  } catch {
+  } catch (err) {
+    console.warn('[Share] Web Share API failed or cancelled:', err);
     return false;
   }
 }

@@ -60,7 +60,8 @@ export const WaitlistModal: React.FC = () => {
       } else {
         setErrorMessage(res.message || 'Failed to issue deed.');
       }
-    } catch {
+    } catch (err) {
+      console.error('[WaitlistModal] Error submitting deed:', err);
       setErrorMessage('An unexpected error occurred. Please try again.');
     } finally {
       setIsSubmitting(false);

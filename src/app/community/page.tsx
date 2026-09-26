@@ -93,7 +93,9 @@ export default function CommunityPage() {
       .then((data) => {
         if (data && data.followers) setXFollowers(data.followers);
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.error('[0SQM Community] Followers API error:', err);
+      });
   }, []);
 
   const checkScroll = () => {
