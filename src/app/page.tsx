@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/api/og',
+        url: '/images/v2/collection-poster.jpg',
         width: 1200,
         height: 630,
         alt: '$0SQM Reality Score Card',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'I saved $25,000 and officially own 0 SQM in Sydney. Same dream. Different budget.',
     site: '@Own0SQM',
     creator: '@Own0SQM',
-    images: ['/api/og'],
+    images: ['/images/v2/collection-poster.jpg'],
   },
 };
 

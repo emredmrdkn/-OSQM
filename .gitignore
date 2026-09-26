@@ -42,5 +42,6 @@ second_$OSQM/
 # temporary root screenshots
 /*.png
 /*.jpg
+/*.zip
 !public/**
 
