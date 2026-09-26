@@ -721,8 +721,8 @@ export default function V2Page() {
 
   const handleShareOnX = () => {
     // 1. Determine site URL from env or window
-    let origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://0sqm.com';
-    if (!process.env.NEXT_PUBLIC_SITE_URL && typeof window !== 'undefined' && window.location.origin) {
+    let origin = 'https://0sqm.com';
+    if (typeof window !== 'undefined' && window.location.origin) {
       if (!window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1')) {
         origin = window.location.origin;
       }
