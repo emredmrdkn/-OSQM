@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { Button } from "@/components/v2/ui/button";
 
-const heroImage = "/images/v2/sydney-hero.jpg";
+const heroImage = "/images/v2/osqm-top-bg.jpg";
 const justinImage = "/images/v2/justin-dog.jpg";
 const merchImage = "/images/v2/merch-lineup.jpg";
 const merchCollectionPoster = "/images/v2/collection-poster.jpg";
@@ -83,9 +83,8 @@ const merchProducts = [
     fit: "Boxy Streetwear Fit",
     image: "/images/v2/products/clean/hero_tee_clean.jpg",
     angles: [
-      { id: "back", label: "Back Artwork", image: "/images/v2/products/clean/hero_tee_clean.jpg", caption: "Justin & Koogee Signature Back Artwork (280 GSM)" },
-      { id: "front", label: "Front Chest", image: "/images/v2/products/clean/tee_same_dream_front.jpg", caption: "Minimalist Left-Chest 0SQM Branding" },
-      { id: "collar", label: "Woven Tag", image: "/images/v2/products/macro_label.jpg", caption: "Custom Woven Neck Label & Ribbed Collar" },
+      { id: "front", label: "Front", image: "/images/v2/products/clean/signature_tee_front_clean.jpg", caption: "Minimalist Left-Chest 0SQM Branding" },
+      { id: "back", label: "Back", image: "/images/v2/products/clean/hero_tee_clean.jpg", caption: "Justin & Koogee Signature Back Artwork (280 GSM)" },
     ],
     description: "Justin & Koogee illustrative back graphic with clean left-chest 0SQM branding. Combed heavy cotton with custom woven neck tag and reinforced collar.",
     tagline: "Streetwear for real plans",
@@ -103,8 +102,8 @@ const merchProducts = [
     fit: "Oversized Streetwear Silhouette",
     image: "/images/v2/products/clean/hero_hoodie_clean.jpg",
     angles: [
-      { id: "studio", label: "Studio Cut", image: "/images/v2/products/clean/hero_hoodie_clean.jpg", caption: "Washed Charcoal 420 GSM Brushed Fleece" },
-      { id: "editorial", label: "Street Lookbook", image: "/images/v2/products/editorial-male-hoodie.jpg", caption: "On-Street Styling — Boxy Drop Shoulder Cut" },
+      { id: "front", label: "Front", image: "/images/v2/products/clean/hero_hoodie_clean.jpg", caption: "Washed Charcoal 420 GSM Brushed Fleece" },
+      { id: "back", label: "Back", image: "/images/v2/products/clean/hero_hoodie_back.jpg", caption: "Oversized Streetwear Back Silhouette" },
     ],
     description: "Ultra-heavy brushed fleece with front kangaroo pocket, tonal chest logo, and sleeve detail: 'Portfolio: 0m²'. Garment washed for vintage texture.",
     tagline: "Same city. Different perspective.",
@@ -122,7 +121,8 @@ const merchProducts = [
     fit: "Heavyweight Boxy Fit",
     image: "/images/v2/products/clean/hero_wen_1m2_clean.jpg",
     angles: [
-      { id: "back", label: "Skyline Graphic", image: "/images/v2/products/clean/hero_wen_1m2_clean.jpg", caption: "Sydney Skyline Back Print — 'Same People Bigger Horizons'" },
+      { id: "front", label: "Front", image: "/images/v2/products/clean/hero_wen_1m2_front.jpg", caption: "Minimalist Left-Chest Logo" },
+      { id: "back", label: "Back", image: "/images/v2/products/clean/hero_wen_1m2_clean.jpg", caption: "Sydney Skyline Back Print — 'Same People Bigger Horizons'" },
     ],
     description: "Back print with city skyline silhouette and '0SQM SAME PEOPLE BIGGER HORIZONS'. Minimal front logo on vintage black cotton.",
     tagline: "Same people. Bigger horizons.",
@@ -140,7 +140,8 @@ const merchProducts = [
     fit: "Relaxed Drop-Shoulder",
     image: "/images/v2/products/clean/hero_i_own_0sqm_clean.jpg",
     angles: [
-      { id: "front", label: "Studio Front", image: "/images/v2/products/clean/hero_i_own_0sqm_clean.jpg", caption: "I Own 0 SQM Bold Statement Tee (280 GSM)" },
+      { id: "front", label: "Front", image: "/images/v2/products/clean/hero_i_own_0sqm_clean.jpg", caption: "I Own 0 SQM Bold Front Print" },
+      { id: "back", label: "Back", image: "/images/v2/products/clean/hero_i_own_0sqm_back.jpg", caption: "Vintage Black Clean Back Cut" },
     ],
     description: "Minimalist bold front statement tee with distressed typography. Thick ribbed collar that won't lose shape wash after wash.",
     tagline: "Wear the reality",
@@ -158,7 +159,8 @@ const merchProducts = [
     fit: "Relaxed Drop-Shoulder",
     image: "/images/v2/products/clean/hero_wen_house_clean.jpg",
     angles: [
-      { id: "front", label: "Studio Front", image: "/images/v2/products/clean/hero_wen_house_clean.jpg", caption: "Handwritten Script on Vintage Washed Olive" },
+      { id: "front", label: "Front", image: "/images/v2/products/clean/hero_wen_house_clean.jpg", caption: "Handwritten Script Front Graphic" },
+      { id: "back", label: "Back", image: "/images/v2/products/clean/hero_wen_house_back.jpg", caption: "Washed Olive Clean Back Cut" },
     ],
     description: "Handwritten script front graphic printed on premium washed olive cotton. The million dollar question on every renter's mind.",
     tagline: "The million dollar question",
@@ -176,7 +178,8 @@ const merchProducts = [
     fit: "Classic Streetwear Fit",
     image: "/images/v2/products/clean/hero_0_today_clean.jpg",
     angles: [
-      { id: "front", label: "Studio Front", image: "/images/v2/products/clean/hero_0_today_clean.jpg", caption: "0 Today. 1m² Someday. Typographic Front Print" },
+      { id: "front", label: "Front", image: "/images/v2/products/clean/hero_0_today_clean.jpg", caption: "0 Today. 1m² Someday. Front Print" },
+      { id: "back", label: "Back", image: "/images/v2/products/clean/hero_0_today_back.jpg", caption: "Off-White Cream Clean Back Cut" },
     ],
     description: "Typographic front print celebrating the daily grind. Combed heavyweight cotton built to endure daily wear.",
     tagline: "Progress over perfection",
@@ -192,9 +195,10 @@ const merchProducts = [
     color: "Washed Charcoal",
     colorHex: "#2E2D2B",
     fit: "Adjustable Brass Clasp",
-    image: "/images/v2/products/clean/cap_ultra_hd.png",
+    image: "/images/v2/products/clean/cap_front_clean.jpg",
     angles: [
-      { id: "cap", label: "Studio Cap", image: "/images/v2/products/clean/cap_ultra_hd.png", caption: "6-Panel Low Profile Washed Cotton Twill with 3D Embroidery" },
+      { id: "front", label: "Front", image: "/images/v2/products/clean/cap_front_clean.jpg", caption: "6-Panel Low Profile Washed Cotton Twill with 3D Embroidery" },
+      { id: "back", label: "Back", image: "/images/v2/products/clean/cap_back_clean.jpg", caption: "Vintage Washed Back with Custom Antiqued Brass Buckle" },
     ],
     description: "Low-profile 6-panel cap with high-density tonal 3D embroidery. Vintage washed finish with custom antiqued brass buckle.",
     tagline: "Quiet statement",
@@ -212,7 +216,8 @@ const merchProducts = [
     fit: "Reinforced Handles",
     image: "/images/v2/products/clean/hero_tote_clean.jpg",
     angles: [
-      { id: "tote", label: "Studio Tote", image: "/images/v2/products/clean/hero_tote_clean.jpg", caption: "380 GSM Heavyweight Natural Canvas with Cross-Stitch Handles" },
+      { id: "front", label: "Front", image: "/images/v2/products/clean/hero_tote_clean.jpg", caption: "Wear The Reality Typography Front" },
+      { id: "back", label: "Back", image: "/images/v2/products/clean/hero_tote_back.jpg", caption: "Natural Canvas Clean Back" },
     ],
     description: "Heavy-duty 100% natural cotton canvas with bold typography. Big enough for groceries, laptops, and broken housing dreams.",
     tagline: "Everyday essentials",
@@ -230,7 +235,7 @@ const merchProducts = [
     fit: "Microwave & Dishwasher Safe",
     image: "/images/v2/products/clean/hero_mugs_clean.jpg",
     angles: [
-      { id: "mugs", label: "Studio Duo", image: "/images/v2/products/clean/hero_mugs_clean.jpg", caption: "Off-White & Matte Black 350ml Ceramic Duo" },
+      { id: "duo", label: "Duo", image: "/images/v2/products/clean/hero_mugs_clean.jpg", caption: "Off-White & Matte Black 350ml Ceramic Duo" },
     ],
     description: "Available in Off-White ('STILL 0 SQM.') and Matte Black ('Good Coffee. Bigger Dreams.'). Fuel for the morning reality check.",
     tagline: "Good coffee, bigger dreams",
@@ -637,9 +642,6 @@ export default function V2Page() {
 
   // Satirical Calculations
   const depositPercent = Math.min(100, (numericSavings / Math.max(1, currentCity.rawDeposit)) * 100);
-  const hyperLocalCount = Math.floor(numericSavings / Math.max(0.01, currentCity.hyperLocal.price));
-  const hoursTo1Sqm = Math.round(currentCity.pricePerSqm / Math.max(1, currentCity.averageHourlyWage));
-  const monthsTo1Sqm = Number((currentCity.pricePerSqm / Math.max(1, currentCity.averageHourlyWage * 8 * 21.67)).toFixed(1));
   const yearsToDeposit = Math.max(1, Math.round((currentCity.rawDeposit - numericSavings) / Math.max(1, currentCity.rawSalary * 0.2)));
 
   // Audit / Calculate animation states
@@ -778,22 +780,7 @@ export default function V2Page() {
     }
   };
 
-  // Sub-tabs under the calculator
-  const [activeCalcTab, setActiveCalcTab] = useState<"receipt" | "boomer" | "auction">("receipt");
-  const [copiedReceipt, setCopiedReceipt] = useState(false);
 
-  // Boomer simulator toggles
-  const [boomerSacrifices, setBoomerSacrifices] = useState({
-    coffee: true,
-    avo: true,
-    streaming: false,
-    walking: false,
-    noHeating: false,
-  });
-
-  // Auction simulator state
-  const [auctionState, setAuctionState] = useState<"idle" | "bidding" | "outbid" | "sold">("idle");
-  const [auctionLog, setAuctionLog] = useState<string[]>([]);
 
   // Renty corgi wisdom
   const [rentyIndex, setRentyIndex] = useState(0);
@@ -865,49 +852,7 @@ export default function V2Page() {
     setTimeout(() => setRentyBarking(false), 500);
   };
 
-  const boomerItems = [
-    { key: "coffee" as const, label: "Skip Daily Flat White", saving: 2007, desc: "+$5.50 / day" },
-    { key: "avo" as const, label: "Stop Eating Smashed Avocado", saving: 1144, desc: "+$22 / week" },
-    { key: "streaming" as const, label: "Cancel Netflix, Disney+ & Spotify", saving: 540, desc: "+$45 / month" },
-    { key: "walking" as const, label: "Walk 30km to Work (No Opal/Train)", saving: 2860, desc: "+$55 / week" },
-    { key: "noHeating" as const, label: "Zero Winter Heating (Wear 4 Jumpers)", saving: 600, desc: "+$150 / winter mo" },
-  ];
 
-  const totalBoomerSaving = boomerItems.reduce((acc, item) => {
-    return acc + (boomerSacrifices[item.key] ? item.saving : 0);
-  }, 0);
-
-  const boomerApprovalScore = Math.min(100, Math.round((totalBoomerSaving / 7151) * 100));
-
-  const monthlyBaseSaving = (currentCity.rawSalary * 0.2) / 12;
-  const monthlyTotalSaving = monthlyBaseSaving + (totalBoomerSaving / 12);
-  const monthsWithSacrifices = (currentCity.pricePerSqm / Math.max(1, monthlyTotalSaving)).toFixed(1);
-
-  const runAuctionSimulation = () => {
-    const bidAmount = numericSavings > 0 ? numericSavings.toLocaleString() : "25,000";
-    setAuctionState("bidding");
-    setAuctionLog([
-      `📢 Auctioneer: "Opening bid of ${currentCity.currencySymbol}${bidAmount} from the young hopeful in the back row!"`
-    ]);
-
-    setTimeout(() => {
-      setAuctionState("outbid");
-      setAuctionLog((prev) => [
-        ...prev,
-        `📱 Offshore Phone Bidder: "Raise to $1,850,000 CASH, unconditional, 7-day settlement!"`,
-        `👨‍💼 Auctioneer: "Going once, going twice..."`
-      ]);
-    }, 1100);
-
-    setTimeout(() => {
-      setAuctionState("sold");
-      setAuctionLog((prev) => [
-        ...prev,
-        `🔨 GAVEL SLAMS: "SOLD to the phone bidder who hasn't stepped foot in the Southern Hemisphere!"`,
-        `🏆 Verdict: You won 0 SQM (and 1 free bottle of lukewarm auction water).`
-      ]);
-    }, 2300);
-  };
 
   const getReceiptText = () => {
     return `==========================================
@@ -945,15 +890,23 @@ https://0sqm.fun
     }
   };
 
+  const [copiedReceipt, setCopiedReceipt] = useState(false);
   const [activePhoto, setActivePhoto] = useState<{
     image: string;
     caption: string;
     alt: string;
+    angles?: { id: string; label: string; image: string; caption?: string }[];
+    activeAngleIdx?: number;
   } | null>(null);
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [merchTab, setMerchTab] = useState<string>("collection");
   const [merchCategory, setMerchCategory] = useState<string>("all");
+  const [productAngles, setProductAngles] = useState<Record<string, number>>({
+    "same-dream-tee": 1,
+    "wen-1sqm-tee": 1,
+  });
   const [waitlistProduct, setWaitlistProduct] = useState<(typeof merchProducts)[0] | null>(null);
+  const [waitlistAngleIdx, setWaitlistAngleIdx] = useState<number>(0);
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistSize, setWaitlistSize] = useState("L");
   const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
@@ -1068,7 +1021,7 @@ https://0sqm.fun
       {/* Hero Section */}
       <section
         id="home"
-        className="relative min-h-[480px] sm:min-h-[620px] lg:min-h-[720px] scroll-mt-16 overflow-hidden pt-16"
+        className="relative min-h-[420px] sm:min-h-[500px] lg:min-h-[580px] scroll-mt-16 overflow-hidden pt-16"
       >
         <img
           src={heroImage}
@@ -1076,23 +1029,23 @@ https://0sqm.fun
           width={1672}
           height={941}
           loading="eager"
-          className="absolute inset-0 h-full w-full object-cover object-[35%_bottom] sm:object-[center_bottom]"
+          className="absolute inset-0 h-full w-full object-cover object-[24%_58%] sm:object-[25%_55%] lg:object-[28%_55%]"
         />
         <h1 className="sr-only">
           $0SQM — The Australian Dream Still Starts at 0m²
         </h1>
 
-        {/* Hero Content (Just a guy... & Follow on X button) */}
-        <div className="relative mx-auto flex min-h-[400px] sm:min-h-[540px] lg:min-h-[620px] max-w-7xl items-start px-5 pt-8 sm:px-8 sm:pt-12 lg:pt-16">
-          <div className="min-w-0 max-w-sm sm:max-w-md lg:max-w-lg bg-background/85 backdrop-blur-xs p-4 sm:p-5 rounded-xl border border-foreground/10 shadow-lg">
-            <p className="text-xs min-[360px]:text-sm sm:text-base lg:text-lg font-bold leading-relaxed text-foreground">
+        {/* Hero Content positioned right to let Justin & Koogee shine on the left */}
+        <div className="relative mx-auto flex min-h-[360px] sm:min-h-[440px] lg:min-h-[500px] max-w-7xl items-start justify-end px-5 pt-6 sm:px-8 sm:pt-10 lg:pt-14">
+          <div className="min-w-0 max-w-sm sm:max-w-md lg:max-w-md bg-background/90 backdrop-blur-xs p-4 sm:p-5 rounded-xl border border-foreground/10 shadow-lg">
+            <p className="text-xs min-[360px]:text-sm sm:text-base font-bold leading-relaxed text-foreground">
               Just a guy, a dog, and a very expensive housing market. Documenting the journey from 0.00m² to a place we can call home.
             </p>
             <div className="mt-3.5 sm:mt-4">
               <Button
                 variant="sunshine"
                 size="default"
-                className="px-5 py-2 sm:px-7 sm:py-3 text-xs min-[360px]:text-sm sm:text-base cursor-pointer shadow-md font-bold"
+                className="px-5 py-2 sm:px-6 sm:py-2.5 text-xs min-[360px]:text-sm sm:text-base cursor-pointer shadow-md font-bold"
                 asChild
               >
                 <a href="https://x.com/Own0SQM" target="_blank" rel="noreferrer">
@@ -1105,9 +1058,9 @@ https://0sqm.fun
       </section>
 
       {/* The Dream Section */}
-      <section id="dream" className="scroll-mt-16 bg-background px-4 py-16 sm:px-6 lg:px-8 border-b border-border">
+      <section id="dream" className="scroll-mt-16 bg-background px-4 py-10 sm:py-12 sm:px-6 lg:px-8 border-b border-border">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
             {/* Image Card with Polaroid & Tape styling */}
             <div className="relative">
               <div
@@ -1118,7 +1071,7 @@ https://0sqm.fun
                     alt: "Justin and Koogee checking the $0SQM Reality Check at Sydney Harbour",
                   })
                 }
-                className="group relative bg-paper p-3 pb-4 shadow-2xl border border-border rounded-xs sm:-rotate-1 hover:rotate-0 hover:scale-[1.01] transition-all duration-300 cursor-pointer"
+                className="group relative bg-paper p-3 pb-4 shadow-xl border border-border rounded-xs sm:-rotate-1 hover:rotate-0 hover:scale-[1.01] transition-all duration-300 cursor-pointer"
               >
                 {/* Masking tape top-center */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-6 masking-tape -rotate-2 z-20 pointer-events-none rounded-xs" />
@@ -1145,8 +1098,8 @@ https://0sqm.fun
               </div>
             </div>
 
-            {/* Content & Justin's Plan */}
-            <div className="space-y-6">
+            {/* Content & Strategic Manifesto */}
+            <div className="space-y-5">
               <div>
                 <span className="font-mono text-xs font-black uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-xs inline-block mb-3">
                   The Official Philosophy
@@ -1162,31 +1115,31 @@ https://0sqm.fun
                 </p>
               </div>
 
-              {/* Spiral Notebook Plan Card */}
-              <div className="rounded-lg border-2 border-dashed border-foreground/20 bg-paper p-5 shadow-sm relative">
-                <div className="flex items-center justify-between border-b border-border pb-2 mb-3">
-                  <span className="font-marker text-lg font-bold text-foreground">
-                    📓 Justin&apos;s Master Plan
+              {/* Strategic 0SQM Manifesto Card */}
+              <div className="rounded-xl border border-border/80 bg-paper p-5 sm:p-6 shadow-xs space-y-3">
+                <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                  <span className="font-mono text-xs font-black uppercase tracking-wider text-primary">
+                    0SQM MANIFESTO
                   </span>
-                  <span className="text-[11px] font-mono text-muted-foreground">Updated: Today</span>
+                  <span className="text-[11px] font-mono text-muted-foreground">Sydney, 2026</span>
                 </div>
-                <ul className="space-y-2 text-xs sm:text-sm font-medium">
-                  {[
-                    ["☑", "Save more (theoretically)"],
-                    ["☑", "Find cheaper suburb (now 4 hours away)"],
-                    ["☑", "Go to more open homes (for the free pens)"],
-                    ["☑", "Get 1 m² of land (the dream)"],
-                    ["☑", "More walks with Koogee"],
-                    ["☐", "Don't give up ☺"],
-                  ].map(([check, item]) => (
-                    <li key={item} className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-primary">{check}</span>
-                      <span className={check === "☐" ? "font-bold text-foreground underline decoration-primary decoration-2" : "text-foreground/90"}>
-                        {item}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                <p className="text-sm sm:text-base font-medium text-foreground/90 leading-relaxed">
+                  We might be priced out of the quarter-acre block, but we refuse to sacrifice our lifestyle or our sense of humor. 0SQM isn&apos;t defeat—it&apos;s reclaiming perspective, community, and freedom.
+                </p>
+                <div className="flex flex-wrap items-center gap-4 pt-1 text-xs font-bold text-muted-foreground">
+                  <span className="flex items-center gap-1.5 text-foreground">
+                    <span className="size-1.5 rounded-full bg-primary" />
+                    Zero mortgage debt
+                  </span>
+                  <span className="flex items-center gap-1.5 text-foreground">
+                    <span className="size-1.5 rounded-full bg-primary" />
+                    Harbour views daily
+                  </span>
+                  <span className="flex items-center gap-1.5 text-foreground">
+                    <span className="size-1.5 rounded-full bg-primary" />
+                    Unfiltered community
+                  </span>
+                </div>
               </div>
 
               <div className="flex items-center gap-3 pt-1">
@@ -1223,21 +1176,22 @@ https://0sqm.fun
             </span>
           </div>
 
-          <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
-            {/* Cities Sidebar */}
-            <div className="flex flex-col gap-2">
-              {/* Category Switcher */}
-              <div className="grid grid-cols-2 gap-1 rounded-md border border-border bg-paper p-1">
+          <div className="mx-auto max-w-2xl space-y-3.5">
+            {/* Sleek, Compact City & Country Switcher */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 p-1.5 rounded-xl border border-border bg-paper shadow-2xs">
+              {/* Category Switcher (Australia / Global) */}
+              <div className="grid grid-cols-2 gap-1 rounded-lg border border-border/70 bg-background/80 p-0.5 shrink-0 sm:w-52">
                 <button
                   type="button"
                   onClick={() => {
                     setCalculatorTab("australia");
                     setSelectedCityIndex(0);
                   }}
-                  className={`rounded-xs py-1.5 px-2 text-center text-xs font-bold transition-all cursor-pointer ${calculatorTab === "australia"
-                      ? "bg-primary text-foreground shadow-xs font-black"
+                  className={`rounded-md py-1 px-2 text-center text-xs font-bold transition-all cursor-pointer ${
+                    calculatorTab === "australia"
+                      ? "bg-primary text-foreground shadow-2xs font-black"
                       : "text-muted-foreground hover:text-foreground"
-                    }`}
+                  }`}
                 >
                   🇦🇺 Australia
                 </button>
@@ -1247,801 +1201,474 @@ https://0sqm.fun
                     setCalculatorTab("global");
                     setSelectedCityIndex(0);
                   }}
-                  className={`rounded-xs py-1.5 px-2 text-center text-xs font-bold transition-all cursor-pointer ${calculatorTab === "global"
-                      ? "bg-primary text-foreground shadow-xs font-black"
+                  className={`rounded-md py-1 px-2 text-center text-xs font-bold transition-all cursor-pointer ${
+                    calculatorTab === "global"
+                      ? "bg-primary text-foreground shadow-2xs font-black"
                       : "text-muted-foreground hover:text-foreground"
-                    }`}
+                  }`}
                 >
                   🌍 Global
                 </button>
               </div>
 
-              {/* City Buttons */}
-              <div className="grid w-full min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-1 lg:content-start">
+              {/* City Pill Buttons (horizontal scrollable on mobile, flex-wrap on desktop) */}
+              <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 no-scrollbar">
                 {activeCities.map((city, index) => (
-                  <Button
-                    variant={index === selectedCityIndex ? "sunshine" : "ghost"}
+                  <button
                     key={city.name}
+                    type="button"
                     onClick={() => setSelectedCityIndex(index)}
-                    className={`h-auto min-w-0 justify-start px-3 py-3 text-left text-xs min-[360px]:text-sm cursor-pointer transition-all duration-150 ${index === selectedCityIndex
-                        ? "font-bold shadow-xs scale-[1.02] border border-foreground/30"
-                        : "hover:bg-muted/80 text-foreground"
-                      } ${index === activeCities.length - 1 ? "col-span-2 sm:col-span-1" : ""}`}
+                    className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      index === selectedCityIndex
+                        ? "bg-foreground text-background shadow-xs scale-[1.02]"
+                        : "bg-background/80 hover:bg-muted text-foreground border border-border/60"
+                    }`}
                   >
-                    <span className="grid size-7 shrink-0 place-items-center rounded-sm border border-foreground/20 bg-background text-[10px] font-black">
-                      {city.flag}
-                    </span>
-                    <span className="truncate">{city.name}</span>
-                  </Button>
+                    <span className="text-[10px] font-mono opacity-80">{city.flag}</span>
+                    <span>{city.name}</span>
+                  </button>
                 ))}
               </div>
             </div>
 
-            {/* Main Area: City Details, Calculator Form & THE REALITY SCORE CARD */}
-            <div className="min-w-0 space-y-6">
-              {/* City Details & Input Controls */}
-              <div className="rounded-2xl border border-border bg-background p-4 shadow-sm sm:p-6">
-                <div className="border-b border-border pb-5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-marker text-3xl font-bold uppercase">{currentCity.name}</h3>
-                      <p className="text-xs text-muted-foreground">{currentCity.country}</p>
-                    </div>
-                    <span className="rounded-full border border-foreground/20 bg-paper px-3 py-1 text-xs font-bold">
-                      {currentCity.flag} · {currentCity.currency} ({currentCity.currencySymbol})
-                    </span>
-                  </div>
-                  <div className="mt-5 grid min-w-0 grid-cols-1 gap-4 min-[350px]:grid-cols-2 md:grid-cols-4">
-                    {[
-                      ["Median House Price", currentCity.medianHousePrice],
-                      ["Land Value (per sqm)", currentCity.landValuePerSqm],
-                      ["Typical Deposit (20%)", currentCity.typicalDeposit],
-                      ["Average Full-time Salary", currentCity.averageSalary],
-                    ].map(([label, value]) => (
-                      <div key={label} className="border-l-2 border-primary pl-3">
-                        <p className="text-[11px] text-muted-foreground">{label}</p>
-                        <strong className="mt-1 block text-xl">{value}</strong>
-                      </div>
-                    ))}
-                  </div>
+            {/* City Details & Input Controls (Sleek & Compact) */}
+            <div className="rounded-xl border border-border bg-background p-3.5 sm:p-4 shadow-xs">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-border/70">
+                <div>
+                  <h3 className="font-marker text-lg sm:text-xl font-bold uppercase leading-tight">{currentCity.name}</h3>
+                  <p className="text-[10px] text-muted-foreground">{currentCity.country}</p>
                 </div>
-
-                {/* Calculator Form & Controls */}
-                <div className="pt-5 space-y-5">
-                  <div>
-                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                      <h4 className="font-marker text-xl font-bold uppercase">
-                        How much of {currentCity.name} can you afford?
-                      </h4>
-                      <span className="text-[11px] font-semibold text-primary-foreground bg-primary px-2 py-0.5 rounded-xs">
-                        Theoretical Rate: {currentCity.landValuePerSqm}/m²
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Enter your savings in {currentCity.currency} ({currentCity.currencySymbol}) or drag the slider to see how many square metres you theoretically afford.
-                    </p>
-
-                    <div className="mt-3 grid min-w-0 grid-cols-1 gap-2 min-[360px]:grid-cols-[minmax(0,1fr)_auto]">
-                      <label className="flex h-11 min-w-0 items-center rounded-md border border-input bg-paper px-3 focus-within:ring-2 focus-within:ring-primary">
-                        <span className="mr-2 font-bold text-muted-foreground">{currentCity.currencySymbol}</span>
-                        <input
-                          ref={savingsInputRef}
-                          value={savings}
-                          onChange={(e) => setSavings(e.target.value)}
-                          onKeyDown={(e) => { if (e.key === "Enter") calculate(); }}
-                          inputMode="decimal"
-                          aria-label="Savings amount"
-                          placeholder="e.g. 25000"
-                          className="w-full min-w-0 flex-1 bg-transparent outline-none font-medium text-base text-foreground"
-                        />
-                      </label>
-                      <Button
-                        variant="ink"
-                        className="h-11 w-full min-[360px]:w-auto cursor-pointer font-bold flex items-center justify-center gap-2 transition-transform active:scale-95"
-                        onClick={calculate}
-                        disabled={isAuditing}
-                      >
-                        {isAuditing ? (
-                          <>
-                            <div className="size-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
-                            <span>Auditing...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Sparkles className="size-4 text-amber-400" />
-                            <span>Calculate</span>
-                          </>
-                        )}
-                      </Button>
-                    </div>
-
-                    {/* Comedic Auditing Progress Banner */}
-                    {isAuditing && (
-                      <div className="mt-3 p-3 rounded-md bg-amber-500/15 border border-amber-500/30 text-xs font-mono text-foreground animate-in fade-in slide-in-from-top-1 duration-200">
-                        <div className="flex items-center justify-between mb-1.5 font-bold">
-                          <span className="flex items-center gap-2">
-                            <span className="size-2 rounded-full bg-amber-600 animate-ping" />
-                            <span>{auditMessages[auditStep]}</span>
-                          </span>
-                          <span className="text-[11px] text-muted-foreground">
-                            {Math.round(((auditStep + 1) / auditMessages.length) * 100)}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-neutral-200 h-1.5 rounded-full overflow-hidden">
-                          <div
-                            className="bg-amber-500 h-full transition-all duration-300 rounded-full"
-                            style={{ width: `${((auditStep + 1) / auditMessages.length) * 100}%` }}
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Range Slider */}
-                    <div className="mt-3 flex items-center gap-3">
-                      <span className="text-[11px] font-bold text-muted-foreground">{currentCity.currencySymbol}0</span>
-                      <input
-                        type="range"
-                        min="0"
-                        max="150000"
-                        step="2500"
-                        value={Math.min(150000, numericSavings)}
-                        onChange={(e) => setSavings(e.target.value)}
-                        className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-amber-400"
-                        aria-label="Savings slider"
-                      />
-                      <span className="text-[11px] font-bold text-muted-foreground">{currentCity.currencySymbol}150k+</span>
-                    </div>
-
-                    {/* Dynamic Live Slider Roaster */}
-                    <div className="mt-2 flex items-center gap-2 rounded-md bg-amber-500/10 border border-amber-500/20 px-3 py-2 text-xs text-foreground transition-all">
-                      <span className="text-sm shrink-0">🔥</span>
-                      <span className="font-semibold italic leading-snug">
-                        {getSliderRoast(numericSavings, currentCity.currencySymbol)}
-                      </span>
-                    </div>
-
-                    {/* Quick Preset Chips */}
-                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                      <span className="text-[11px] font-semibold text-muted-foreground mr-1">Quick Presets:</span>
-                      {["5000", "25000", "50000", "100000", "250000"].map((preset) => (
-                        <button
-                          key={preset}
-                          type="button"
-                          onClick={() => handlePreset(preset)}
-                          className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold transition-colors cursor-pointer ${numericSavings === Number(preset)
-                              ? "bg-primary text-foreground border-foreground/30 font-bold"
-                              : "bg-paper hover:bg-muted text-muted-foreground border-border"
-                            }`}
-                        >
-                          {currentCity.currencySymbol}{Number(preset).toLocaleString()}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="rounded-full border border-foreground/15 bg-paper px-2 py-0.5 text-[10px] font-bold">
+                    {currentCity.flag} · {currentCity.currency} ({currentCity.currencySymbol})
+                  </span>
+                  <span className="text-[10px] font-semibold text-primary-foreground bg-primary px-2 py-0.5 rounded-full">
+                    {currentCity.landValuePerSqm}/m²
+                  </span>
                 </div>
               </div>
 
-              {/* ========================================================================= */}
-              {/* THE REALITY SCORE BILLBOARD (Sydney Harbour Scene with Renty) */}
-              {/* ========================================================================= */}
-              <div className="flex justify-center w-full">
-                <div
-                  ref={cardRef}
-                  id="reality-score-card"
-                  className={`w-full max-w-3xl rounded-[32px] sm:rounded-[40px] border border-neutral-300 shadow-2xl p-4 sm:p-6 md:p-8 relative overflow-hidden transition-all duration-300 ${auditShake ? "scale-[1.02] ring-4 ring-amber-400/40" : ""
-                    }`}
-                  style={{
-                    backgroundImage: "url('/images/v2/cities/sydney.jpg')",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center 42%",
-                  }}
-                >
-                  {/* Subtle bright sky vignette to ensure top text and billboard stand out */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/35 via-white/10 to-black/25 pointer-events-none" />
+              {/* Compact 4-Metric Strip */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 py-2.5 border-b border-border/70 text-xs">
+                {[
+                  ["Median House", currentCity.medianHousePrice],
+                  ["Land Value", `${currentCity.landValuePerSqm}/m²`],
+                  ["20% Deposit", currentCity.typicalDeposit],
+                  ["Avg Salary", currentCity.averageSalary],
+                ].map(([label, value]) => (
+                  <div key={label} className="bg-paper/70 rounded-lg p-2 border border-border/50">
+                    <p className="text-[9px] text-muted-foreground uppercase tracking-wider">{label}</p>
+                    <strong className="mt-0.5 block text-xs sm:text-sm font-bold text-foreground">{value}</strong>
+                  </div>
+                ))}
+              </div>
 
-                  {/* Top Scene Header (Sky Area) */}
-                  <div className="relative z-10 flex flex-wrap items-start justify-between gap-3 pb-8 sm:pb-12 md:pb-14">
-                    {/* Left: Logo & Subtitle */}
-                    <div className="drop-shadow-sm">
-                      <div className="flex items-center text-3xl sm:text-5xl font-marker font-bold tracking-tight">
-                        <span className="text-neutral-900">$</span>
-                        <span className="text-[#F5C842]">0</span>
-                        <span className="text-neutral-900">SQM</span>
-                      </div>
-                      <p className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-neutral-800 uppercase mt-0.5">
-                        REAL DATA. REAL PRICES. SAME RESULT.
-                      </p>
+              {/* Input & Calculator Row */}
+              <div className="pt-2.5 space-y-2">
+                <div className="grid min-w-0 grid-cols-1 gap-2 min-[360px]:grid-cols-[minmax(0,1fr)_auto]">
+                  <label className="flex h-9 sm:h-10 min-w-0 items-center rounded-lg border border-input bg-paper px-3 focus-within:ring-2 focus-within:ring-primary">
+                    <span className="mr-1.5 font-bold text-xs text-muted-foreground">{currentCity.currencySymbol}</span>
+                    <input
+                      ref={savingsInputRef}
+                      value={savings}
+                      onChange={(e) => setSavings(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === "Enter") calculate(); }}
+                      inputMode="decimal"
+                      aria-label="Savings amount"
+                      placeholder="e.g. 25000"
+                      className="w-full min-w-0 flex-1 bg-transparent outline-none font-semibold text-sm sm:text-base text-foreground"
+                    />
+                  </label>
+                  <Button
+                    variant="ink"
+                    className="h-9 sm:h-10 px-4 text-xs font-bold cursor-pointer flex items-center justify-center gap-1.5 rounded-lg active:scale-95"
+                    onClick={calculate}
+                    disabled={isAuditing}
+                  >
+                    {isAuditing ? (
+                      <>
+                        <div className="size-3 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                        <span>Auditing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="size-3.5 text-amber-400" />
+                        <span>Calculate</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                {/* Comedic Auditing Progress Banner */}
+                {isAuditing && (
+                  <div className="p-2.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-xs font-mono text-foreground animate-in fade-in slide-in-from-top-1 duration-200">
+                    <div className="flex items-center justify-between mb-1 font-bold">
+                      <span className="flex items-center gap-1.5">
+                        <span className="size-2 rounded-full bg-amber-600 animate-ping" />
+                        <span className="text-[11px]">{auditMessages[auditStep]}</span>
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        {Math.round(((auditStep + 1) / auditMessages.length) * 100)}%
+                      </span>
                     </div>
-
-                    {/* Middle: Slogan with yellow brush underline */}
-                    <div className="hidden sm:block text-center pt-1 drop-shadow-xs -rotate-1">
-                      <p className="font-marker text-xs sm:text-sm md:text-base font-bold tracking-wide text-neutral-900 uppercase leading-tight">
-                        THE AUSTRALIAN DREAM
-                      </p>
-                      <div className="inline-block relative">
-                        <p className="font-marker text-xs sm:text-sm md:text-base font-bold tracking-wide text-neutral-900 uppercase leading-tight">
-                          STILL STARTS AT 0M².
-                        </p>
-                        <div className="h-1 sm:h-1.5 bg-[#F5C842] rounded-full w-full -mt-0.5" />
-                      </div>
+                    <div className="w-full bg-neutral-200 h-1 rounded-full overflow-hidden">
+                      <div
+                        className="bg-amber-500 h-full transition-all duration-300 rounded-full"
+                        style={{ width: `${((auditStep + 1) / auditMessages.length) * 100}%` }}
+                      />
                     </div>
+                  </div>
+                )}
 
-                    {/* Right spacer to balance top row while leaving room for Renty */}
-                    <div className="w-24 sm:w-36 md:w-44 shrink-0" />
+                {/* Range Slider */}
+                <div className="flex items-center gap-2 pt-0.5">
+                  <span className="text-[10px] font-mono font-bold text-muted-foreground">{currentCity.currencySymbol}0</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="150000"
+                    step="2500"
+                    value={Math.min(150000, numericSavings)}
+                    onChange={(e) => setSavings(e.target.value)}
+                    className="w-full h-1.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                    aria-label="Savings slider"
+                  />
+                  <span className="text-[10px] font-mono font-bold text-muted-foreground">{currentCity.currencySymbol}150k+</span>
+                </div>
+
+                {/* Dynamic Live Slider Roaster */}
+                <div className="flex items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 text-[11px] text-foreground">
+                  <span className="text-xs shrink-0">🔥</span>
+                  <span className="font-semibold italic leading-tight truncate">
+                    {getSliderRoast(numericSavings, currentCity.currencySymbol)}
+                  </span>
+                </div>
+
+                {/* Quick Preset Chips */}
+                <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                  <span className="text-[10px] font-semibold text-muted-foreground mr-1">Presets:</span>
+                  {["5000", "25000", "50000", "100000", "250000"].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => handlePreset(preset)}
+                      className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold transition-colors cursor-pointer ${
+                        numericSavings === Number(preset)
+                          ? "bg-primary text-foreground border-foreground/30 font-bold"
+                          : "bg-paper hover:bg-muted text-muted-foreground border-border"
+                      }`}
+                    >
+                      {currentCity.currencySymbol}{Number(preset).toLocaleString()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* THE REALITY SCORE BILLBOARD (Refined, Compact & Sleek) */}
+            <div className="flex justify-center w-full">
+              <div
+                ref={cardRef}
+                id="reality-score-card"
+                className={`w-full rounded-2xl sm:rounded-3xl border border-neutral-300 shadow-xl p-3 sm:p-4.5 relative overflow-hidden transition-all duration-300 ${
+                  auditShake ? "scale-[1.01] ring-2 ring-amber-400/40" : ""
+                }`}
+                style={{
+                  backgroundImage: "url('/images/v2/cities/sydney.jpg')",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center 42%",
+                }}
+              >
+                {/* Subtle vignette overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white/35 via-white/10 to-black/25 pointer-events-none" />
+
+                {/* Top Scene Header (Sky Area) */}
+                <div className="relative z-10 flex flex-wrap items-start justify-between gap-2 pb-3 sm:pb-4">
+                  <div className="drop-shadow-sm">
+                    <div className="flex items-center text-xl sm:text-2xl font-marker font-bold tracking-tight">
+                      <span className="text-neutral-900">$</span>
+                      <span className="text-[#F5C842]">0</span>
+                      <span className="text-neutral-900">SQM</span>
+                    </div>
+                    <p className="text-[9px] font-mono font-bold tracking-wider text-neutral-800 uppercase">
+                      REAL DATA. REAL PRICES. SAME RESULT.
+                    </p>
                   </div>
 
-                  {/* THE BILLBOARD CONTAINER */}
-                  <div className="relative z-20 mt-4 sm:mt-6">
-                    {/* Koogee Peeking over Billboard with Sunglasses & "KOOGEE APPROVES." */}
-                    <div className="absolute top-0 -translate-y-[calc(100%-6px)] sm:-translate-y-[calc(100%-8px)] md:-translate-y-[calc(100%-10px)] right-4 sm:right-10 md:right-14 z-30 flex items-end select-none pointer-events-none">
-                      <img
-                        src="/images/v2/renty-peeking.png"
-                        alt="Koogee the Corgi Approves"
-                        className="w-28 sm:w-36 md:w-44 object-contain drop-shadow-2xl"
-                      />
-                      <div className="flex flex-col items-start -ml-1 sm:-ml-2 mb-6 sm:mb-10 select-none">
-                        <span className="font-marker text-[10px] sm:text-xs md:text-sm font-bold text-neutral-900 -rotate-6 leading-tight whitespace-nowrap drop-shadow-xs">
-                          KOOGEE
-                          <br />
-                          APPROVES.
+                  <div className="hidden sm:block text-center pt-0.5 drop-shadow-xs -rotate-1">
+                    <p className="font-marker text-[11px] font-bold tracking-wide text-neutral-900 uppercase leading-tight">
+                      THE AUSTRALIAN DREAM STILL STARTS AT 0M².
+                    </p>
+                    <div className="h-1 bg-[#F5C842] rounded-full w-full -mt-0.5" />
+                  </div>
+
+                  <div className="w-16 sm:w-20 shrink-0" />
+                </div>
+
+                {/* THE BILLBOARD CONTAINER */}
+                <div className="relative z-20 mt-2 sm:mt-3">
+                  {/* Koogee Peeking over Billboard */}
+                  <div className="absolute top-0 -translate-y-[calc(100%-4px)] right-3 sm:right-6 z-30 flex items-end select-none pointer-events-none">
+                    <img
+                      src="/images/v2/renty-peeking.png"
+                      alt="Koogee the Corgi Approves"
+                      className="w-16 sm:w-20 object-contain drop-shadow-lg"
+                    />
+                    <div className="flex flex-col items-start -ml-1 mb-3 sm:mb-5 select-none">
+                      <span className="font-marker text-[9px] sm:text-[10px] font-bold text-neutral-900 -rotate-6 leading-tight whitespace-nowrap drop-shadow-xs">
+                        KOOGEE
+                        <br />
+                        APPROVES.
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* THE BILLBOARD STRUCTURE */}
+                  <div className="rounded-xl sm:rounded-2xl border-2 sm:border-3 border-[#363A40] bg-[#1E2024] shadow-[0_15px_35px_rgba(0,0,0,0.45)] overflow-hidden relative">
+                    {/* Metallic Screws */}
+                    <div className="absolute top-1.5 left-1.5 size-2 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
+                    <div className="absolute top-1.5 right-1.5 size-2 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
+                    <div className="absolute bottom-1.5 left-1.5 size-2 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
+                    <div className="absolute bottom-1.5 right-1.5 size-2 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
+
+                    {/* Upper Half: Dark Digital Sign Display */}
+                    <div className="bg-[#202328] p-3 sm:p-4 border-b-2 border-[#33373D] text-white">
+                      <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase pb-2">
+                        <span className="text-neutral-300 tracking-wider">REALITY SCORE</span>
+                        <span className="text-neutral-400">
+                          {currentCity.name.toUpperCase()}, {currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : "NSW"}
                         </span>
-                        <svg className="w-5 h-5 sm:w-7 sm:h-7 text-neutral-900 -rotate-12 mt-0.5 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M18 6a9 9 0 0 1-10 10l-4-2m0 0l3-4m-3 4l4 2" />
-                        </svg>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-[1.3fr_1fr] gap-3 items-center">
+                        {/* Left: Split-Flap Flip Counter */}
+                        <div>
+                          <div className="flex items-center gap-1 my-0.5">
+                            {/* Tile 1 */}
+                            <div className="relative w-auto min-w-8 h-11 sm:min-w-10 sm:h-14 px-1.5 bg-[#121417] rounded-md flex items-center justify-center shadow-md border border-black/50 overflow-hidden select-none">
+                              <span className="font-sans font-black text-2xl sm:text-3xl text-white tracking-tight">{intPart}</span>
+                              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
+                            </div>
+
+                            {/* Dot */}
+                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#121417] self-end mb-2 mx-0.5 shadow-sm" />
+
+                            {/* Tile 2 */}
+                            <div className="relative w-8 h-11 sm:w-10 sm:h-14 bg-[#121417] rounded-md flex items-center justify-center shadow-md border border-black/50 overflow-hidden select-none">
+                              <span className="font-sans font-black text-2xl sm:text-3xl text-white tracking-tight">{decPart[0] || "0"}</span>
+                              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
+                            </div>
+
+                            {/* Tile 3 */}
+                            <div className="relative w-8 h-11 sm:w-10 sm:h-14 bg-[#121417] rounded-md flex items-center justify-center shadow-md border border-black/50 overflow-hidden select-none">
+                              <span className="font-sans font-black text-2xl sm:text-3xl text-white tracking-tight">{decPart[1] || "0"}</span>
+                              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
+                            </div>
+
+                            {/* Tile 4: m² */}
+                            <div className="relative w-11 h-11 sm:w-13 sm:h-14 bg-[#121417] rounded-md flex flex-col items-center justify-center shadow-md border border-black/50 overflow-hidden select-none ml-0.5">
+                              <div className="relative inline-block">
+                                <span className="font-bold text-xl sm:text-2xl text-white select-none">m²</span>
+                                <div className="h-0.5 bg-[#F5C842] rounded-full w-full -mt-0.5" />
+                              </div>
+                              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
+                            </div>
+                          </div>
+
+                          <div className="mt-1.5">
+                            <p className="font-bold text-sm sm:text-base text-white leading-tight">
+                              {affordableSqm.toFixed(2)} m² in theory. <span className="text-[#F5C842]">0 m² in reality.</span>
+                            </p>
+                            <p className="text-[11px] text-neutral-400 font-medium mt-0.5">
+                              You own 0 square metres. But hey, at least the views are free.
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Right: Metadata Card */}
+                        <div className="rounded-xl border border-black/10 bg-[#FAF8F2] p-2.5 sm:p-3 text-neutral-900 shadow-xs space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="size-3 text-neutral-800 shrink-0" />
+                            <div className="min-w-0 flex-1 flex items-baseline justify-between">
+                              <span className="text-[8px] font-mono font-bold text-neutral-500 uppercase">LOCATION</span>
+                              <strong className="text-[11px] font-bold text-neutral-900 truncate">
+                                {currentCity.name}, {currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : currentCity.country}
+                              </strong>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <Calendar className="size-3 text-neutral-800 shrink-0" />
+                            <div className="min-w-0 flex-1 flex items-baseline justify-between">
+                              <span className="text-[8px] font-mono font-bold text-neutral-500 uppercase">DATE</span>
+                              <strong className="text-[11px] font-bold text-neutral-900">20 Sep 2026</strong>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <Home className="size-3 text-neutral-800 shrink-0" />
+                            <div className="min-w-0 flex-1 flex items-baseline justify-between">
+                              <span className="text-[8px] font-mono font-bold text-neutral-500 uppercase">TYPE</span>
+                              <strong className="text-[11px] font-bold text-neutral-900">Theoretical Land</strong>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <Wallet className="size-3 text-neutral-800 shrink-0" />
+                            <div className="min-w-0 flex-1 flex items-baseline justify-between">
+                              <span className="text-[8px] font-mono font-bold text-neutral-500 uppercase">SAVINGS</span>
+                              <strong className="text-[11px] font-bold text-neutral-900">
+                                {currentCity.currencySymbol}{numericSavings.toLocaleString()}
+                              </strong>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    {/* THE BILLBOARD STRUCTURE */}
-                    <div className="rounded-[24px] sm:rounded-[32px] border-[6px] sm:border-[8px] border-[#363A40] bg-[#1E2024] shadow-[0_25px_60px_rgba(0,0,0,0.5)] overflow-hidden relative">
-                      {/* 4 Corner Metallic Screws / Rivets */}
-                      <div className="absolute top-2.5 left-2.5 size-2.5 sm:size-3 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
-                      <div className="absolute top-2.5 right-2.5 size-2.5 sm:size-3 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
-                      <div className="absolute bottom-2.5 left-2.5 size-2.5 sm:size-3 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
-                      <div className="absolute bottom-2.5 right-2.5 size-2.5 sm:size-3 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
-
-                      {/* Upper Half: Dark Digital Sign Display */}
-                      <div className="bg-[#202328] p-4 sm:p-6 border-b-4 border-[#33373D] text-white">
-                        <div className="flex items-center justify-between text-xs font-mono font-bold uppercase pb-3">
-                          <span className="text-neutral-300 tracking-widest">REALITY SCORE</span>
-                          <span className="text-neutral-400 text-[11px] tracking-wider">
-                            {currentCity.name.toUpperCase()}, {currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : "NSW"}
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-[1.3fr_1fr] gap-4 items-center">
-                          {/* Left: Split-Flap Flip Counter */}
+                    {/* Lower Half: Cream Board with Cost Breakdown & Sticky Note */}
+                    <div className="bg-[#FAF8F2] p-3 sm:p-4 text-neutral-900">
+                      <div className="grid grid-cols-1 sm:grid-cols-[1.3fr_1fr] gap-3 items-start">
+                        {/* Left: Cost Breakdown */}
+                        <div className="flex flex-col justify-between">
                           <div>
-                            <div className="flex items-center gap-1 sm:gap-1.5 my-1">
-                              {/* Tile 1 */}
-                              <div className="relative w-auto min-w-12 h-18 sm:min-w-15 sm:h-22 px-2 bg-[#121417] rounded-[8px] sm:rounded-[10px] flex items-center justify-center shadow-lg border border-black/50 overflow-hidden select-none">
-                                <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">{intPart}</span>
-                                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
-                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-r-xs" />
-                                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-l-xs" />
+                            <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase">
+                              <span className="text-neutral-800 tracking-wider">COST BREAKDOWN</span>
+                              <span className="text-neutral-500 text-[9px]">{currentCity.currency} ({currentCity.currencySymbol})</span>
+                            </div>
+
+                            <div className="border-b border-neutral-300 my-1.5" />
+
+                            <div className="space-y-1 font-mono text-[10px] sm:text-[11px]">
+                              <div className="flex items-center justify-between text-neutral-800">
+                                <span className="flex items-center gap-1">
+                                  <Tag className="size-2.5 text-neutral-600 shrink-0" />
+                                  <span>Land Value ({affordableSqm.toFixed(2)} m²)</span>
+                                </span>
+                                <span className="font-semibold">{currentCity.currencySymbol}{numericSavings.toLocaleString()}</span>
                               </div>
-
-                              {/* Dot */}
-                              <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#121417] self-end mb-3 sm:mb-4 mx-0.5 shadow-sm" />
-
-                              {/* Tile 2 */}
-                              <div className="relative w-12 h-18 sm:w-15 sm:h-22 bg-[#121417] rounded-[8px] sm:rounded-[10px] flex items-center justify-center shadow-lg border border-black/50 overflow-hidden select-none">
-                                <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">{decPart[0] || "0"}</span>
-                                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
-                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-r-xs" />
-                                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-l-xs" />
+                              <div className="flex items-center justify-between text-neutral-800">
+                                <span className="flex items-center gap-1">
+                                  <FileText className="size-2.5 text-neutral-600 shrink-0" />
+                                  <span>Stamp Duty (on fresh air)</span>
+                                </span>
+                                <span className="font-semibold">{currentCity.currencySymbol}{dynamicStampDuty.toLocaleString()}</span>
                               </div>
-
-                              {/* Tile 3 */}
-                              <div className="relative w-12 h-18 sm:w-15 sm:h-22 bg-[#121417] rounded-[8px] sm:rounded-[10px] flex items-center justify-center shadow-lg border border-black/50 overflow-hidden select-none">
-                                <span className="font-sans font-black text-4xl sm:text-6xl text-white tracking-tight">{decPart[1] || "0"}</span>
-                                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
-                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-r-xs" />
-                                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-l-xs" />
+                              <div className="flex items-center justify-between text-neutral-800">
+                                <span className="flex items-center gap-1">
+                                  <Wrench className="size-2.5 text-neutral-600 shrink-0" />
+                                  <span>Strata Sinking Fund (broken lift)</span>
+                                </span>
+                                <span className="font-semibold">{currentCity.currencySymbol}{dynamicStrata.toLocaleString()}</span>
                               </div>
-
-                              {/* Tile 4: m² with flip line and yellow underline */}
-                              <div className="relative w-16 h-18 sm:w-20 sm:h-22 bg-[#121417] rounded-[8px] sm:rounded-[10px] flex flex-col items-center justify-center shadow-lg border border-black/50 overflow-hidden select-none ml-1">
-                                <div className="relative inline-block">
-                                  <span className="font-bold text-3xl sm:text-5xl text-white select-none">m²</span>
-                                  <div className="h-1 bg-[#F5C842] rounded-full w-full -mt-0.5" />
-                                </div>
-                                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
-                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-r-xs" />
-                                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-2.5 bg-[#0A0C0E] rounded-l-xs" />
+                              <div className="flex items-center justify-between text-neutral-800">
+                                <span className="flex items-center gap-1">
+                                  <User className="size-2.5 text-neutral-600 shrink-0" />
+                                  <span>Agent Cologne Surcharge</span>
+                                </span>
+                                <span className="font-semibold">{currentCity.currencySymbol}{dynamicAgentCologne.toLocaleString()}</span>
+                              </div>
+                              <div className="flex items-center justify-between text-neutral-800">
+                                <span className="flex items-center gap-1">
+                                  <Percent className="size-2.5 text-neutral-600 shrink-0" />
+                                  <span>Landlord Mortgage Gratitude</span>
+                                </span>
+                                <span className="font-semibold">100%</span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="flex items-center gap-1 text-neutral-800">
+                                  <Heart className="size-2.5 text-neutral-600 shrink-0" />
+                                  <span>Emotional Damage</span>
+                                </span>
+                                <span className="text-emerald-600 font-bold">FREE</span>
                               </div>
                             </div>
 
-                            <div className="mt-3">
-                              <p className="font-bold text-base sm:text-xl text-white leading-tight">
-                                {affordableSqm.toFixed(2)} m² in theory. <span className="text-[#F5C842]">0 m² in reality.</span>
-                              </p>
-                              <p className="text-xs sm:text-sm text-neutral-400 font-medium mt-0.5">
-                                You own 0 square metres. But hey, at least the views are free.
-                              </p>
-                            </div>
+                            <div className="border-b border-neutral-300 my-1.5" />
                           </div>
 
-                          {/* Right: Metadata Card */}
-                          <div className="rounded-2xl border border-black/10 bg-[#FAF8F2] p-3.5 sm:p-4 text-neutral-900 shadow-sm space-y-2.5">
-                            {/* Location */}
-                            <div className="flex items-start gap-2.5">
-                              <MapPin className="size-4 text-neutral-800 shrink-0 mt-0.5" />
-                              <div>
-                                <span className="block text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-500">
-                                  LOCATION
-                                </span>
-                                <strong className="text-xs sm:text-sm font-bold text-neutral-900">
-                                  {currentCity.name}, {currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : currentCity.country}
-                                </strong>
-                              </div>
-                            </div>
-
-                            {/* Date */}
-                            <div className="flex items-start gap-2.5">
-                              <Calendar className="size-4 text-neutral-800 shrink-0 mt-0.5" />
-                              <div>
-                                <span className="block text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-500">
-                                  DATE
-                                </span>
-                                <strong className="text-xs sm:text-sm font-bold text-neutral-900">
-                                  20 Sep 2026
-                                </strong>
-                              </div>
-                            </div>
-
-                            {/* Property Type */}
-                            <div className="flex items-start gap-2.5">
-                              <Home className="size-4 text-neutral-800 shrink-0 mt-0.5" />
-                              <div>
-                                <span className="block text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-500">
-                                  PROPERTY TYPE
-                                </span>
-                                <strong className="text-xs sm:text-sm font-bold text-neutral-900">
-                                  Theoretical Land
-                                </strong>
-                              </div>
-                            </div>
-
-                            {/* Your Savings */}
-                            <div className="flex items-start gap-2.5">
-                              <Wallet className="size-4 text-neutral-800 shrink-0 mt-0.5" />
-                              <div>
-                                <span className="block text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-500">
-                                  YOUR SAVINGS
-                                </span>
-                                <strong className="text-xs sm:text-sm font-bold text-neutral-900">
-                                  {currentCity.currencySymbol}{numericSavings.toLocaleString()}
-                                </strong>
-                              </div>
-                            </div>
+                          <div className="flex items-center justify-between pt-0.5">
+                            <span className="text-[11px] font-mono font-black tracking-wider text-neutral-900 uppercase">
+                              TOTAL EQUITY ACQUIRED
+                            </span>
+                            <span className="text-base sm:text-lg font-black text-neutral-900">
+                              0 m²
+                            </span>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Lower Half: Cream Board with Cost Breakdown & Sticky Note */}
-                      <div className="bg-[#FAF8F2] p-4 sm:p-6 text-neutral-900">
-                        <div className="grid grid-cols-1 sm:grid-cols-[1.3fr_1fr] gap-4 items-start">
-                          {/* Left: Cost Breakdown */}
-                          <div className="flex flex-col justify-between">
+                        {/* Right: Yellow Sticky Note & Action Buttons */}
+                        <div className="flex flex-col justify-between gap-2">
+                          {/* Yellow Sticky Note */}
+                          <div className="rounded-lg border border-[#EAC200] bg-[#FFDE43] p-2.5 sm:p-3 -rotate-1 shadow-xs flex flex-col justify-between">
                             <div>
-                              <div className="flex items-center justify-between text-xs font-mono font-bold uppercase">
-                                <span className="text-neutral-800 tracking-wider">COST BREAKDOWN</span>
-                                <span className="text-neutral-500 text-[10px]">{currentCity.currency} ({currentCity.currencySymbol})</span>
-                              </div>
-
-                              <div className="border-b border-neutral-300 my-2" />
-
-                              <div className="space-y-1.5 font-mono text-[11px] sm:text-xs">
-                                <div className="flex items-center justify-between text-neutral-800">
-                                  <span className="flex items-center gap-1.5">
-                                    <Tag className="size-3 text-neutral-600 shrink-0" />
-                                    <span>Land Value ({affordableSqm.toFixed(2)} m²)</span>
-                                  </span>
-                                  <span className="font-semibold">{currentCity.currencySymbol}{numericSavings.toLocaleString()}</span>
-                                </div>
-                                <div className="flex items-center justify-between text-neutral-800">
-                                  <span className="flex items-center gap-1.5">
-                                    <FileText className="size-3 text-neutral-600 shrink-0" />
-                                    <span>Stamp Duty (on fresh air)</span>
-                                  </span>
-                                  <span className="font-semibold">{currentCity.currencySymbol}{dynamicStampDuty.toLocaleString()}</span>
-                                </div>
-                                <div className="flex items-center justify-between text-neutral-800">
-                                  <span className="flex items-center gap-1.5">
-                                    <Wrench className="size-3 text-neutral-600 shrink-0" />
-                                    <span>Strata Sinking Fund (broken lift)</span>
-                                  </span>
-                                  <span className="font-semibold">{currentCity.currencySymbol}{dynamicStrata.toLocaleString()}</span>
-                                </div>
-                                <div className="flex items-center justify-between text-neutral-800">
-                                  <span className="flex items-center gap-1.5">
-                                    <User className="size-3 text-neutral-600 shrink-0" />
-                                    <span>Agent Cologne Surcharge</span>
-                                  </span>
-                                  <span className="font-semibold">{currentCity.currencySymbol}{dynamicAgentCologne.toLocaleString()}</span>
-                                </div>
-                                <div className="flex items-center justify-between text-neutral-800">
-                                  <span className="flex items-center gap-1.5">
-                                    <Percent className="size-3 text-neutral-600 shrink-0" />
-                                    <span>Landlord Mortgage Gratitude</span>
-                                  </span>
-                                  <span className="font-semibold">100%</span>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                  <span className="flex items-center gap-1.5 text-neutral-800">
-                                    <Heart className="size-3 text-neutral-600 shrink-0" />
-                                    <span>Emotional Damage</span>
-                                  </span>
-                                  <span className="text-emerald-600 font-bold">FREE</span>
-                                </div>
-                              </div>
-
-                              <div className="border-b border-neutral-300 my-2" />
+                              <span className="font-serif text-2xl leading-none text-neutral-800 select-none block -mb-1">“</span>
+                              <p className="font-marker font-bold text-[11px] sm:text-xs leading-snug tracking-wide text-neutral-900 uppercase">
+                                {dynamicStickyNote.toUpperCase()}
+                              </p>
                             </div>
-
-                            <div className="flex items-center justify-between pt-1">
-                              <span className="text-xs sm:text-sm font-mono font-black tracking-wider text-neutral-900 uppercase">
-                                TOTAL EQUITY ACQUIRED
-                              </span>
-                              <span className="text-xl sm:text-2xl font-black text-neutral-900">
-                                0 m²
-                              </span>
-                            </div>
+                            <span className="text-right font-mono text-[9px] font-bold tracking-wider text-neutral-800 uppercase mt-1">
+                              — KOOGEE
+                            </span>
                           </div>
 
-                          {/* Right: Yellow Sticky Note & Action Buttons */}
-                          <div className="flex flex-col justify-between gap-3">
-                            {/* Bright Yellow Sticky Note */}
-                            <div className="rounded-xl border border-[#EAC200] bg-[#FFDE43] p-4 sm:p-5 -rotate-1 shadow-[2px_4px_12px_rgba(0,0,0,0.12)] flex flex-col justify-between">
-                              <div>
-                                <span className="font-serif text-3xl leading-none text-neutral-800 select-none block -mb-2">“</span>
-                                <p className="font-marker font-bold text-xs sm:text-[13px] leading-snug tracking-wide text-neutral-900 uppercase">
-                                  {dynamicStickyNote.toUpperCase()}
-                                </p>
-                              </div>
-                              <span className="text-right font-mono text-[10px] font-bold tracking-wider text-neutral-800 uppercase mt-2">
-                                — KOOGEE
-                              </span>
-                            </div>
+                          {/* Action Buttons */}
+                          <div className="space-y-1.5">
+                            <button
+                              type="button"
+                              onClick={handleShareOnX}
+                              disabled={isDownloading}
+                              className="w-full h-8.5 rounded-lg bg-[#0F1419] hover:bg-black active:scale-[0.98] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                            >
+                              <svg className="size-3.5 fill-current" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                              </svg>
+                              <span>Share on X</span>
+                            </button>
 
-                            {/* Action Buttons */}
-                            <div className="space-y-2">
-                              {/* Share on X Button */}
+                            <div className="grid grid-cols-2 gap-1.5">
                               <button
                                 type="button"
-                                onClick={handleShareOnX}
+                                onClick={handleDownloadCard}
                                 disabled={isDownloading}
-                                className="w-full h-11 rounded-xl bg-[#0F1419] hover:bg-black active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
+                                className="h-8 rounded-lg border border-neutral-300 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-800 font-bold text-[11px] flex items-center justify-center gap-1 transition-all shadow-2xs cursor-pointer"
                               >
-                                <svg className="size-4 fill-current" viewBox="0 0 24 24">
-                                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                                </svg>
-                                <span>Share on X</span>
+                                <Download className="size-3" />
+                                <span>{isDownloading ? "Saving..." : "Download"}</span>
                               </button>
-
-                              {/* Download & Try Again Buttons */}
-                              <div className="grid grid-cols-2 gap-2">
-                                <button
-                                  type="button"
-                                  onClick={handleDownloadCard}
-                                  disabled={isDownloading}
-                                  className="h-10 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
-                                >
-                                  <Download className="size-3.5" />
-                                  <span>{isDownloading ? "Saving..." : "Download"}</span>
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={handleTryAgain}
-                                  className="h-10 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
-                                >
-                                  <RotateCcw className="size-3.5" />
-                                  <span>Try Again</span>
-                                </button>
-                              </div>
+                              <button
+                                type="button"
+                                onClick={handleTryAgain}
+                                className="h-8 rounded-lg border border-neutral-300 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-800 font-bold text-[11px] flex items-center justify-center gap-1 transition-all shadow-2xs cursor-pointer"
+                              >
+                                <RotateCcw className="size-3" />
+                                <span>Try Again</span>
+                              </button>
                             </div>
                           </div>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Concrete Pedestal Base */}
-                      <div className="bg-gradient-to-b from-[#B2B6BD] via-[#A2A7AE] to-[#92979E] border-t-4 border-[#7A7E85] px-4 sm:px-6 py-3.5 text-neutral-900 flex flex-col sm:flex-row items-center justify-between gap-2 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]">
-                        <div className="inline-block relative -rotate-0.5">
-                          <p className="font-marker text-sm sm:text-base font-bold text-neutral-900 tracking-wide">
-                            BETTER VIEWS. SMALLER BUDGETS.
-                          </p>
-                          <div className="h-1 bg-[#F5C842] rounded-full w-full -mt-0.5" />
-                        </div>
-                        <div className="text-center sm:text-right">
-                          <p className="font-mono text-[9px] sm:text-[10px] font-semibold text-neutral-800 tracking-wider uppercase">
-                            A GUY, A DOG, AND A VERY EXPENSIVE HOUSING MARKET.
-                          </p>
-                          <p className="font-mono text-xs sm:text-sm font-black tracking-widest text-neutral-900 uppercase">
-                            0SQM.COM.AU
-                          </p>
-                        </div>
+                    {/* Concrete Pedestal Base */}
+                    <div className="bg-gradient-to-b from-[#B2B6BD] via-[#A2A7AE] to-[#92979E] border-t-2 border-[#7A7E85] px-3 sm:px-4 py-2 text-neutral-900 flex flex-col sm:flex-row items-center justify-between gap-1 shadow-[inset_0_1px_3px_rgba(0,0,0,0.15)]">
+                      <div className="inline-block relative">
+                        <p className="font-marker text-xs sm:text-sm font-bold text-neutral-900 tracking-wide">
+                          BETTER VIEWS. SMALLER BUDGETS.
+                        </p>
+                        <div className="h-0.5 bg-[#F5C842] rounded-full w-full -mt-0.5" />
+                      </div>
+                      <div className="text-center sm:text-right flex items-center gap-2">
+                        <p className="font-mono text-[8px] sm:text-[9px] font-semibold text-neutral-800 tracking-wider uppercase">
+                          A GUY, A DOG, AND A VERY EXPENSIVE HOUSING MARKET.
+                        </p>
+                        <p className="font-mono text-[10px] sm:text-xs font-black tracking-wider text-neutral-900 uppercase">
+                          0SQM.COM.AU
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              {/* 20% Deposit Reality Progress Meter */}
-              <div className="rounded-2xl border border-border bg-background p-4 sm:p-6 shadow-sm">
-                <div className="flex justify-between items-center text-xs font-bold mb-1.5">
-                  <span className="text-foreground flex items-center gap-1">
-                    <span>🏦</span> Deposit Progress ({depositPercent.toFixed(1)}% of 20% downpayment)
-                  </span>
-                  <span className="text-muted-foreground font-mono">
-                    {currentCity.currencySymbol}{numericSavings.toLocaleString()} / {currentCity.typicalDeposit}
-                  </span>
-                </div>
-                <div className="w-full bg-neutral-200 h-2.5 rounded-full overflow-hidden">
-                  <div
-                    className="bg-primary h-full transition-all duration-300 rounded-full"
-                    style={{ width: `${depositPercent}%` }}
-                  />
-                </div>
-                <div className="mt-1.5 flex justify-between items-center text-[10px] text-muted-foreground">
-                  <span className="italic">
-                    {depositPercent < 10
-                      ? "Living rent-free in the comments 🛋️"
-                      : depositPercent < 30
-                        ? "One foot in the foyer (barefoot) 🦶"
-                        : depositPercent < 60
-                          ? "Halfway to an inspection brochure 📄"
-                          : depositPercent < 100
-                            ? "Your landlord is sweating 😰"
-                            : "Wait, you actually made it?! 🤯"}
-                  </span>
-                  <span className="font-semibold text-foreground">
-                    {numericSavings >= currentCity.rawDeposit
-                      ? "Deposit reached!"
-                      : `~${yearsToDeposit} yrs of saving needed`}
-                  </span>
-                </div>
-              </div>
-
-              {/* 3-Column Satirical Breakdown */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {/* 1. Physical Reality */}
-                <div className="rounded-xl border border-border bg-paper/90 p-4 text-xs flex flex-col justify-between shadow-xs">
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
-                      📐 Physical Reality
-                    </span>
-                    <strong className="text-sm font-marker text-foreground block">
-                      {metaphor.title}
-                    </strong>
-                    <p className="text-muted-foreground mt-1 italic leading-snug">
-                      &ldquo;{metaphor.desc}&rdquo;
-                    </p>
-                  </div>
-                  <div className="mt-2 pt-2 border-t border-border/60 text-[10px] font-mono text-foreground font-semibold">
-                    {affordableSqm.toFixed(2)} m² (≈ {(affordableSqm * 10.764).toFixed(1)} sq ft)
-                  </div>
-                </div>
-
-                {/* 2. Boomer Currency Equivalent */}
-                <div className="rounded-xl border border-border bg-paper/90 p-4 text-xs flex flex-col justify-between shadow-xs">
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
-                      {currentCity.hyperLocal.emoji} Boomer Currency
-                    </span>
-                    <strong className="text-sm font-marker text-foreground block">
-                      {hyperLocalCount.toLocaleString()} {currentCity.hyperLocal.unit}
-                    </strong>
-                    <p className="text-muted-foreground mt-1 italic leading-snug">
-                      Or you could have bought {hyperLocalCount.toLocaleString()} {currentCity.hyperLocal.name}.
-                    </p>
-                  </div>
-                  <div className="mt-2 pt-2 border-t border-border/60 text-[10px] font-mono text-muted-foreground">
-                    {currentCity.currencySymbol}{currentCity.hyperLocal.price} per item
-                  </div>
-                </div>
-
-                {/* 3. Brutal Timeline */}
-                <div className="rounded-xl border border-border bg-paper/90 p-4 text-xs flex flex-col justify-between shadow-xs">
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
-                      ⏳ Brutal Timeline
-                    </span>
-                    <strong className="text-sm font-marker text-red-600 block">
-                      {hoursTo1Sqm.toLocaleString()} Working Hours
-                    </strong>
-                    <p className="text-muted-foreground mt-1 italic leading-snug">
-                      {monthsTo1Sqm} months of 100% saved salary to buy 1 m².
-                    </p>
-                  </div>
-                  <div className="mt-2 pt-2 border-t border-border/60 text-[10px] font-mono text-muted-foreground">
-                    Settlement: {numericSavings >= currentCity.rawDeposit ? "TODAY" : "NEVER ☺"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Interactive Comedy Sub-Tabs (Boomer Advice, Auction Simulator) */}
-              <div className="rounded-2xl border border-border bg-paper p-4 sm:p-6 shadow-sm">
-                {/* Tab Selector Buttons */}
-                <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
-                  <button
-                    type="button"
-                    onClick={() => setActiveCalcTab("boomer")}
-                    className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${activeCalcTab === "boomer"
-                        ? "bg-foreground text-background shadow-xs"
-                        : "bg-muted hover:bg-neutral-200 text-muted-foreground"
-                      }`}
-                  >
-                    <span>🥑</span> Boomer Advice Simulator
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveCalcTab("auction")}
-                    className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${activeCalcTab === "auction"
-                        ? "bg-foreground text-background shadow-xs"
-                        : "bg-muted hover:bg-neutral-200 text-muted-foreground"
-                      }`}
-                  >
-                    <span>🔨</span> Sydney Auction Simulator
-                  </button>
-                </div>
-
-                {/* Sub-tab: Boomer Advice Simulator */}
-                {activeCalcTab === "boomer" && (
-                  <div className="mt-4 space-y-4">
-                    <div>
-                      <h5 className="font-marker text-base font-bold text-foreground">
-                        Boomer Financial Wisdom: How to Buy 1 m²
-                      </h5>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        Check off the lifestyle sacrifices boomers recommend to see how many decades it shaves off your first square metre.
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      {boomerItems.map((item) => {
-                        const isChecked = boomerSacrifices[item.key];
-                        return (
-                          <label
-                            key={item.key}
-                            className={`flex items-start gap-2.5 p-2.5 rounded-sm border cursor-pointer transition-all ${isChecked
-                                ? "bg-amber-500/10 border-amber-500/40 text-foreground"
-                                : "bg-paper/80 border-border text-muted-foreground hover:bg-muted/50"
-                              }`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={isChecked}
-                              onChange={(e) =>
-                                setBoomerSacrifices((prev) => ({
-                                  ...prev,
-                                  [item.key]: e.target.checked,
-                                }))
-                              }
-                              className="mt-0.5 size-4 rounded accent-amber-500 cursor-pointer"
-                            />
-                            <div className="text-xs">
-                              <strong className="block font-medium text-foreground">{item.label}</strong>
-                              <span className="text-[11px] font-mono text-muted-foreground">
-                                {item.desc} (saves ~${item.saving.toLocaleString()}/yr)
-                              </span>
-                            </div>
-                          </label>
-                        );
-                      })}
-                    </div>
-
-                    {/* Dynamic Boomer Sacrifice Output */}
-                    <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-3 text-xs space-y-2">
-                      <div className="flex justify-between items-center font-mono">
-                        <span className="font-bold text-foreground">Total Annual Sacrifices:</span>
-                        <span className="font-black text-sm text-green-700">
-                          +${totalBoomerSaving.toLocaleString()} / year
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center text-[11px]">
-                        <span className="text-muted-foreground">Months of 100% saving to 1 m²:</span>
-                        <span className="font-bold text-foreground">
-                          {monthsWithSacrifices} months (was {monthsTo1Sqm} months)
-                        </span>
-                      </div>
-
-                      {/* Boomer Approval Meter */}
-                      <div className="pt-1">
-                        <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-1">
-                          <span>BOOMER APPROVAL RATING: {boomerApprovalScore}%</span>
-                          <span>
-                            {boomerApprovalScore < 30
-                              ? "Unforgivable Avocado Addict 🥑"
-                              : boomerApprovalScore < 70
-                                ? "Acceptable, but cut the sourdough 🍞"
-                                : "Certified 1982 Hard Worker 👴"}
-                          </span>
-                        </div>
-                        <div className="w-full bg-neutral-200 h-2 rounded-full overflow-hidden">
-                          <div
-                            className="bg-amber-500 h-full transition-all duration-300 rounded-full"
-                            style={{ width: `${boomerApprovalScore}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      <p className="text-[11px] italic text-muted-foreground pt-1 border-t border-amber-500/20">
-                        &ldquo;Back in 1982, interest rates were 17.5% and we walked uphill both ways to the bank! If you just stop breathing restaurant air, you will afford a studio by 2145.&rdquo;
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Sub-tab: Live Sydney Auction Simulator */}
-                {activeCalcTab === "auction" && (
-                  <div className="mt-4 space-y-4">
-                    <div>
-                      <h5 className="font-marker text-base font-bold text-foreground">
-                        Sydney Saturday 11 AM Auction Simulator
-                      </h5>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        Experience the thrill of raising your bidder paddle with {currentCity.currencySymbol}
-                        {numericSavings > 0 ? numericSavings.toLocaleString() : "25,000"} in hand against cash syndicates.
-                      </p>
-                    </div>
-
-                    {/* Auction Stage Display */}
-                    <div className="min-h-[140px] rounded-sm border border-border bg-paper/90 p-3 text-xs space-y-2 font-mono">
-                      {auctionLog.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
-                          <span className="text-3xl mb-1">🔨</span>
-                          <p className="font-bold">The front lawn is packed. 42 people registered.</p>
-                          <p className="text-[11px] mt-0.5">Click below to raise your paddle and make your opening bid.</p>
-                        </div>
-                      ) : (
-                        auctionLog.map((line, idx) => (
-                          <div
-                            key={idx}
-                            className={`p-2 rounded-xs animate-in fade-in slide-in-from-bottom-1 duration-200 ${line.includes("SOLD")
-                                ? "bg-red-500/15 text-red-700 font-bold border border-red-500/30"
-                                : line.includes("GAVEL")
-                                  ? "bg-amber-500/15 text-foreground font-black"
-                                  : "bg-white text-neutral-800 border border-neutral-200"
-                              }`}
-                          >
-                            {line}
-                          </div>
-                        ))
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ink"
-                        onClick={runAuctionSimulation}
-                        disabled={auctionState === "bidding" || auctionState === "outbid"}
-                        className="h-10 text-xs font-bold cursor-pointer flex items-center gap-2"
-                      >
-                        {auctionState === "bidding" || auctionState === "outbid" ? (
-                          <>
-                            <div className="size-3.5 border-2 border-background border-t-transparent rounded-full animate-spin" />
-                            <span>Auction in Progress...</span>
-                          </>
-                        ) : auctionState === "sold" ? (
-                          <>
-                            <RotateCcw className="size-3.5" />
-                            <span>Bid Again (Glutton for punishment)</span>
-                          </>
-                        ) : (
-                          <>
-                            <span>🙋 Raise Paddle (Bid {currentCity.currencySymbol}{numericSavings > 0 ? numericSavings.toLocaleString() : "25,000"})</span>
-                          </>
-                        )}
-                      </Button>
-                      {auctionState === "sold" && (
-                        <span className="text-xs font-marker text-red-600 animate-in fade-in">
-                          Outcome: 0 SQM won! ☺
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -2268,50 +1895,36 @@ https://0sqm.fun
       </section>
 
       {/* ==================== 0SQM STREETWEAR & MERCH SECTION ==================== */}
-      <section id="merch" className="torn-top scroll-mt-16 bg-[#FAF7F2] text-neutral-900 px-4 pb-20 pt-20 sm:px-6 lg:px-8 border-b border-[#E5E0D4] relative">
+      <section id="merch" className="torn-top scroll-mt-16 bg-[#FAF7F2] text-neutral-900 px-4 py-10 sm:py-12 sm:px-6 lg:px-8 border-b border-[#E5E0D4] relative">
         <div className="mx-auto max-w-7xl">
           {/* Section Header */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-12 border-b border-neutral-300/70">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b border-neutral-200">
             <div>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFD452] text-neutral-950 text-xs font-black tracking-wider uppercase mb-4 shadow-xs">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFD452] text-neutral-950 text-xs font-black tracking-wider uppercase mb-3 shadow-2xs">
                 <Sparkles className="size-3.5 fill-current" />
                 <span>0SQM™ Apparel &amp; Goods // Drop 01</span>
               </div>
-              <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[0.9] text-neutral-950">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight leading-[0.92] text-neutral-950">
                 WEAR THE
                 <br />
                 <span className="text-[#C69200]">REALITY.</span>
               </h2>
-              <p className="font-caveat text-2xl sm:text-3xl text-neutral-600 mt-2">
+              <p className="font-caveat text-xl sm:text-2xl text-neutral-600 mt-2">
                 &ldquo;Same people. Smaller spaces. Bigger dreams.&rdquo;
               </p>
             </div>
 
-            {/* Hand-drawn tape note directly inspired by the original design mock */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 max-w-xl">
-              <div className="relative rotate-1 bg-white p-5 rounded-sm shadow-md border border-neutral-200/90 max-w-xs shrink-0">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-5 bg-[#FFD452]/50 backdrop-blur-xs -rotate-2 border border-[#E5BE3A]/40" />
-                <p className="font-marker text-lg sm:text-xl text-neutral-900 leading-snug">
-                  &ldquo;Can&apos;t wear a house.
-                  <br />
-                  Can wear this.&rdquo; ↘
-                </p>
-                <div className="mt-3 flex items-center justify-between text-[11px] text-neutral-500 font-bold uppercase tracking-wider">
-                  <span>Sydney • Drop 01</span>
-                  <span className="font-marker text-lg text-neutral-900">☺</span>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                  A streetwear collection engineered for a generation priced out of 100m² blocks, but rich in perspective. Standalone heavyweight silhouettes, vintage washes, and water-based prints that outlast any 30-year mortgage.
-                </p>
-                <div className="flex flex-wrap gap-1.5 text-[11px] font-bold text-neutral-700">
-                  <span className="bg-white px-2.5 py-1 rounded-sm border border-neutral-200 shadow-2xs">280 GSM Heavy Tees</span>
-                  <span className="bg-white px-2.5 py-1 rounded-sm border border-neutral-200 shadow-2xs">420 GSM Hoodies</span>
-                  <span className="bg-white px-2.5 py-1 rounded-sm border border-neutral-200 shadow-2xs">3D Embroidery</span>
-                  <span className="bg-[#FFD452]/20 text-neutral-900 px-2.5 py-1 rounded-sm border border-[#FFD452]/40 font-black">Drop 01 Allocation</span>
-                </div>
+            {/* Elevated, Clean Editorial Copy */}
+            <div className="max-w-md space-y-2">
+              <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-medium">
+                A streetwear collection engineered for a generation priced out of 100m² blocks, but rich in perspective. Standalone heavyweight silhouettes, vintage washes, and water-based prints that outlast any 30-year mortgage.
+              </p>
+              <div className="flex items-center gap-3 pt-1 text-[11px] font-mono font-bold text-neutral-500 uppercase tracking-wider">
+                <span>Drop 01</span>
+                <span>•</span>
+                <span>Sydney Studio</span>
+                <span>•</span>
+                <span className="text-[#C69200]">Limited Run</span>
               </div>
             </div>
           </div>
@@ -2360,6 +1973,13 @@ https://0sqm.fun
               {merchProducts
                 .filter((p) => merchCategory === "all" || p.category === merchCategory)
                 .map((product) => {
+                  const activeAngleIdx = productAngles[product.id] || 0;
+                  const currentAngle = product.angles?.[activeAngleIdx] || product.angles?.[0];
+                  const currentImage = currentAngle?.image || product.image;
+                  const currentCaption = currentAngle?.caption
+                    ? `${product.name} — ${currentAngle.label} (${currentAngle.caption})`
+                    : `${product.name} — ${product.tagline} (${product.gsm})`;
+
                   return (
                     <article
                       key={product.id}
@@ -2368,15 +1988,17 @@ https://0sqm.fun
                       {/* Individual Studio Image Container */}
                       <div
                         onClick={() => setActivePhoto({
-                          image: product.image,
-                          caption: `${product.name} — ${product.tagline} (${product.gsm})`,
-                          alt: product.name,
+                          image: currentImage,
+                          caption: currentCaption,
+                          alt: `${product.name} - ${currentAngle?.label || "Studio"}`,
+                          angles: product.angles,
+                          activeAngleIdx: activeAngleIdx,
                         })}
                         className="relative aspect-square bg-[#F0ECE4]/70 overflow-hidden flex items-center justify-center p-6 cursor-pointer border-b border-neutral-100"
                       >
                         <img
-                          src={product.image}
-                          alt={product.name}
+                          src={currentImage}
+                          alt={`${product.name} - ${currentAngle?.label || "View"}`}
                           loading="lazy"
                           className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
                         />
@@ -2386,6 +2008,36 @@ https://0sqm.fun
                         <span className="absolute top-3 right-3 bg-[#FFD452] text-neutral-950 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-sm shadow-2xs">
                           {product.badge}
                         </span>
+
+                        {/* Front / Back Angle Switcher Tabs */}
+                        {product.angles && product.angles.length > 1 && (
+                          <div
+                            className="absolute bottom-3 left-3 z-10 flex items-center bg-white/95 backdrop-blur-md rounded-full p-1 border border-neutral-250 shadow-sm"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {product.angles.map((angle, idx) => {
+                              const isSelected = activeAngleIdx === idx;
+                              return (
+                                <button
+                                  key={angle.id}
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setProductAngles((prev) => ({ ...prev, [product.id]: idx }));
+                                  }}
+                                  className={`px-3 py-1 text-[11px] font-black uppercase tracking-wider rounded-full transition-all cursor-pointer ${
+                                    isSelected
+                                      ? "bg-[#FFD452] text-neutral-950 shadow-xs"
+                                      : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100/90"
+                                  }`}
+                                >
+                                  {angle.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+
                         <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-xs text-neutral-700 text-[11px] font-bold px-2.5 py-1 rounded-sm border border-neutral-200 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 shadow-xs">
                           <ZoomIn className="size-3 text-[#C69200]" />
                           <span>Inspect</span>
@@ -2409,13 +2061,9 @@ https://0sqm.fun
                           <h4 className="text-base font-black text-neutral-950 group-hover:text-[#C69200] transition-colors leading-snug">
                             {product.name}
                           </h4>
-
-                          <p className="mt-1.5 text-xs text-neutral-500 line-clamp-2 leading-relaxed">
-                            {product.description}
-                          </p>
                         </div>
 
-                        <div className="mt-5 pt-3.5 border-t border-neutral-100 flex items-center justify-between gap-3">
+                        <div className="mt-4 pt-3.5 border-t border-neutral-100 flex items-center justify-between gap-3">
                           <div>
                             <span className="text-sm font-black text-neutral-950">
                               {product.price}
@@ -2428,6 +2076,7 @@ https://0sqm.fun
                             size="sm"
                             onClick={() => {
                               setWaitlistProduct(product);
+                              setWaitlistAngleIdx(productAngles[product.id] || 0);
                               setWaitlistSubmitted(false);
                             }}
                             className="cursor-pointer text-xs font-black flex items-center gap-1.5 px-3.5 py-2 shadow-xs hover:shadow-md"
@@ -2444,8 +2093,8 @@ https://0sqm.fun
           </div>
 
           {/* ==================== 2. EDITORIAL LOOKBOOK & MASTER POSTERS ==================== */}
-          <div className="mt-20 pt-14 border-t border-neutral-300/70">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+          <div className="mt-10 pt-8 border-t border-neutral-200">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
               <div>
                 <span className="text-xs font-black tracking-widest uppercase text-[#C69200]">
                   Official Campaign Archive
@@ -2560,35 +2209,11 @@ https://0sqm.fun
               </div>
             </div>
           </div>
-
-          {/* Quality Banner & Guarantee */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-white/80 rounded-2xl border border-neutral-200/90 text-center shadow-xs">
-            <div className="space-y-1">
-              <span className="text-2xl font-black text-neutral-950">280 GSM</span>
-              <p className="text-xs font-bold uppercase text-neutral-800">Heavy Combed Cotton</p>
-              <p className="text-[11px] text-neutral-500">Dense weave, zero transparency</p>
-            </div>
-            <div className="space-y-1">
-              <span className="text-2xl font-black text-neutral-950">420 GSM</span>
-              <p className="text-xs font-bold uppercase text-neutral-800">Brushed Fleece</p>
-              <p className="text-[11px] text-neutral-500">Oversized silhouette &amp; vintage wash</p>
-            </div>
-            <div className="space-y-1">
-              <span className="text-2xl font-black text-neutral-950">100%</span>
-              <p className="text-xs font-bold uppercase text-neutral-800">Water-Based Ink</p>
-              <p className="text-[11px] text-neutral-500">Soft touch, won&apos;t crack or peel</p>
-            </div>
-            <div className="space-y-1">
-              <span className="text-2xl font-black text-[#C69200]">0 SQM</span>
-              <p className="text-xs font-bold uppercase text-neutral-800">Reality Guaranteed</p>
-              <p className="text-[11px] text-neutral-500">Free theoretical land certificate</p>
-            </div>
-          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-paper px-4 py-7 sm:px-6">
+      <footer className="border-t border-border bg-paper px-4 py-6 sm:px-6">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 sm:flex-row">
           <span className="font-marker text-2xl font-bold">
             $<span className="text-primary">0</span>SQM
@@ -2647,7 +2272,30 @@ https://0sqm.fun
                 className="max-h-[76vh] w-auto max-w-full object-contain rounded-xs shadow-sm"
               />
             </div>
-            <p className="mt-4 text-center font-marker text-xl sm:text-2xl text-neutral-900 shrink-0">
+            {activePhoto.angles && activePhoto.angles.length > 1 && (
+              <div className="mt-3 flex items-center gap-1.5 bg-neutral-100 p-1 rounded-full border border-neutral-300">
+                {activePhoto.angles.map((ang, idx) => (
+                  <button
+                    key={ang.id}
+                    type="button"
+                    onClick={() => setActivePhoto({
+                      ...activePhoto,
+                      image: ang.image,
+                      activeAngleIdx: idx,
+                      caption: ang.caption || activePhoto.caption,
+                    })}
+                    className={`px-3.5 py-1 text-xs font-black uppercase tracking-wider rounded-full transition-all cursor-pointer ${
+                      (activePhoto.activeAngleIdx ?? 0) === idx
+                        ? "bg-[#FFD452] text-neutral-950 shadow-xs"
+                        : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/60"
+                    }`}
+                  >
+                    {ang.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            <p className="mt-3 text-center font-marker text-xl sm:text-2xl text-neutral-900 shrink-0">
               {activePhoto.caption}
             </p>
           </div>
@@ -2693,12 +2341,36 @@ https://0sqm.fun
                   Color: <strong className="text-neutral-200">{waitlistProduct.color}</strong> • {waitlistProduct.fit}
                 </p>
 
-                <div className="mt-4 aspect-[16/9] w-full bg-neutral-950 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-neutral-800">
+                <div className="mt-4 relative aspect-[16/9] w-full bg-neutral-950 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-neutral-800">
                   <img
-                    src={waitlistProduct.image}
+                    src={
+                      waitlistProduct.angles?.[waitlistAngleIdx]?.image ||
+                      waitlistProduct.image
+                    }
                     alt={waitlistProduct.name}
                     className="max-h-full max-w-full object-contain"
                   />
+                  {waitlistProduct.angles && waitlistProduct.angles.length > 1 && (
+                    <div className="absolute bottom-2 left-2 z-10 flex items-center bg-neutral-900/90 backdrop-blur-md rounded-full p-0.5 border border-neutral-700 shadow-xs">
+                      {waitlistProduct.angles.map((angle, idx) => {
+                        const isSelected = waitlistAngleIdx === idx;
+                        return (
+                          <button
+                            key={angle.id}
+                            type="button"
+                            onClick={() => setWaitlistAngleIdx(idx)}
+                            className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-full transition-all cursor-pointer ${
+                              isSelected
+                                ? "bg-[#FFD452] text-neutral-950"
+                                : "text-neutral-400 hover:text-white"
+                            }`}
+                          >
+                            {angle.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 {/* Size selector if it's apparel */}

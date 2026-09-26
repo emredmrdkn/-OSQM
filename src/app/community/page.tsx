@@ -400,12 +400,12 @@ export default function CommunityPage() {
               </span>
             </div>
 
-            {/* 4. Renty / Koogee */}
+            {/* 4. Koogee */}
             <div className="flex flex-col items-center text-center px-4 pt-4 sm:pt-0">
               <div className="h-8 flex items-center justify-center">
                 <img
                   src="/images/community/corgi_stat_clean.png"
-                  alt="Renty the Corgi"
+                  alt="Koogee the Corgi"
                   className="h-8 w-auto object-contain"
                 />
               </div>
@@ -413,7 +413,7 @@ export default function CommunityPage() {
                 1
               </span>
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#737373] mt-0.5">
-                RENTY
+                KOOGEE
               </span>
             </div>
 
