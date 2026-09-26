@@ -668,9 +668,9 @@ export default function V2Page() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [shareToast, setShareToast] = useState<string | null>(null);
 
-  // Pre-render the card to a PNG Blob as soon as result is calculated so click handler runs synchronously
+  // Pre-render the card to a PNG Blob as soon as component mounts or inputs change
   useEffect(() => {
-    if (!cardRef.current || !hasAudited) return;
+    if (!cardRef.current) return;
     let isCancelled = false;
 
     const timer = setTimeout(() => {
@@ -690,13 +690,13 @@ export default function V2Page() {
         .catch((err) => {
           console.warn('Pre-render blob error:', err);
         });
-    }, 200);
+    }, 250);
 
     return () => {
       isCancelled = true;
       clearTimeout(timer);
     };
-  }, [hasAudited, affordableSqm, currentCity.id, numericSavings]);
+  }, [affordableSqm, currentCity.id, numericSavings]);
 
   const handleDownloadCard = async () => {
     if (!cardRef.current) return;
@@ -719,7 +719,7 @@ export default function V2Page() {
     }
   };
 
-  const handleShareOnX = () => {
+  const handleShareOnX = async () => {
     // 1. Determine site URL from env or window
     let origin = 'https://0sqm.com';
     if (typeof window !== 'undefined' && window.location.origin) {
@@ -747,11 +747,28 @@ export default function V2Page() {
     const shareUrl = `${origin}/share?${query}`;
     const tweetText = `My ${cleanCity} Reality Score: 0 SQM.\n${cleanSqm}m² in theory. 0m² in reality.\nDifferent city. Same portfolio. 🙂\n#0SQM`;
 
-    const pngBlob = preRenderedBlobRef.current;
+    // Ensure PNG blob is available even if user didn't calculate or wait
+    let pngBlob = preRenderedBlobRef.current;
+    if (!pngBlob && cardRef.current) {
+      try {
+        const url = await toPng(cardRef.current, {
+          quality: 0.98,
+          pixelRatio: 2,
+          backgroundColor: '#FAF9F5',
+        });
+        const res = await fetch(url);
+        pngBlob = await res.blob();
+        preRenderedBlobRef.current = pngBlob;
+      } catch (e) {
+        console.warn('Fallback card capture failed:', e);
+      }
+    }
+
     const imageFile = pngBlob ? new File([pngBlob], `0sqm-reality-score-${currentCity.id || 'sydney'}.png`, { type: 'image/png' }) : null;
 
-    // a) Mobile: If on mobile and navigator.canShare({files:[file]}) is true
-    if (imageFile && typeof navigator !== 'undefined' && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
+    // a) Mobile ONLY: If on a mobile device and navigator.canShare({files:[file]}) is true
+    const isMobile = typeof navigator !== 'undefined' && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile && imageFile && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
       navigator.share({
         files: [imageFile],
         text: `${tweetText}\n${shareUrl}`,
@@ -761,8 +778,8 @@ export default function V2Page() {
       return;
     }
 
-    // b) Otherwise (desktop):
-    // Open Twitter in new tab
+    // b) Desktop / PC / Mac:
+    // ALWAYS open Twitter compose modal directly in a new tab!
     const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(tweetUrl, '_blank', 'noopener,noreferrer');
 
@@ -1615,7 +1632,7 @@ https://0sqm.fun
                               TOTAL EQUITY ACQUIRED
                             </span>
                             <span className="text-base sm:text-lg font-black text-neutral-900">
-                              0 m²
+                              {affordableSqm.toFixed(2)} m²
                             </span>
                           </div>
                         </div>

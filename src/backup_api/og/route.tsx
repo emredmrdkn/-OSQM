@@ -294,7 +294,7 @@ export async function GET(request: NextRequest): Promise<ImageResponse> {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #EAE6DC', paddingTop: '6px', marginTop: '6px' }}>
                   <span style={{ fontSize: '10px', fontWeight: 900, color: '#141414' }}>TOTAL EQUITY ACQUIRED</span>
                   <div style={{ display: 'flex', backgroundColor: '#FFE243', padding: '2px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: 900, color: '#141414' }}>
-                    0 m²
+                    {sqm} m²
                   </div>
                 </div>
               </div>
