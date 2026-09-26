@@ -613,6 +613,17 @@ export default function V2Page() {
   const [calculatorTab, setCalculatorTab] = useState<"australia" | "global">("australia");
   const [selectedCityIndex, setSelectedCityIndex] = useState(0);
   const [savings, setSavings] = useState("25000");
+  const [currentDateStr, setCurrentDateStr] = useState<string>("");
+
+  useEffect(() => {
+    setCurrentDateStr(
+      new Date().toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+    );
+  }, []);
 
   const polaroidScrollRef = useRef<HTMLDivElement>(null);
 
@@ -1513,7 +1524,7 @@ https://0sqm.fun
                             <Calendar className="size-3 text-neutral-800 shrink-0" />
                             <div className="min-w-0 flex-1 flex items-baseline justify-between">
                               <span className="text-[8px] font-mono font-bold text-neutral-500 uppercase">DATE</span>
-                              <strong className="text-[11px] font-bold text-neutral-900">20 Sep 2026</strong>
+                              <strong className="text-[11px] font-bold text-neutral-900">{currentDateStr || "26 Sep 2026"}</strong>
                             </div>
                           </div>
 

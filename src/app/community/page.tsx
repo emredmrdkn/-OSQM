@@ -2,6 +2,7 @@
 
 import { ArrowRight, ChevronRight, ChevronLeft, MapPin, Home, Users } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import { CITIES_DATA } from "@/data/cities";
 
 /* ─── Community City Cards Data (Matching design mockup) ─── */
 const communityCards = [
@@ -84,6 +85,7 @@ export default function CommunityPage() {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [xFollowers, setXFollowers] = useState<number>(46);
 
   const checkScroll = () => {
     if (!scrollRef.current) return;
@@ -367,22 +369,22 @@ export default function CommunityPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-0 divide-y sm:divide-y-0 sm:divide-x divide-[#E5E0D4]">
             
-            {/* 1. Members */}
+            {/* 1. Members (Live X Followers) */}
             <div className="flex flex-col items-center text-center px-4">
               <Users className="size-8 text-[#141414] stroke-[1.6]" />
               <span className="mt-2 text-2xl sm:text-3xl font-black tracking-tight text-[#141414]">
-                12,482
+                {xFollowers.toLocaleString()}
               </span>
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#737373] mt-0.5">
                 MEMBERS
               </span>
             </div>
 
-            {/* 2. Cities */}
+            {/* 2. Cities (Dynamic Site Cities Count) */}
             <div className="flex flex-col items-center text-center px-4 pt-4 sm:pt-0">
               <MapPin className="size-8 text-[#141414] stroke-[1.6]" />
               <span className="mt-2 text-2xl sm:text-3xl font-black tracking-tight text-[#141414]">
-                42
+                {CITIES_DATA.length}
               </span>
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#737373] mt-0.5">
                 CITIES
