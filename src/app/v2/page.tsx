@@ -710,7 +710,7 @@ export default function V2Page() {
 
   const handleShareOnX = () => {
     // 1. Determine site URL from env or window
-    let origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://0sqm.com.au';
+    let origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://0sqm.com';
     if (!process.env.NEXT_PUBLIC_SITE_URL && typeof window !== 'undefined' && window.location.origin) {
       if (!window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1')) {
         origin = window.location.origin;
@@ -751,25 +751,37 @@ export default function V2Page() {
     }
 
     // b) Otherwise (desktop):
-    // In the SAME TICK (synchronously inside user gesture): call window.open in new tab
+    // Open Twitter in new tab
     const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(tweetUrl, '_blank', 'noopener,noreferrer');
 
-    // Start clipboard write and show toast
+    // Also automatically trigger download of the card image so the user has the file
+    if (pngBlob) {
+      try {
+        const downloadLink = document.createElement('a');
+        downloadLink.download = `0sqm-reality-score-${currentCity.id || 'sydney'}.png`;
+        downloadLink.href = URL.createObjectURL(pngBlob);
+        downloadLink.click();
+      } catch (e) {
+        console.warn('Auto download card failed', e);
+      }
+    }
+
+    // Copy to clipboard and show helpful toast
     if (pngBlob && typeof navigator !== 'undefined' && navigator.clipboard && typeof ClipboardItem !== 'undefined') {
       navigator.clipboard.write([
         new ClipboardItem({ 'image/png': pngBlob })
       ]).then(() => {
-        setShareToast("📸 Image copied — press Ctrl+V (Cmd+V on Mac) in the post to attach it.");
+        setShareToast("📸 Card copied & downloaded! Press Cmd+V (or Ctrl+V) in your tweet to attach your card image!");
       }).catch((err) => {
         console.warn('Clipboard write failed, link card will provide the image preview', err);
-        setShareToast("Opening X in a new tab...");
+        setShareToast("Opening X in a new tab... Twitter card will show your score!");
       });
     } else {
-      setShareToast("Opening X in a new tab...");
+      setShareToast("Opening X in a new tab... Twitter card will show your score!");
     }
 
-    setTimeout(() => setShareToast(null), 6000);
+    setTimeout(() => setShareToast(null), 8000);
   };
 
   const handleTryAgain = () => {
