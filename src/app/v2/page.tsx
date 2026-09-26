@@ -1783,7 +1783,7 @@ https://0sqm.fun
               <div className="flex flex-col justify-between">
                 <div className="flex items-start gap-4 sm:gap-5">
                   <img
-                    src="/images/v2/team-cfo.jpg"
+                    src="/images/Koogee.jpeg"
                     alt="Koogee - Chief Financial Officer"
                     className="size-24 sm:size-28 md:size-32 rounded-2xl object-cover shrink-0 border border-foreground/10 shadow-sm"
                   />
