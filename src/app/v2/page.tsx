@@ -1686,7 +1686,7 @@ https://0sqm.fun
                           A GUY, A DOG, AND A VERY EXPENSIVE HOUSING MARKET.
                         </p>
                         <p className="font-mono text-[10px] sm:text-xs font-black tracking-wider text-neutral-900 uppercase">
-                          0SQM.COM.AU
+                          0SQM.COM
                         </p>
                       </div>
                     </div>
@@ -2440,7 +2440,7 @@ https://0sqm.fun
                     required
                     value={waitlistEmail}
                     onChange={(e) => setWaitlistEmail(e.target.value)}
-                    placeholder="justin@0sqm.com.au"
+                    placeholder="justin@0sqm.com"
                     className="w-full px-4 py-2.5 rounded-lg bg-neutral-900 border border-neutral-700 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-[#FFD452]"
                   />
                   <Button
