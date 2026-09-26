@@ -6,6 +6,9 @@
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+  # Route /share to share.php with query string preserved
+  RewriteRule ^share/?$ share.php [L,QSA]
+
   # Pretty URLs: if file exists as .html, serve it cleanly
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME}\.html -f
