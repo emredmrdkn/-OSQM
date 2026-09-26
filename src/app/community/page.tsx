@@ -87,6 +87,15 @@ export default function CommunityPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [xFollowers, setXFollowers] = useState<number>(46);
 
+  useEffect(() => {
+    fetch('/followers.php')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.followers) setXFollowers(data.followers);
+      })
+      .catch(() => {});
+  }, []);
+
   const checkScroll = () => {
     if (!scrollRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
@@ -384,7 +393,7 @@ export default function CommunityPage() {
             <div className="flex flex-col items-center text-center px-4 pt-4 sm:pt-0">
               <MapPin className="size-8 text-[#141414] stroke-[1.6]" />
               <span className="mt-2 text-2xl sm:text-3xl font-black tracking-tight text-[#141414]">
-                {CITIES_DATA.length}
+                15
               </span>
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#737373] mt-0.5">
                 CITIES

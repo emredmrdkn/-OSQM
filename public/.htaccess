@@ -24,8 +24,15 @@ ErrorDocument 404 /404.html
     Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
     Header set Pragma "no-cache"
     Header set Expires "0"
+    Header set X-LiteSpeed-Cache-Control "no-cache"
   </IfModule>
 </FilesMatch>
+
+# Disable LiteSpeed server-level page caching
+<IfModule LiteSpeed>
+  CacheDisable public /
+  CacheDisable private /
+</IfModule>
 
 # Enable Browser Caching for static assets only
 <IfModule mod_expires.c>
