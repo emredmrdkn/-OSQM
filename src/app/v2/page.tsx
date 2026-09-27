@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, Calendar, Check, ChevronLeft, ChevronRight, Copy, Download, Eye, FileText, Filter, Heart, Home, Layers, MapPin, Menu, Percent, RotateCcw, Share2, ShoppingBag, Sparkles, Tag, User, Wallet, Wrench, X, ZoomIn } from "lucide-react";
+import { ArrowRight, Calendar, Check, ChevronLeft, ChevronRight, Copy, Download, Eye, FileText, Filter, Globe, Heart, Home, Layers, MapPin, Menu, Percent, RotateCcw, Share2, ShoppingBag, Sparkles, Tag, User, Wallet, Wrench, X, ZoomIn } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { Button } from "@/components/v2/ui/button";
@@ -1405,308 +1405,286 @@ https://0sqm.fun
               </div>
             </div>
 
-            {/* THE REALITY SCORE BILLBOARD (Refined, Compact & Sleek) */}
+            {/* THE REALITY SCORE CARD (Redesigned matching reality-score-card.png) */}
             <div className="flex justify-center w-full">
               <div
                 ref={cardRef}
                 id="reality-score-card"
-                className={`w-full rounded-2xl sm:rounded-3xl border border-neutral-300 shadow-xl p-3 sm:p-4.5 relative overflow-hidden transition-all duration-300 ${
+                className={`w-full max-w-4xl bg-[#FAF9F5] rounded-3xl border border-[#E7E2D6] p-4 sm:p-7 shadow-xl shadow-black/5 relative overflow-hidden transition-all duration-300 text-neutral-900 ${
                   auditShake ? "scale-[1.01] ring-2 ring-amber-400/40" : ""
                 }`}
-                style={{
-                  backgroundImage: "url('/images/v2/cities/sydney.jpg')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center 42%",
-                }}
               >
-                {/* Subtle vignette overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-white/35 via-white/10 to-black/25 pointer-events-none" />
-
-                {/* Top Scene Header (Sky Area) */}
-                <div className="relative z-10 flex flex-wrap items-start justify-between gap-2 pb-3 sm:pb-4">
-                  <div className="drop-shadow-sm">
-                    <div className="flex items-center text-xl sm:text-2xl font-marker font-bold tracking-tight">
-                      <span className="text-neutral-900">$</span>
-                      <span className="text-[#F5C842]">0</span>
-                      <span className="text-neutral-900">SQM</span>
+                {/* 1. Top Header */}
+                <div className="flex items-start justify-between gap-3 pb-4 sm:pb-5">
+                  {/* Left: Brand Logo & Tagline */}
+                  <div>
+                    <div className="flex items-center text-3xl sm:text-4xl font-marker font-bold tracking-tight leading-none">
+                      <span className="text-neutral-950">$</span>
+                      <span className="text-[#FFD452]">0</span>
+                      <span className="text-neutral-950">SQM</span>
                     </div>
-                    <p className="text-[9px] font-mono font-bold tracking-wider text-neutral-800 uppercase">
+                    <p className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest text-neutral-800 uppercase mt-1">
                       REAL DATA. REAL PRICES. SAME RESULT.
                     </p>
                   </div>
 
-                  <div className="hidden sm:block text-center pt-0.5 drop-shadow-xs -rotate-1">
-                    <p className="font-marker text-[11px] font-bold tracking-wide text-neutral-900 uppercase leading-tight">
-                      THE AUSTRALIAN DREAM STILL STARTS AT 0M².
-                    </p>
-                    <div className="h-1 bg-[#F5C842] rounded-full w-full -mt-0.5" />
-                  </div>
-
-                  <div className="w-16 sm:w-20 shrink-0" />
-                </div>
-
-                {/* THE BILLBOARD CONTAINER */}
-                <div className="relative z-20 mt-2 sm:mt-3">
-                  {/* Koogee Peeking over Billboard */}
-                  <div className="absolute top-0 -translate-y-[calc(100%-4px)] right-3 sm:right-6 z-30 flex items-end select-none pointer-events-none">
-                    <img
-                      src="/images/v2/renty-peeking.png"
-                      alt="Koogee the Corgi Approves"
-                      className="w-16 sm:w-20 object-contain drop-shadow-lg"
-                    />
-                    <div className="flex flex-col items-start -ml-1 mb-3 sm:mb-5 select-none">
-                      <span className="font-marker text-[9px] sm:text-[10px] font-bold text-neutral-900 -rotate-6 leading-tight whitespace-nowrap drop-shadow-xs">
-                        KOOGEE
-                        <br />
-                        APPROVES.
+                  {/* Right: The Australian Dream Badge */}
+                  <div className="text-right">
+                    <div className="inline-flex flex-col items-end">
+                      <span className="font-marker text-xs sm:text-sm font-bold text-neutral-900 tracking-wide -rotate-1">
+                        THE AUSTRALIAN DREAM
                       </span>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <span className="font-marker text-xs sm:text-sm font-bold text-neutral-900">
+                          STILL STARTS AT
+                        </span>
+                        <span className="relative inline-flex items-center justify-center font-marker text-xs sm:text-sm font-black bg-[#FFDE43] text-neutral-950 px-2 py-0.5 rounded-sm">
+                          0M².
+                          {/* Accent lines */}
+                          <span className="absolute -right-3 -top-1 font-sans text-xs text-neutral-800 font-bold select-none">
+                            //
+                          </span>
+                        </span>
+                      </div>
                     </div>
                   </div>
+                </div>
 
-                  {/* THE BILLBOARD STRUCTURE */}
-                  <div className="rounded-xl sm:rounded-2xl border-2 sm:border-3 border-[#363A40] bg-[#1E2024] shadow-[0_15px_35px_rgba(0,0,0,0.45)] overflow-hidden relative">
-                    {/* Metallic Screws */}
-                    <div className="absolute top-1.5 left-1.5 size-2 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
-                    <div className="absolute top-1.5 right-1.5 size-2 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
-                    <div className="absolute bottom-1.5 left-1.5 size-2 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
-                    <div className="absolute bottom-1.5 right-1.5 size-2 rounded-full bg-gradient-to-br from-neutral-200 via-neutral-400 to-neutral-600 border border-neutral-800 shadow-inner z-30" />
-
-                    {/* Upper Half: Dark Digital Sign Display */}
-                    <div className="bg-[#202328] p-3 sm:p-4 border-b-2 border-[#33373D] text-white">
-                      <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase pb-2">
-                        <span className="text-neutral-300 tracking-wider">REALITY SCORE</span>
-                        <span className="text-neutral-400">
+                {/* 2. Upper Grid: Reality Score (Left) & Metadata (Right) */}
+                <div className="grid grid-cols-1 md:grid-cols-[1.35fr_1fr] gap-3 sm:gap-4 items-stretch mb-3 sm:mb-4">
+                  {/* Left: Reality Score Dark Digital Display */}
+                  <div className="bg-[#14171A] rounded-2xl p-4 sm:p-5 text-white flex flex-col justify-between shadow-sm">
+                    <div>
+                      <div className="flex items-center justify-between text-[11px] font-mono font-bold uppercase pb-3 text-neutral-400">
+                        <span className="tracking-widest">REALITY SCORE</span>
+                        <span className="tracking-wider">
                           {currentCity.name.toUpperCase()}, {currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : "NSW"}
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-[1.3fr_1fr] gap-3 items-center">
-                        {/* Left: Split-Flap Flip Counter */}
-                        <div>
-                          <div className="flex items-center gap-1 my-0.5">
-                            {/* Tile 1 */}
-                            <div className="relative w-auto min-w-8 h-11 sm:min-w-10 sm:h-14 px-1.5 bg-[#121417] rounded-md flex items-center justify-center shadow-md border border-black/50 overflow-hidden select-none">
-                              <span className="font-sans font-black text-2xl sm:text-3xl text-white tracking-tight">{intPart}</span>
-                              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
-                            </div>
-
-                            {/* Dot */}
-                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#121417] self-end mb-2 mx-0.5 shadow-sm" />
-
-                            {/* Tile 2 */}
-                            <div className="relative w-8 h-11 sm:w-10 sm:h-14 bg-[#121417] rounded-md flex items-center justify-center shadow-md border border-black/50 overflow-hidden select-none">
-                              <span className="font-sans font-black text-2xl sm:text-3xl text-white tracking-tight">{decPart[0] || "0"}</span>
-                              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
-                            </div>
-
-                            {/* Tile 3 */}
-                            <div className="relative w-8 h-11 sm:w-10 sm:h-14 bg-[#121417] rounded-md flex items-center justify-center shadow-md border border-black/50 overflow-hidden select-none">
-                              <span className="font-sans font-black text-2xl sm:text-3xl text-white tracking-tight">{decPart[1] || "0"}</span>
-                              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
-                            </div>
-
-                            {/* Tile 4: m² */}
-                            <div className="relative w-11 h-11 sm:w-13 sm:h-14 bg-[#121417] rounded-md flex flex-col items-center justify-center shadow-md border border-black/50 overflow-hidden select-none ml-0.5">
-                              <div className="relative inline-block">
-                                <span className="font-bold text-xl sm:text-2xl text-white select-none">m²</span>
-                                <div className="h-0.5 bg-[#F5C842] rounded-full w-full -mt-0.5" />
-                              </div>
-                              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-[#0A0C0E] shadow-[0_1px_0_rgba(255,255,255,0.18)]" />
-                            </div>
-                          </div>
-
-                          <div className="mt-1.5">
-                            <p className="font-bold text-sm sm:text-base text-white leading-tight">
-                              {affordableSqm.toFixed(2)} m² in theory. <span className="text-[#F5C842]">0 m² in reality.</span>
-                            </p>
-                            <p className="text-[11px] text-neutral-400 font-medium mt-0.5">
-                              You own 0 square metres. But hey, at least the views are free.
-                            </p>
-                          </div>
+                      {/* Split-Flap Counter Tiles */}
+                      <div className="flex items-center gap-1.5 sm:gap-2 my-1">
+                        {/* Tile 1: Integer */}
+                        <div className="relative min-w-12 sm:min-w-16 h-14 sm:h-20 px-2 bg-[#1C1F24] rounded-lg sm:rounded-xl flex items-center justify-center shadow-md border border-white/5 overflow-hidden select-none">
+                          <span className="font-sans font-black text-3xl sm:text-5xl text-white tracking-tight">{intPart}</span>
+                          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-black/60 shadow-[0_1px_0_rgba(255,255,255,0.1)]" />
                         </div>
 
-                        {/* Right: Metadata Card */}
-                        <div className="rounded-xl border border-black/10 bg-[#FAF8F2] p-2.5 sm:p-3 text-neutral-900 shadow-xs space-y-1.5">
-                          <div className="flex items-center gap-2">
-                            <MapPin className="size-3 text-neutral-800 shrink-0" />
-                            <div className="min-w-0 flex-1 flex items-baseline justify-between">
-                              <span className="text-[8px] font-mono font-bold text-neutral-500 uppercase">LOCATION</span>
-                              <strong className="text-[11px] font-bold text-neutral-900 truncate">
-                                {currentCity.name}, {currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : currentCity.country}
-                              </strong>
-                            </div>
-                          </div>
+                        {/* Dot */}
+                        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-white/90 self-end mb-3 sm:mb-4 mx-0.5" />
 
-                          <div className="flex items-center gap-2">
-                            <Calendar className="size-3 text-neutral-800 shrink-0" />
-                            <div className="min-w-0 flex-1 flex items-baseline justify-between">
-                              <span className="text-[8px] font-mono font-bold text-neutral-500 uppercase">DATE</span>
-                              <strong className="text-[11px] font-bold text-neutral-900">{currentDateStr || "26 Sep 2026"}</strong>
-                            </div>
-                          </div>
+                        {/* Tile 2: Dec 1 */}
+                        <div className="relative min-w-12 sm:min-w-16 h-14 sm:h-20 px-2 bg-[#1C1F24] rounded-lg sm:rounded-xl flex items-center justify-center shadow-md border border-white/5 overflow-hidden select-none">
+                          <span className="font-sans font-black text-3xl sm:text-5xl text-white tracking-tight">{decPart[0] || "0"}</span>
+                          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-black/60 shadow-[0_1px_0_rgba(255,255,255,0.1)]" />
+                        </div>
 
-                          <div className="flex items-center gap-2">
-                            <Home className="size-3 text-neutral-800 shrink-0" />
-                            <div className="min-w-0 flex-1 flex items-baseline justify-between">
-                              <span className="text-[8px] font-mono font-bold text-neutral-500 uppercase">TYPE</span>
-                              <strong className="text-[11px] font-bold text-neutral-900">Theoretical Land</strong>
-                            </div>
-                          </div>
+                        {/* Tile 3: Dec 2 */}
+                        <div className="relative min-w-12 sm:min-w-16 h-14 sm:h-20 px-2 bg-[#1C1F24] rounded-lg sm:rounded-xl flex items-center justify-center shadow-md border border-white/5 overflow-hidden select-none">
+                          <span className="font-sans font-black text-3xl sm:text-5xl text-white tracking-tight">{decPart[1] || "0"}</span>
+                          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-black/60 shadow-[0_1px_0_rgba(255,255,255,0.1)]" />
+                        </div>
 
-                          <div className="flex items-center gap-2">
-                            <Wallet className="size-3 text-neutral-800 shrink-0" />
-                            <div className="min-w-0 flex-1 flex items-baseline justify-between">
-                              <span className="text-[8px] font-mono font-bold text-neutral-500 uppercase">SAVINGS</span>
-                              <strong className="text-[11px] font-bold text-neutral-900">
-                                {currentCity.currencySymbol}{numericSavings.toLocaleString()}
-                              </strong>
-                            </div>
+                        {/* Tile 4: m² */}
+                        <div className="relative min-w-14 sm:min-w-20 h-14 sm:h-20 px-2 bg-[#1C1F24] rounded-lg sm:rounded-xl flex flex-col items-center justify-center shadow-md border border-white/5 overflow-hidden select-none ml-1">
+                          <div className="relative inline-flex flex-col items-center">
+                            <span className="font-sans font-bold text-2xl sm:text-4xl text-white leading-none">m²</span>
+                            <div className="h-1 sm:h-1.5 bg-[#FFDE43] rounded-full w-8 sm:w-11 mt-1 sm:mt-1.5" />
                           </div>
+                          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-black/60 shadow-[0_1px_0_rgba(255,255,255,0.1)]" />
                         </div>
                       </div>
                     </div>
 
-                    {/* Lower Half: Cream Board with Cost Breakdown & Sticky Note */}
-                    <div className="bg-[#FAF8F2] p-3 sm:p-4 text-neutral-900">
-                      <div className="grid grid-cols-1 sm:grid-cols-[1.3fr_1fr] gap-3 items-start">
-                        {/* Left: Cost Breakdown */}
-                        <div className="flex flex-col justify-between">
-                          <div>
-                            <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase">
-                              <span className="text-neutral-800 tracking-wider">COST BREAKDOWN</span>
-                              <span className="text-neutral-500 text-[9px]">{currentCity.currency} ({currentCity.currencySymbol})</span>
-                            </div>
+                    <div className="mt-3 pt-2">
+                      <p className="font-bold text-base sm:text-lg text-white leading-snug">
+                        You own 0 square metres.
+                      </p>
+                      <p className="text-xs sm:text-sm text-neutral-400 font-medium mt-0.5">
+                        But hey, at least the views are free.
+                      </p>
+                    </div>
+                  </div>
 
-                            <div className="border-b border-neutral-300 my-1.5" />
-
-                            <div className="space-y-1 font-mono text-[10px] sm:text-[11px]">
-                              <div className="flex items-center justify-between text-neutral-800">
-                                <span className="flex items-center gap-1">
-                                  <Tag className="size-2.5 text-neutral-600 shrink-0" />
-                                  <span>Land Value ({affordableSqm.toFixed(2)} m²)</span>
-                                </span>
-                                <span className="font-semibold">{currentCity.currencySymbol}{numericSavings.toLocaleString()}</span>
-                              </div>
-                              <div className="flex items-center justify-between text-neutral-800">
-                                <span className="flex items-center gap-1">
-                                  <FileText className="size-2.5 text-neutral-600 shrink-0" />
-                                  <span>Stamp Duty (on fresh air)</span>
-                                </span>
-                                <span className="font-semibold">{currentCity.currencySymbol}{dynamicStampDuty.toLocaleString()}</span>
-                              </div>
-                              <div className="flex items-center justify-between text-neutral-800">
-                                <span className="flex items-center gap-1">
-                                  <Wrench className="size-2.5 text-neutral-600 shrink-0" />
-                                  <span>Strata Sinking Fund (broken lift)</span>
-                                </span>
-                                <span className="font-semibold">{currentCity.currencySymbol}{dynamicStrata.toLocaleString()}</span>
-                              </div>
-                              <div className="flex items-center justify-between text-neutral-800">
-                                <span className="flex items-center gap-1">
-                                  <User className="size-2.5 text-neutral-600 shrink-0" />
-                                  <span>Agent Cologne Surcharge</span>
-                                </span>
-                                <span className="font-semibold">{currentCity.currencySymbol}{dynamicAgentCologne.toLocaleString()}</span>
-                              </div>
-                              <div className="flex items-center justify-between text-neutral-800">
-                                <span className="flex items-center gap-1">
-                                  <Percent className="size-2.5 text-neutral-600 shrink-0" />
-                                  <span>Landlord Mortgage Gratitude</span>
-                                </span>
-                                <span className="font-semibold">100%</span>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <span className="flex items-center gap-1 text-neutral-800">
-                                  <Heart className="size-2.5 text-neutral-600 shrink-0" />
-                                  <span>Emotional Damage</span>
-                                </span>
-                                <span className="text-emerald-600 font-bold">FREE</span>
-                              </div>
-                            </div>
-
-                            <div className="border-b border-neutral-300 my-1.5" />
-                          </div>
-
-                          <div className="flex items-center justify-between pt-0.5">
-                            <span className="text-[11px] font-mono font-black tracking-wider text-neutral-900 uppercase">
-                              TOTAL EQUITY ACQUIRED
-                            </span>
-                            <span className="text-base sm:text-lg font-black text-neutral-900">
-                              {affordableSqm.toFixed(2)} m²
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Right: Yellow Sticky Note & Action Buttons */}
-                        <div className="flex flex-col justify-between gap-2">
-                          {/* Yellow Sticky Note */}
-                          <div className="rounded-lg border border-[#EAC200] bg-[#FFDE43] p-2.5 sm:p-3 -rotate-1 shadow-xs flex flex-col justify-between">
-                            <div>
-                              <span className="font-serif text-2xl leading-none text-neutral-800 select-none block -mb-1">“</span>
-                              <p className="font-marker font-bold text-[11px] sm:text-xs leading-snug tracking-wide text-neutral-900 uppercase">
-                                {dynamicStickyNote.toUpperCase()}
-                              </p>
-                            </div>
-                            <span className="text-right font-mono text-[9px] font-bold tracking-wider text-neutral-800 uppercase mt-1">
-                              — KOOGEE
-                            </span>
-                          </div>
-
-                          {/* Action Buttons */}
-                          <div className="space-y-1.5">
-                            <button
-                              type="button"
-                              onClick={handleShareOnX}
-                              disabled={isDownloading}
-                              className="w-full h-8.5 rounded-lg bg-[#0F1419] hover:bg-black active:scale-[0.98] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
-                            >
-                              <svg className="size-3.5 fill-current" viewBox="0 0 24 24">
-                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                              </svg>
-                              <span>Share on X</span>
-                            </button>
-
-                            <div className="grid grid-cols-2 gap-1.5">
-                              <button
-                                type="button"
-                                onClick={handleDownloadCard}
-                                disabled={isDownloading}
-                                className="h-8 rounded-lg border border-neutral-300 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-800 font-bold text-[11px] flex items-center justify-center gap-1 transition-all shadow-2xs cursor-pointer"
-                              >
-                                <Download className="size-3" />
-                                <span>{isDownloading ? "Saving..." : "Download"}</span>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={handleTryAgain}
-                                className="h-8 rounded-lg border border-neutral-300 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-800 font-bold text-[11px] flex items-center justify-center gap-1 transition-all shadow-2xs cursor-pointer"
-                              >
-                                <RotateCcw className="size-3" />
-                                <span>Try Again</span>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+                  {/* Right: Location & Meta Info Card */}
+                  <div className="bg-white/90 rounded-2xl border border-neutral-200/90 p-4 sm:p-5 flex flex-col justify-between shadow-2xs">
+                    {/* Location */}
+                    <div className="flex items-center gap-3 py-1">
+                      <MapPin className="size-4 sm:size-5 text-neutral-900 shrink-0" />
+                      <div>
+                        <span className="block text-[9px] font-mono font-bold tracking-wider text-neutral-400 uppercase">LOCATION</span>
+                        <strong className="text-xs sm:text-sm font-bold text-neutral-900">
+                          {currentCity.name}, {currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : "NSW"}
+                        </strong>
                       </div>
                     </div>
 
-                    {/* Concrete Pedestal Base */}
-                    <div className="bg-gradient-to-b from-[#B2B6BD] via-[#A2A7AE] to-[#92979E] border-t-2 border-[#7A7E85] px-3 sm:px-4 py-2 text-neutral-900 flex flex-col sm:flex-row items-center justify-between gap-1 shadow-[inset_0_1px_3px_rgba(0,0,0,0.15)]">
-                      <div className="inline-block relative">
-                        <p className="font-marker text-xs sm:text-sm font-bold text-neutral-900 tracking-wide">
-                          BETTER VIEWS. SMALLER BUDGETS.
-                        </p>
-                        <div className="h-0.5 bg-[#F5C842] rounded-full w-full -mt-0.5" />
-                      </div>
-                      <div className="text-center sm:text-right flex items-center gap-2">
-                        <p className="font-mono text-[8px] sm:text-[9px] font-semibold text-neutral-800 tracking-wider uppercase">
-                          A GUY, A DOG, AND A VERY EXPENSIVE HOUSING MARKET.
-                        </p>
-                        <p className="font-mono text-[10px] sm:text-xs font-black tracking-wider text-neutral-900 uppercase">
-                          0SQM.COM
-                        </p>
+                    {/* Date */}
+                    <div className="flex items-center gap-3 py-1 border-t border-neutral-100">
+                      <Calendar className="size-4 sm:size-5 text-neutral-900 shrink-0" />
+                      <div>
+                        <span className="block text-[9px] font-mono font-bold tracking-wider text-neutral-400 uppercase">DATE</span>
+                        <strong className="text-xs sm:text-sm font-bold text-neutral-900">{currentDateStr || "20 Sep 2026"}</strong>
                       </div>
                     </div>
+
+                    {/* Property Type */}
+                    <div className="flex items-center gap-3 py-1 border-t border-neutral-100">
+                      <Home className="size-4 sm:size-5 text-neutral-900 shrink-0" />
+                      <div>
+                        <span className="block text-[9px] font-mono font-bold tracking-wider text-neutral-400 uppercase">PROPERTY TYPE</span>
+                        <strong className="text-xs sm:text-sm font-bold text-neutral-900">Theoretical Land</strong>
+                      </div>
+                    </div>
+
+                    {/* Savings */}
+                    <div className="flex items-center gap-3 py-1 border-t border-neutral-100">
+                      <Wallet className="size-4 sm:size-5 text-neutral-900 shrink-0" />
+                      <div>
+                        <span className="block text-base sm:text-xl font-black text-neutral-950 font-mono tracking-tight">
+                          {currentCity.currencySymbol}{numericSavings.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. Lower Grid: Cost Breakdown (Left) & Yellow Card + Actions (Right) */}
+                <div className="grid grid-cols-1 md:grid-cols-[1.35fr_1fr] gap-3 sm:gap-4 items-stretch">
+                  {/* Left Column: Cost Breakdown & Total Equity */}
+                  <div className="flex flex-col justify-between bg-white/90 rounded-2xl border border-neutral-200/90 p-4 sm:p-5 shadow-2xs">
+                    <div>
+                      <div className="flex items-center justify-between text-[11px] font-mono font-black uppercase text-neutral-900 pb-1.5">
+                        <span className="tracking-wider">COST BREAKDOWN</span>
+                        <span className="text-neutral-500 font-medium text-[10px]">{currentCity.currency} ({currentCity.currencySymbol})</span>
+                      </div>
+
+                      <div className="border-b border-neutral-200 my-2" />
+
+                      <div className="space-y-1.5 font-mono text-[11px] sm:text-xs">
+                        <div className="flex items-center justify-between text-neutral-800">
+                          <span className="flex items-center gap-1.5">
+                            <FileText className="size-3.5 text-neutral-500 shrink-0" />
+                            <span>Land Value ({affordableSqm.toFixed(2)} m²)</span>
+                          </span>
+                          <span className="font-bold text-neutral-950">{currentCity.currencySymbol}{numericSavings.toLocaleString()}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-neutral-800">
+                          <span className="flex items-center gap-1.5">
+                            <FileText className="size-3.5 text-neutral-500 shrink-0" />
+                            <span>Stamp Duty (on fresh air)</span>
+                          </span>
+                          <span className="font-bold text-neutral-950">{currentCity.currencySymbol}{dynamicStampDuty.toLocaleString()}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-neutral-800">
+                          <span className="flex items-center gap-1.5">
+                            <Wrench className="size-3.5 text-neutral-500 shrink-0" />
+                            <span>Strata Sinking Fund (broken lift)</span>
+                          </span>
+                          <span className="font-bold text-neutral-950">{currentCity.currencySymbol}{dynamicStrata.toLocaleString()}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-neutral-800">
+                          <span className="flex items-center gap-1.5">
+                            <User className="size-3.5 text-neutral-500 shrink-0" />
+                            <span>Agent Cologne Surcharge</span>
+                          </span>
+                          <span className="font-bold text-neutral-950">{currentCity.currencySymbol}{dynamicAgentCologne.toLocaleString()}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-neutral-800">
+                          <span className="flex items-center gap-1.5">
+                            <Percent className="size-3.5 text-neutral-500 shrink-0" />
+                            <span>Landlord Mortgage Gratitude</span>
+                          </span>
+                          <span className="font-bold text-neutral-950">100%</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="flex items-center gap-1.5 text-neutral-800">
+                            <Heart className="size-3.5 text-neutral-500 shrink-0" />
+                            <span>Emotional Damage</span>
+                          </span>
+                          <span className="text-emerald-600 font-black">FREE</span>
+                        </div>
+                      </div>
+
+                      <div className="border-b border-neutral-200 my-2.5" />
+                    </div>
+
+                    {/* Total Equity Row with Yellow Pill */}
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-xs sm:text-sm font-mono font-black tracking-wider text-neutral-950 uppercase">
+                        TOTAL EQUITY ACQUIRED
+                      </span>
+                      <div className="bg-[#FFDE43] text-neutral-950 font-black text-xl sm:text-2xl px-5 py-1.5 rounded-xl shadow-2xs font-sans tracking-tight">
+                        {affordableSqm > 0 ? `${affordableSqm.toFixed(2)} m²` : "0 m²"}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Yellow Koogee Sticky Note & Buttons */}
+                  <div className="flex flex-col justify-between gap-3">
+                    {/* Yellow Sticky Note with Corgi */}
+                    <div className="rounded-2xl border border-[#E5C41C] bg-[#FFDE43] p-3.5 sm:p-4 shadow-2xs flex items-center justify-between relative overflow-hidden">
+                      <div className="flex-1 pr-2 z-10">
+                        <span className="font-serif text-3xl leading-none text-neutral-900 select-none block -mb-1">“</span>
+                        <p className="font-marker font-bold text-xs sm:text-sm leading-snug tracking-wide text-neutral-950 uppercase">
+                          {dynamicStickyNote.toUpperCase()}
+                        </p>
+                        <span className="block font-mono text-[10px] font-black tracking-wider text-neutral-900 uppercase mt-2">
+                          — KOOGEE
+                        </span>
+                      </div>
+                      <div className="shrink-0 relative z-10">
+                        <img
+                          src="/images/koogee-card-corgi.png"
+                          alt="Koogee the Corgi"
+                          className="w-20 sm:w-24 object-contain rounded-lg"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={handleShareOnX}
+                        disabled={isDownloading}
+                        className="w-full h-10 sm:h-11 rounded-xl bg-[#0F1419] hover:bg-black active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
+                      >
+                        <svg className="size-4 fill-current" viewBox="0 0 24 24">
+                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                        <span>Share on X</span>
+                      </button>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={handleDownloadCard}
+                          disabled={isDownloading}
+                          className="h-9 sm:h-10 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-2xs cursor-pointer"
+                        >
+                          <Download className="size-3.5" />
+                          <span>{isDownloading ? "Saving..." : "Download"}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleTryAgain}
+                          className="h-9 sm:h-10 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-2xs cursor-pointer"
+                        >
+                          <RotateCcw className="size-3.5" />
+                          <span>Try Again</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Footer */}
+                <div className="border-t border-neutral-200/80 mt-4 sm:mt-5 pt-3 flex items-center justify-between text-neutral-600 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider">
+                  <span className="font-bold text-neutral-800">OSQM.COM.AU</span>
+                  <div className="flex items-center gap-1 text-neutral-500 font-medium">
+                    <span>DIFFERENT CITIES. SAME PORTFOLIO.</span>
+                    <Globe className="size-3.5 text-neutral-700 shrink-0" />
                   </div>
                 </div>
               </div>
