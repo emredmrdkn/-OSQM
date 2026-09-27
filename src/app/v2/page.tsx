@@ -661,64 +661,11 @@ export default function V2Page() {
   const [hasAudited, setHasAudited] = useState(false);
   const [auditShake, setAuditShake] = useState(false);
 
-  // Reality Score Card Ref, Export Ref, Pre-rendered Blob Ref and Download / Share states
+  // Reality Score Card Ref, Export Ref and Download states
   const cardRef = useRef<HTMLDivElement>(null);
   const exportCardRef = useRef<HTMLDivElement>(null);
-  const cardWrapperRef = useRef<HTMLDivElement>(null);
-  const [cardScale, setCardScale] = useState(1);
   const savingsInputRef = useRef<HTMLInputElement>(null);
-  const preRenderedBlobRef = useRef<Blob | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [shareToast, setShareToast] = useState<string | null>(null);
-
-  // Responsive scale: ensures the card stays in exact horizontal 2-column landscape on mobile
-  useEffect(() => {
-    const updateScale = () => {
-      if (cardWrapperRef.current) {
-        const containerWidth = cardWrapperRef.current.clientWidth;
-        const targetWidth = 860;
-        if (containerWidth < targetWidth) {
-          setCardScale(containerWidth / targetWidth);
-        } else {
-          setCardScale(1);
-        }
-      }
-    };
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
-  }, []);
-
-  // Pre-render the card to a high-res PNG Blob (1448x1086) as soon as component mounts or inputs change
-  useEffect(() => {
-    const captureTarget = exportCardRef.current || cardRef.current;
-    if (!captureTarget) return;
-    let isCancelled = false;
-
-    const timer = setTimeout(() => {
-      if (!captureTarget || isCancelled) return;
-      toPng(captureTarget, {
-        quality: 0.98,
-        pixelRatio: 1.68372, // 860px * 1.68372 = 1448px (exact reality-score-card.png resolution)
-        backgroundColor: "#FAF9F5",
-      })
-        .then((url) => fetch(url))
-        .then((res) => res.blob())
-        .then((blob) => {
-          if (!isCancelled) {
-            preRenderedBlobRef.current = blob;
-          }
-        })
-        .catch((err) => {
-          console.warn("Pre-render blob error:", err);
-        });
-    }, 300);
-
-    return () => {
-      isCancelled = true;
-      clearTimeout(timer);
-    };
-  }, [affordableSqm, currentCity.id, numericSavings]);
 
   const handleDownloadCard = async () => {
     const captureTarget = exportCardRef.current || cardRef.current;
@@ -734,7 +681,6 @@ export default function V2Page() {
       link.download = `0sqm-reality-score-${currentCity.id || "sydney"}.png`;
       link.href = dataUrl;
       link.click();
-      return dataUrl;
     } catch (err) {
       console.error("Failed to download card", err);
     } finally {
@@ -742,103 +688,11 @@ export default function V2Page() {
     }
   };
 
-  const handleShareOnX = async () => {
-    // 1. Determine site URL from env or window
-    let origin = "https://0sqm.com";
-    if (typeof window !== "undefined" && window.location.origin) {
-      if (!window.location.origin.includes("localhost") && !window.location.origin.includes("127.0.0.1")) {
-        origin = window.location.origin;
-      }
-    }
-
-    const cleanCity = currentCity.name;
-    const cleanState = currentCity.flag && currentCity.flag.length <= 3 ? currentCity.flag : "NSW";
+  const handleShareOnX = () => {
     const cleanSqm = affordableSqm.toFixed(2);
-    const cleanSavings = numericSavings.toString();
-    const cleanCurrency = currentCity.currency;
-    const cleanSymbol = currentCity.currencySymbol;
-
-    const query = new URLSearchParams({
-      city: cleanCity,
-      state: cleanState,
-      sqm: cleanSqm,
-      savings: cleanSavings,
-      currency: cleanCurrency,
-      symbol: cleanSymbol,
-    }).toString();
-
-    const shareUrl = `${origin}/share?${query}`;
     const tweetText = `#MySquareMeter is ${cleanSqm} m².\nI joined the @Own0SQM club too. #0SQM`;
-
-    // 2. Ensure pristine horizontal 1448x1086 PNG blob is available
-    let pngBlob = preRenderedBlobRef.current;
-    const captureTarget = exportCardRef.current || cardRef.current;
-    if (captureTarget) {
-      try {
-        const url = await toPng(captureTarget, {
-          quality: 0.98,
-          pixelRatio: 1.68372,
-          backgroundColor: "#FAF9F5",
-        });
-        const res = await fetch(url);
-        pngBlob = await res.blob();
-        preRenderedBlobRef.current = pngBlob;
-      } catch (e) {
-        console.warn("Export card capture failed:", e);
-      }
-    }
-
-    const imageFile = pngBlob
-      ? new File([pngBlob], `0sqm-reality-score-${currentCity.id || "sydney"}.png`, { type: "image/png" })
-      : null;
-
-    // a) Mobile (iOS/Android): Web Share API directly shares the horizontal 1448x1086 image file + tweet text
-    const isMobile = typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isMobile && imageFile && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
-      navigator
-        .share({
-          files: [imageFile],
-          text: tweetText,
-        })
-        .catch((err) => {
-          if (err.name !== "AbortError") console.error("Mobile share failed", err);
-        });
-      return;
-    }
-
-    // b) Desktop / Fallback:
-    // Open Twitter compose with tweet text AND shareUrl so Twitter automatically previews the horizontal card image!
-    const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
+    const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(tweetUrl, "_blank", "noopener,noreferrer");
-
-    // Also automatically trigger download of the horizontal card image
-    if (pngBlob) {
-      try {
-        const downloadLink = document.createElement("a");
-        downloadLink.download = `0sqm-reality-score-${currentCity.id || "sydney"}.png`;
-        downloadLink.href = URL.createObjectURL(pngBlob);
-        downloadLink.click();
-      } catch (e) {
-        console.warn("Auto download card failed", e);
-      }
-    }
-
-    // Copy to clipboard and show helpful toast
-    if (pngBlob && typeof navigator !== "undefined" && navigator.clipboard && typeof ClipboardItem !== "undefined") {
-      navigator.clipboard
-        .write([new ClipboardItem({ "image/png": pngBlob })])
-        .then(() => {
-          setShareToast("📸 Yatay kart panoya kopyalandı ve indirildi! X gönderinize eklemek için Cmd+V / Ctrl+V yapabilirsiniz.");
-        })
-        .catch((err) => {
-          console.warn("Clipboard write failed:", err);
-          setShareToast("X yeni sekmede açılıyor... Kart görseli önizlemede görünecektir.");
-        });
-    } else {
-      setShareToast("X yeni sekmede açılıyor... Kart görseli önizlemede görünecektir.");
-    }
-
-    setTimeout(() => setShareToast(null), 8000);
   };
 
   const handleTryAgain = () => {
@@ -1012,7 +866,7 @@ https://0sqm.fun
     ? `${((numericSavings - dynamicStampDuty) / currentCity.pricePerSqm).toFixed(2)} m²`
     : "0 m²";
 
-  const renderCardContent = () => (
+  const renderCardContent = (isExport = false) => (
     <>
       {/* 1. Top Header */}
       <div className="flex items-start justify-between gap-3 pb-5">
@@ -1053,7 +907,7 @@ https://0sqm.fun
       </div>
 
       {/* 2. Main 2-Column Grid (Left: 57%, Right: 43%) */}
-      <div className="grid grid-cols-[1.32fr_1fr] gap-4 items-start">
+      <div className={`grid ${isExport ? "grid-cols-[1.32fr_1fr]" : "grid-cols-1 md:grid-cols-[1.32fr_1fr]"} gap-3 sm:gap-4 items-start`}>
         {/* Left Column */}
         <div className="space-y-3.5">
           {/* Reality Score Dark Digital Display */}
@@ -1067,33 +921,33 @@ https://0sqm.fun
               </div>
 
               {/* Split-Flap Counter Tiles */}
-              <div className="flex items-center gap-2 my-1">
+              <div className="flex items-center gap-1.5 sm:gap-2 my-1 overflow-x-auto no-scrollbar">
                 {/* Tile 1: Integer */}
-                <div className="relative min-w-16 h-20 px-2.5 bg-[#1C1F24] rounded-xl flex items-center justify-center shadow-md border border-white/5 overflow-hidden select-none">
-                  <span className="font-sans font-black text-5xl text-white tracking-tight">{intPart}</span>
+                <div className="relative min-w-12 sm:min-w-16 h-16 sm:h-20 px-2 sm:px-2.5 bg-[#1C1F24] rounded-xl flex items-center justify-center shadow-md border border-white/5 overflow-hidden select-none">
+                  <span className="font-sans font-black text-4xl sm:text-5xl text-white tracking-tight">{intPart}</span>
                   <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-black/70 shadow-[0_1px_0_rgba(255,255,255,0.08)]" />
                 </div>
 
                 {/* Dot */}
-                <div className="w-2.5 h-2.5 rounded-full bg-white/90 self-end mb-4 mx-0.5" />
+                <div className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-white/90 self-end mb-3 sm:mb-4 mx-0.5" />
 
                 {/* Tile 2: Dec 1 */}
-                <div className="relative min-w-16 h-20 px-2.5 bg-[#1C1F24] rounded-xl flex items-center justify-center shadow-md border border-white/5 overflow-hidden select-none">
-                  <span className="font-sans font-black text-5xl text-white tracking-tight">{decPart[0] || "0"}</span>
+                <div className="relative min-w-12 sm:min-w-16 h-16 sm:h-20 px-2 sm:px-2.5 bg-[#1C1F24] rounded-xl flex items-center justify-center shadow-md border border-white/5 overflow-hidden select-none">
+                  <span className="font-sans font-black text-4xl sm:text-5xl text-white tracking-tight">{decPart[0] || "0"}</span>
                   <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-black/70 shadow-[0_1px_0_rgba(255,255,255,0.08)]" />
                 </div>
 
                 {/* Tile 3: Dec 2 */}
-                <div className="relative min-w-16 h-20 px-2.5 bg-[#1C1F24] rounded-xl flex items-center justify-center shadow-md border border-white/5 overflow-hidden select-none">
-                  <span className="font-sans font-black text-5xl text-white tracking-tight">{decPart[1] || "0"}</span>
+                <div className="relative min-w-12 sm:min-w-16 h-16 sm:h-20 px-2 sm:px-2.5 bg-[#1C1F24] rounded-xl flex items-center justify-center shadow-md border border-white/5 overflow-hidden select-none">
+                  <span className="font-sans font-black text-4xl sm:text-5xl text-white tracking-tight">{decPart[1] || "0"}</span>
                   <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-black/70 shadow-[0_1px_0_rgba(255,255,255,0.08)]" />
                 </div>
 
                 {/* Tile 4: m² */}
-                <div className="relative min-w-20 h-20 px-2.5 bg-[#1C1F24] rounded-xl flex flex-col items-center justify-center shadow-md border border-white/5 overflow-hidden select-none ml-1">
+                <div className="relative min-w-16 sm:min-w-20 h-16 sm:h-20 px-2 sm:px-2.5 bg-[#1C1F24] rounded-xl flex flex-col items-center justify-center shadow-md border border-white/5 overflow-hidden select-none ml-0.5 sm:ml-1">
                   <div className="relative inline-flex flex-col items-center">
-                    <span className="font-sans font-black text-4xl text-white leading-none">m²</span>
-                    <div className="h-1.5 bg-[#FFDE43] rounded-full w-11 mt-1.5" />
+                    <span className="font-sans font-black text-3xl sm:text-4xl text-white leading-none">m²</span>
+                    <div className="h-1 sm:h-1.5 bg-[#FFDE43] rounded-full w-9 sm:w-11 mt-1 sm:mt-1.5" />
                   </div>
                   <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-black/70 shadow-[0_1px_0_rgba(255,255,255,0.08)]" />
                 </div>
@@ -1286,7 +1140,7 @@ https://0sqm.fun
 
       {/* 3. Footer */}
       <div className="border-t border-neutral-200/80 mt-6 pt-4 pb-1 px-1 flex items-center justify-between text-neutral-600 font-mono text-[11px] uppercase tracking-wider select-none">
-        <span className="font-bold text-neutral-800">OSQM.COM.AU</span>
+        <span className="font-bold text-neutral-800">0SQM.COM</span>
         <div className="flex items-center gap-1.5 text-neutral-500 font-medium">
           <span>DIFFERENT CITIES. SAME PORTFOLIO.</span>
           <Globe className="size-3.5 text-neutral-700 shrink-0" />
@@ -1521,7 +1375,7 @@ https://0sqm.fun
             </span>
           </div>
 
-          <div className="mx-auto max-w-2xl space-y-3.5">
+          <div className="mx-auto max-w-4xl space-y-3.5">
             {/* Sleek, Compact City & Country Switcher */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 p-1.5 rounded-xl border border-border bg-paper shadow-2xs">
               {/* Category Switcher (Australia / Global) */}
@@ -1703,70 +1557,16 @@ https://0sqm.fun
             </div>
 
             {/* THE REALITY SCORE CARD (Exact 1:1 match with reality-score-card.png) */}
-            <div ref={cardWrapperRef} className="w-full flex flex-col items-center">
+            <div className="w-full flex justify-center">
               <div
-                style={{
-                  width: "100%",
-                  maxWidth: 860,
-                  height: cardScale < 1 ? `${Math.round(685 * cardScale)}px` : "auto",
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-                className="flex justify-center"
+                ref={cardRef}
+                id="reality-score-card"
+                className={`w-full max-w-[860px] bg-[#FAF9F5] rounded-[28px] border border-[#E7E2D6] p-4 sm:p-7 pb-6 shadow-xl shadow-black/5 relative overflow-hidden transition-all duration-300 text-neutral-900 select-none ${
+                  auditShake ? "scale-[1.01] ring-2 ring-amber-400/40" : ""
+                }`}
               >
-                <div
-                  style={{
-                    width: 860,
-                    transform: cardScale < 1 ? `scale(${cardScale})` : undefined,
-                    transformOrigin: "top left",
-                  }}
-                  className={auditShake ? "scale-[1.01] ring-2 ring-amber-400/40 rounded-[28px]" : ""}
-                >
-                  <div
-                    ref={cardRef}
-                    id="reality-score-card"
-                    className="w-[860px] bg-[#FAF9F5] rounded-[28px] border border-[#E7E2D6] p-7 pb-6 shadow-xl shadow-black/5 relative overflow-hidden text-neutral-900 select-none"
-                  >
-                    {renderCardContent()}
-                  </div>
-                </div>
+                {renderCardContent(false)}
               </div>
-
-              {/* Mobile Quick Action Buttons (shown only on small screens when card is scaled) */}
-              {cardScale < 1 && (
-                <div className="w-full max-w-sm mt-3.5 space-y-2 px-1">
-                  <button
-                    type="button"
-                    onClick={handleShareOnX}
-                    disabled={isDownloading}
-                    className="w-full h-11 rounded-xl bg-[#0F1419] hover:bg-black active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
-                  >
-                    <svg className="size-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                    </svg>
-                    <span>Share on X</span>
-                  </button>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={handleDownloadCard}
-                      disabled={isDownloading}
-                      className="h-10 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-2xs cursor-pointer"
-                    >
-                      <Download className="size-3.5" />
-                      <span>{isDownloading ? "Saving..." : "Download"}</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleTryAgain}
-                      className="h-10 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 active:scale-[0.98] text-neutral-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-2xs cursor-pointer"
-                    >
-                      <RotateCcw className="size-3.5" />
-                      <span>Try Again</span>
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Off-screen Pristine Export Element (Fixed 860px width, captured at 1.68372 ratio => exact 1448x1086px) */}
@@ -1785,7 +1585,7 @@ https://0sqm.fun
                 ref={exportCardRef}
                 className="w-[860px] bg-[#FAF9F5] rounded-[28px] border border-[#E7E2D6] p-7 pb-6 shadow-xl shadow-black/5 text-neutral-900"
               >
-                {renderCardContent()}
+                {renderCardContent(true)}
               </div>
             </div>
           </div>
@@ -2624,13 +2424,6 @@ https://0sqm.fun
         </div>
       )}
 
-      {/* Share / Download Toast Notification */}
-      {shareToast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#0F1419] text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-2 text-xs sm:text-sm font-semibold animate-in fade-in slide-in-from-bottom-4 duration-300">
-          <Sparkles className="size-4 text-amber-400 shrink-0" />
-          <span>{shareToast}</span>
-        </div>
-      )}
     </main>
   );
 }

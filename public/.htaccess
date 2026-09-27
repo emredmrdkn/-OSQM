@@ -6,7 +6,10 @@
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  # 2. Canonical Domain: 301 redirect www and other domains to https://0sqm.com
+  # 2. Canonical Domain: 301 redirect 0sqm.com.au, 0sqm.au, and all aliases to https://0sqm.com
+  RewriteCond %{HTTP_HOST} ^(www\.)?0sqm\.com\.au$ [NC,OR]
+  RewriteCond %{HTTP_HOST} ^(www\.)?0sqm\.au$ [NC,OR]
+  RewriteCond %{HTTP_HOST} ^www\.0sqm\.com$ [NC,OR]
   RewriteCond %{HTTP_HOST} !^0sqm\.com$ [NC]
   RewriteCond %{HTTP_HOST} !^localhost [NC]
   RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
