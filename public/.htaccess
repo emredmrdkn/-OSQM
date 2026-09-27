@@ -2,11 +2,17 @@
   RewriteEngine On
   RewriteBase /
 
-  # Redirect HTTP to HTTPS
+  # 1. Redirect HTTP to HTTPS
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  # Route /share to share.php with query string preserved
+  # 2. Canonical Domain: 301 redirect www and other domains to https://0sqm.com
+  RewriteCond %{HTTP_HOST} !^0sqm\.com$ [NC]
+  RewriteCond %{HTTP_HOST} !^localhost [NC]
+  RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
+  RewriteRule ^(.*)$ https://0sqm.com/$1 [L,R=301]
+
+  # 3. Route /share to share.php with query string preserved
   RewriteRule ^share/?$ share.php [L,QSA]
 
   # Pretty URLs: if file exists as .html, serve it cleanly
