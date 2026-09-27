@@ -8,7 +8,7 @@ $state = isset($_GET['state']) ? trim(strip_tags($_GET['state'])) : 'NSW';
 
 $title = "$city Reality Score: {$sqm} m² in theory. 0 m² in reality. — $0SQM";
 $desc = "I saved \${$savings} and officially own 0 SQM in {$city}. Different city. Same portfolio. The viral housing reality check.";
-$cardImage = "https://0sqm.com/images/reality-score-card.png";
+$cardImage = "https://0sqm.com/images/reality-score-card.png?v=2";
 ?>
 <!DOCTYPE html>
 <html lang="en">
