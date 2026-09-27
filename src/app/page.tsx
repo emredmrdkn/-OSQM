@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/images/reality-score-card.png',
-        width: 1200,
-        height: 630,
+        url: 'https://0sqm.com/images/reality-score-card.png',
+        width: 1448,
+        height: 1086,
         alt: '$0SQM Reality Score Card',
       },
     ],

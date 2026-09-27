@@ -24,8 +24,8 @@ $cardImage = "https://0sqm.com/images/reality-score-card.png";
   <meta property="og:title" content="<?php echo htmlspecialchars($title); ?>">
   <meta property="og:description" content="<?php echo htmlspecialchars($desc); ?>">
   <meta property="og:image" content="<?php echo $cardImage; ?>">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1448">
+  <meta property="og:image:height" content="1086">
   <meta property="og:site_name" content="$0SQM">
 
   <!-- Twitter Card -->
