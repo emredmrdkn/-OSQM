@@ -865,18 +865,6 @@ export default function V2Page() {
     setSavings(val);
   };
 
-  const getSliderRoast = (val: number, symbol: string) => {
-    if (val <= 0) return "Pure freedom (and negative net worth) 🧘";
-    if (val < 2500) return `With ${symbol}${val.toLocaleString()}, you can afford 2 days of Sydney CBD parking & an iced flat white ☕`;
-    if (val < 10000) return `Enough for 1 doormat in Bondi, but strictly during off-peak hours 🚪`;
-    if (val < 25000) return `Justin tier: a nice laptop, a corgi harness, and exactly 0 m² 💻`;
-    if (val < 50000) return `The air rights directly between the fridge and the wall in an unrenovated studio 🧊`;
-    if (val < 80000) return `Enough to cover strata legal fees for your neighbour's leaking balcony 🌧️`;
-    if (val < 120000) return `You can now inhale the oxygen at a Saturday open inspection without coughing 👃`;
-    if (val < 150000) return `Almost enough for stamp duty on a cardboard box in Surry Hills 📦`;
-    return `Offshore cash buyer laughing in the background on speakerphone 📞`;
-  };
-
   const rentyQuotes = [
     { text: "Woof! Rent is a construct. Sticks at the dog park are free and have 100% equity.", emoji: "🪵" },
     { text: "Arf! My dog bed is 0.4 m². Legally, I own more prime land than Justin.", emoji: "🛏️" },
@@ -1374,14 +1362,6 @@ https://0sqm.fun
                     aria-label="Savings slider"
                   />
                   <span className="text-[10px] font-mono font-bold text-muted-foreground">{currentCity.currencySymbol}150k+</span>
-                </div>
-
-                {/* Dynamic Live Slider Roaster */}
-                <div className="flex items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 text-[11px] text-foreground">
-                  <span className="text-xs shrink-0">🔥</span>
-                  <span className="font-semibold italic leading-tight truncate">
-                    {getSliderRoast(numericSavings, currentCity.currencySymbol)}
-                  </span>
                 </div>
 
                 {/* Quick Preset Chips */}
@@ -1937,13 +1917,6 @@ https://0sqm.fun
               <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-medium">
                 A streetwear collection engineered for a generation priced out of 100m² blocks, but rich in perspective. Standalone heavyweight silhouettes, vintage washes, and water-based prints that outlast any 30-year mortgage.
               </p>
-              <div className="flex items-center gap-3 pt-1 text-[11px] font-mono font-bold text-neutral-500 uppercase tracking-wider">
-                <span>Drop 01</span>
-                <span>•</span>
-                <span>Sydney Studio</span>
-                <span>•</span>
-                <span className="text-[#C69200]">Limited Run</span>
-              </div>
             </div>
           </div>
 
