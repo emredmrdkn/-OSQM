@@ -745,7 +745,7 @@ export default function V2Page() {
     }).toString();
 
     const shareUrl = `${origin}/share?${query}`;
-    const tweetText = `My ${cleanCity} Reality Score: 0 SQM.\n${cleanSqm}m² in theory. 0m² in reality.\nDifferent city. Same portfolio. 🙂\n#0SQM`;
+    const tweetText = `#MySquareMeter is 0.00 m².\nI joined the @Own0SQM club too. #0SQM`;
 
     // Ensure PNG blob is available even if user didn't calculate or wait
     let pngBlob = preRenderedBlobRef.current;
@@ -771,7 +771,7 @@ export default function V2Page() {
     if (isMobile && imageFile && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
       navigator.share({
         files: [imageFile],
-        text: `${tweetText}\n${shareUrl}`,
+        text: tweetText,
       }).catch((err) => {
         if (err.name !== 'AbortError') console.error('Mobile share failed', err);
       });
@@ -779,8 +779,8 @@ export default function V2Page() {
     }
 
     // b) Desktop / PC / Mac:
-    // ALWAYS open Twitter compose modal directly in a new tab!
-    const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
+    // ALWAYS open Twitter compose modal directly in a new tab without cluttering URL!
+    const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(tweetUrl, '_blank', 'noopener,noreferrer');
 
     // Also automatically trigger download of the card image so the user has the file
