@@ -745,7 +745,7 @@ export default function V2Page() {
     }).toString();
 
     const shareUrl = `${origin}/share?${query}`;
-    const tweetText = `#MySquareMeter is 0.00 m².\nI joined the @Own0SQM club too. #0SQM`;
+    const tweetText = `#MySquareMeter is ${cleanSqm} m².\nI joined the @Own0SQM club too. #0SQM`;
 
     // Ensure PNG blob is available even if user didn't calculate or wait
     let pngBlob = preRenderedBlobRef.current;

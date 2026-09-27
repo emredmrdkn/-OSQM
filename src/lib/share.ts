@@ -10,7 +10,8 @@ export function getTwitterShareUrl(result: RealityCheckResult, siteUrl?: string)
   const localItem = result.primaryHyperLocal.item.unitName;
   const localCount = result.primaryHyperLocal.count.toLocaleString();
 
-  const tweetText = `#MySquareMeter is 0.00 m².\nI joined the @Own0SQM club too. #0SQM`;
+  const formattedSqm = sqm.includes('m²') ? sqm : `${sqm} m²`;
+  const tweetText = `#MySquareMeter is ${formattedSqm}.\nI joined the @Own0SQM club too. #0SQM`;
   
   const shareParams = new URLSearchParams({
     text: tweetText,
