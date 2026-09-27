@@ -1063,16 +1063,6 @@ https://0sqm.fun
               </div>
             </div>
 
-            {/* Savings */}
-            <div className="flex items-center gap-3 py-1.5 border-t border-neutral-100">
-              <Wallet className="size-5 text-neutral-900 shrink-0" />
-              <div>
-                <span className="block text-[9px] font-mono font-bold tracking-wider text-neutral-400 uppercase">YOUR SAVINGS</span>
-                <span className="block text-xl font-black text-neutral-950 font-mono tracking-tight">
-                  {currentCity.currencySymbol}{numericSavings.toLocaleString()}
-                </span>
-              </div>
-            </div>
           </div>
 
           {/* Yellow Koogee Sticky Note */}
