@@ -6,7 +6,7 @@ import { toPng } from "html-to-image";
 import { Button } from "@/components/v2/ui/button";
 
 const heroImage = "/images/v2/osqm-top-bg.jpg";
-const justinImage = "/images/v2/justin-dog.jpg";
+const justinImage = "/images/v2/justin-dog-sunset.jpg";
 const merchImage = "/images/v2/merch-lineup.jpg";
 const merchCollectionPoster = "/images/v2/collection-poster.jpg";
 const merchLookbook = "/images/v2/lookbook-editorial.jpg";
@@ -963,7 +963,7 @@ https://0sqm.fun
     },
     {
       id: "hope",
-      image: "/images/v2/justin-dog.jpg",
+      image: "/images/v2/justin-dog-sunset.jpg",
       alt: "Justin and his dog overlooking Sydney Harbour at sunset",
       caption: "Still 0m², but never 0 hope.",
       rotation: "rotate-1",
