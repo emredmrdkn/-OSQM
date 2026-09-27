@@ -15,7 +15,7 @@
 /build
 
 # misc
-.DS_Store
+**/.DS_Store
 *.pem
 
 # debug
@@ -45,3 +45,5 @@ second_$OSQM/
 /*.zip
 !public/**
 
+.DS_Store
+**/.DS_Store
