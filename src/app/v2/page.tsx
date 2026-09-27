@@ -266,7 +266,7 @@ const australianCapitals = [
       emoji: "🥑",
       unit: "toasts",
     },
-    satiricalNote: "Congratulations. You own enough Sydney real estate to park half a corgi.",
+    satiricalNote: "Congratulations. You own enough Sydney real estate for: Koogee the Corgi. Reality: still 0m²!",
   },
   {
     id: "melbourne",
@@ -422,7 +422,7 @@ const globalCities = [
       emoji: "🥑",
       unit: "toasts",
     },
-    satiricalNote: "Congratulations. You own enough Sydney real estate to park half a corgi.",
+    satiricalNote: "Congratulations. You own enough Sydney real estate for: Koogee the Corgi. Reality: still 0m²!",
   },
   {
     id: "london",
@@ -1410,7 +1410,7 @@ https://0sqm.fun
               <div
                 ref={cardRef}
                 id="reality-score-card"
-                className={`w-full max-w-4xl bg-[#FAF9F5] rounded-3xl border border-[#E7E2D6] p-4 sm:p-7 shadow-xl shadow-black/5 relative overflow-hidden transition-all duration-300 text-neutral-900 ${
+                className={`w-full max-w-4xl bg-[#FAF9F5] rounded-3xl border border-[#E7E2D6] p-4 sm:p-7 pb-8 sm:pb-12 shadow-xl shadow-black/5 relative overflow-hidden transition-all duration-300 text-neutral-900 ${
                   auditShake ? "scale-[1.01] ring-2 ring-amber-400/40" : ""
                 }`}
               >
@@ -1434,14 +1434,14 @@ https://0sqm.fun
                       <span className="font-marker text-xs sm:text-sm font-bold text-neutral-900 tracking-wide -rotate-1">
                         THE AUSTRALIAN DREAM
                       </span>
-                      <div className="flex items-center gap-1 mt-0.5">
+                      <div className="flex items-center gap-1.5 mt-0.5">
                         <span className="font-marker text-xs sm:text-sm font-bold text-neutral-900">
                           STILL STARTS AT
                         </span>
                         <span className="relative inline-flex items-center justify-center font-marker text-xs sm:text-sm font-black bg-[#FFDE43] text-neutral-950 px-2 py-0.5 rounded-sm">
                           0M².
                           {/* Accent lines */}
-                          <span className="absolute -right-3 -top-1 font-sans text-xs text-neutral-800 font-bold select-none">
+                          <span className="absolute -right-3 -top-1 font-marker text-sm text-neutral-900 select-none">
                             //
                           </span>
                         </span>
@@ -1524,7 +1524,7 @@ https://0sqm.fun
                       <Calendar className="size-4 sm:size-5 text-neutral-900 shrink-0" />
                       <div>
                         <span className="block text-[9px] font-mono font-bold tracking-wider text-neutral-400 uppercase">DATE</span>
-                        <strong className="text-xs sm:text-sm font-bold text-neutral-900">{currentDateStr || "20 Sep 2026"}</strong>
+                        <strong className="text-xs sm:text-sm font-bold text-neutral-900">{currentDateStr || "27 Sep 2026"}</strong>
                       </div>
                     </div>
 
@@ -1622,22 +1622,22 @@ https://0sqm.fun
 
                   {/* Right Column: Yellow Koogee Sticky Note & Buttons */}
                   <div className="flex flex-col justify-between gap-3">
-                    {/* Yellow Sticky Note with Corgi */}
-                    <div className="rounded-2xl border border-[#E5C41C] bg-[#FFDE43] p-3.5 sm:p-4 shadow-2xs flex items-center justify-between relative overflow-hidden">
-                      <div className="flex-1 pr-2 z-10">
-                        <span className="font-serif text-3xl leading-none text-neutral-900 select-none block -mb-1">“</span>
-                        <p className="font-marker font-bold text-xs sm:text-sm leading-snug tracking-wide text-neutral-950 uppercase">
+                    {/* Yellow Sticky Note with Complete Corgi */}
+                    <div className="rounded-2xl border border-[#E5C41C] bg-[#FFDE43] p-4 pb-0 shadow-2xs flex items-end justify-between relative overflow-hidden min-h-[160px] sm:min-h-[175px]">
+                      <div className="flex-1 pb-4 pr-2 z-10 max-w-[58%]">
+                        <span className="font-serif text-2xl sm:text-3xl leading-none text-neutral-900 select-none block -mb-0.5">“</span>
+                        <p className="font-marker font-bold text-[11px] sm:text-xs md:text-sm leading-snug tracking-wide text-neutral-950 uppercase">
                           {dynamicStickyNote.toUpperCase()}
                         </p>
                         <span className="block font-mono text-[10px] font-black tracking-wider text-neutral-900 uppercase mt-2">
                           — KOOGEE
                         </span>
                       </div>
-                      <div className="shrink-0 relative z-10">
+                      <div className="w-[42%] shrink-0 flex items-end justify-end self-end z-10">
                         <img
                           src="/images/koogee-card-corgi.png"
                           alt="Koogee the Corgi"
-                          className="w-20 sm:w-24 object-contain rounded-lg"
+                          className="w-full max-w-[160px] h-auto object-contain block drop-shadow-xs select-none pointer-events-none -mr-1"
                         />
                       </div>
                     </div>
@@ -1679,10 +1679,10 @@ https://0sqm.fun
                   </div>
                 </div>
 
-                {/* 4. Footer */}
-                <div className="border-t border-neutral-200/80 mt-4 sm:mt-5 pt-3 flex items-center justify-between text-neutral-600 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider">
+                {/* 4. Footer with generous bottom margin to prevent clipping */}
+                <div className="border-t border-neutral-200/80 mt-6 sm:mt-8 pt-4 pb-2 px-2 flex items-center justify-between text-neutral-600 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider">
                   <span className="font-bold text-neutral-800">OSQM.COM.AU</span>
-                  <div className="flex items-center gap-1 text-neutral-500 font-medium">
+                  <div className="flex items-center gap-1.5 text-neutral-500 font-medium">
                     <span>DIFFERENT CITIES. SAME PORTFOLIO.</span>
                     <Globe className="size-3.5 text-neutral-700 shrink-0" />
                   </div>
