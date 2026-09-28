@@ -6,7 +6,7 @@ import { submitWaitlist } from '@/actions/waitlist';
 import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
 import { Tape } from '@/components/atoms/Tape';
-import { X, CheckCircle2, ShieldAlert, Sparkles, Copy, Check } from 'lucide-react';
+import { X, CheckCircle2, ShieldAlert, Copy, Check } from 'lucide-react';
 
 export const WaitlistModal: React.FC = () => {
   const isWaitlistOpen = useAppStore((state) => state.isWaitlistOpen);

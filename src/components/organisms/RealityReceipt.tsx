@@ -4,7 +4,7 @@ import React from 'react';
 import { useAppStore } from '@/store/useAppStore';
 import { Button } from '@/components/atoms/Button';
 import { getTwitterShareUrl } from '@/lib/share';
-import { Share2, Sparkles } from 'lucide-react';
+import { Share2 } from 'lucide-react';
 
 export const RealityReceipt: React.FC = () => {
   const { result, isReceiptVisible, openShareModal } = useAppStore();
@@ -133,7 +133,6 @@ export const RealityReceipt: React.FC = () => {
           variant="primary"
           size="md"
           fullWidth
-          icon={<Sparkles className="w-4 h-4" />}
           onClick={openShareModal}
         >
           Generate Shareable Card

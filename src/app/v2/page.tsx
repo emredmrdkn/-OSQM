@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, Calendar, Check, ChevronLeft, ChevronRight, Copy, Download, Eye, FileText, Filter, Globe, Heart, Home, Layers, MapPin, Menu, Percent, RotateCcw, Share2, ShoppingBag, Sparkles, Tag, User, Wallet, Wrench, X, ZoomIn } from "lucide-react";
+import { ArrowRight, Calendar, Check, ChevronLeft, ChevronRight, Copy, Download, Eye, FileText, Filter, Globe, Heart, Home, Layers, MapPin, Menu, Percent, RotateCcw, Share2, ShoppingBag, Tag, User, Wallet, Wrench, X, ZoomIn } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { Button } from "@/components/v2/ui/button";
@@ -1454,10 +1454,10 @@ https://0sqm.fun
               </div>
 
               {/* Input & Calculator Row */}
-              <div className="pt-2.5 space-y-2">
-                <div className="grid min-w-0 grid-cols-1 gap-2 min-[360px]:grid-cols-[minmax(0,1fr)_auto]">
-                  <label className="flex h-9 sm:h-10 min-w-0 items-center rounded-lg border border-input bg-paper px-3 focus-within:ring-2 focus-within:ring-primary">
-                    <span className="mr-1.5 font-bold text-xs text-muted-foreground">{currentCity.currencySymbol}</span>
+              <div className="pt-2.5 space-y-2.5">
+                <div className="grid min-w-0 grid-cols-1 gap-2 sm:gap-2.5 sm:grid-cols-[1fr_auto]">
+                  <label className="flex h-11 min-w-0 items-center rounded-xl border border-neutral-300 bg-white px-3.5 focus-within:border-neutral-900 focus-within:ring-1 focus-within:ring-neutral-900 transition-all shadow-2xs">
+                    <span className="mr-2 font-bold text-sm text-neutral-400">{currentCity.currencySymbol}</span>
                     <input
                       ref={savingsInputRef}
                       value={savings}
@@ -1466,44 +1466,41 @@ https://0sqm.fun
                       inputMode="decimal"
                       aria-label="Savings amount"
                       placeholder="e.g. 25000"
-                      className="w-full min-w-0 flex-1 bg-transparent outline-none font-semibold text-sm sm:text-base text-foreground"
+                      className="w-full min-w-0 flex-1 bg-transparent outline-none font-bold text-base text-neutral-900 placeholder:text-neutral-300"
                     />
                   </label>
-                  <Button
-                    variant="ink"
-                    className="h-9 sm:h-10 px-4 text-xs font-bold cursor-pointer flex items-center justify-center gap-1.5 rounded-lg active:scale-95"
+                  <button
+                    type="button"
                     onClick={calculate}
                     disabled={isAuditing}
+                    className="h-11 px-7 bg-neutral-900 hover:bg-black active:scale-[0.98] text-white rounded-xl font-black text-sm tracking-wider uppercase transition-all shadow-xs cursor-pointer flex items-center justify-center text-center disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {isAuditing ? (
-                      <>
-                        <div className="size-3 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="size-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         <span>Auditing...</span>
-                      </>
+                      </div>
                     ) : (
-                      <>
-                        <Sparkles className="size-3.5 text-amber-400" />
-                        <span>Calculate</span>
-                      </>
+                      <span>Calculate</span>
                     )}
-                  </Button>
+                  </button>
                 </div>
 
                 {/* Comedic Auditing Progress Banner */}
                 {isAuditing && (
-                  <div className="p-2.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-xs font-mono text-foreground animate-in fade-in slide-in-from-top-1 duration-200">
-                    <div className="flex items-center justify-between mb-1 font-bold">
-                      <span className="flex items-center gap-1.5">
-                        <span className="size-2 rounded-full bg-amber-600 animate-ping" />
+                  <div className="p-3 rounded-xl bg-neutral-100 border border-neutral-200 text-xs font-mono text-neutral-900 animate-in fade-in duration-200">
+                    <div className="flex items-center justify-between mb-1.5 font-bold">
+                      <span className="flex items-center gap-2">
+                        <span className="size-2 rounded-full bg-neutral-900 animate-pulse" />
                         <span className="text-[11px]">{auditMessages[auditStep]}</span>
                       </span>
-                      <span className="text-[10px] text-muted-foreground">
+                      <span className="text-[10px] text-neutral-500 font-semibold">
                         {Math.round(((auditStep + 1) / auditMessages.length) * 100)}%
                       </span>
                     </div>
-                    <div className="w-full bg-neutral-200 h-1 rounded-full overflow-hidden">
+                    <div className="w-full bg-neutral-200 h-1.5 rounded-full overflow-hidden">
                       <div
-                        className="bg-amber-500 h-full transition-all duration-300 rounded-full"
+                        className="bg-neutral-900 h-full transition-all duration-300 rounded-full"
                         style={{ width: `${((auditStep + 1) / auditMessages.length) * 100}%` }}
                       />
                     </div>
@@ -1511,8 +1508,8 @@ https://0sqm.fun
                 )}
 
                 {/* Range Slider */}
-                <div className="flex items-center gap-2 pt-0.5">
-                  <span className="text-[10px] font-mono font-bold text-muted-foreground">{currentCity.currencySymbol}0</span>
+                <div className="flex items-center gap-2.5 pt-1">
+                  <span className="text-[10px] font-mono font-bold text-neutral-400">{currentCity.currencySymbol}0</span>
                   <input
                     type="range"
                     min="0"
@@ -1520,24 +1517,24 @@ https://0sqm.fun
                     step="2500"
                     value={Math.min(150000, numericSavings)}
                     onChange={(e) => setSavings(e.target.value)}
-                    className="w-full h-1.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                    className="w-full h-1.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-900"
                     aria-label="Savings slider"
                   />
-                  <span className="text-[10px] font-mono font-bold text-muted-foreground">{currentCity.currencySymbol}150k+</span>
+                  <span className="text-[10px] font-mono font-bold text-neutral-400">{currentCity.currencySymbol}150k+</span>
                 </div>
 
                 {/* Quick Preset Chips */}
-                <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                  <span className="text-[10px] font-semibold text-muted-foreground mr-1">Presets:</span>
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                  <span className="text-[11px] font-bold text-neutral-400 mr-1 uppercase tracking-wider">Presets:</span>
                   {["5000", "25000", "50000", "100000", "250000"].map((preset) => (
                     <button
                       key={preset}
                       type="button"
                       onClick={() => handlePreset(preset)}
-                      className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold transition-colors cursor-pointer ${
+                      className={`rounded-lg border px-3 py-1 text-xs font-bold transition-all cursor-pointer ${
                         numericSavings === Number(preset)
-                          ? "bg-primary text-foreground border-foreground/30 font-bold"
-                          : "bg-paper hover:bg-muted text-muted-foreground border-border"
+                          ? "bg-neutral-900 text-white border-neutral-900 shadow-2xs font-extrabold"
+                          : "bg-white hover:bg-neutral-100 text-neutral-700 border-neutral-250 shadow-2xs"
                       }`}
                     >
                       {currentCity.currencySymbol}{Number(preset).toLocaleString()}
@@ -1808,8 +1805,7 @@ https://0sqm.fun
           {/* Section Header */}
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b border-neutral-200">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFD452] text-neutral-950 text-xs font-black tracking-wider uppercase mb-3 shadow-2xs">
-                <Sparkles className="size-3.5 fill-current" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900 text-white text-[11px] font-black tracking-wider uppercase mb-3 shadow-2xs">
                 <span>0SQM™ Apparel &amp; Goods // Drop 01</span>
               </div>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight leading-[0.92] text-neutral-950">
