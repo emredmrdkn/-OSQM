@@ -18,6 +18,9 @@
   # 3. Route /share to share.php with query string preserved
   RewriteRule ^share/?$ share.php [L,QSA]
 
+  # 4. Redirect /v2 to / (canonical consolidation)
+  RewriteRule ^v2/?$ / [L,R=301]
+
   # Pretty URLs: if file exists as .html, serve it cleanly
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME}\.html -f
@@ -41,6 +44,22 @@ ErrorDocument 404 /404.html
 <IfModule LiteSpeed>
   CacheDisable public /
   CacheDisable private /
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "DENY"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+  Header unset X-Powered-By
+  Header unset Server
+</IfModule>
+
+# Hide PHP version
+<IfModule mod_php.c>
+  php_flag expose_php Off
 </IfModule>
 
 # Enable Browser Caching for static assets only

@@ -1159,7 +1159,6 @@ https://0sqm.fun
               <a
                 key={label}
                 href={href}
-                {...(href.startsWith("/") ? { target: "_blank", rel: "noreferrer" } : {})}
                 className="hover:underline decoration-primary decoration-4 underline-offset-8"
               >
                 {label}

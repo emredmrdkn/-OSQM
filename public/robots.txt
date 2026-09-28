@@ -1,4 +1,57 @@
+# ═══════════════════════════════════════
+# 0SQM.COM — ROBOTS.TXT
+# ═══════════════════════════════════════
+
+# Arama motorları — tam erişim
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# AI ARAMA BOTLARI — kaynak gösterme amaçlı erişim
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+# AI MODEL EĞİTİM BOTLARI — erişim yok
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+# Genel kural
 User-agent: *
 Allow: /
+Disallow: /share.php
+Disallow: /_next/
+Disallow: /followers.php
 
 Sitemap: https://0sqm.com/sitemap.xml

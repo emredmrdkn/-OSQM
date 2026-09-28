@@ -7,15 +7,19 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: '$0SQM — The Australian Dream Still Starts at 0m²',
   description: 'Real data. Real prices. Same result. The viral Australian housing reality check.',
+  alternates: {
+    canonical: `${siteUrl}/`,
+  },
   openGraph: {
     title: '$0SQM — The Australian Dream Still Starts at 0m²',
     description: 'The Australian dream still starts at zero square metres. Same dream. Different budget.',
     type: 'website',
+    url: siteUrl,
     images: [
       {
-        url: 'https://0sqm.com/images/reality-score-card.png',
-        width: 1448,
-        height: 1086,
+        url: 'https://0sqm.com/images/og-card.jpg',
+        width: 1200,
+        height: 630,
         alt: '$0SQM Reality Score Card',
       },
     ],
@@ -26,7 +30,7 @@ export const metadata: Metadata = {
     description: 'I saved $25,000 and officially own 0 SQM in Sydney. Same dream. Different budget.',
     site: '@Own0SQM',
     creator: '@Own0SQM',
-    images: ['https://0sqm.com/images/reality-score-card.png'],
+    images: ['https://0sqm.com/images/og-card.jpg'],
   },
 };
 

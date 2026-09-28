@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   title: '$0SQM — The Australian Dream Still Starts at 0m²',
   description: 'Real data. Real prices. Same result. The viral Australian housing reality check. Calculate how many square metres your life savings affords in Sydney and beyond.',
   alternates: {
-    canonical: siteUrl,
+    canonical: `${siteUrl}/`,
   },
   keywords: [
     '0sqm',
@@ -58,6 +58,11 @@ export const metadata: Metadata = {
     'Australia real estate reality check',
     'stamp duty calculator Sydney',
     'first home buyer reality check',
+    'housing affordability calculator Australia',
+    'how much land can I afford Sydney',
+    'Australian Dream housing',
+    'property deposit calculator NSW',
+    'Melbourne house prices vs Sydney',
   ],
   authors: [{ name: 'Justin & Koogee' }],
   creator: 'Justin & Koogee',
@@ -81,9 +86,9 @@ export const metadata: Metadata = {
     url: siteUrl,
     images: [
       {
-        url: 'https://0sqm.com/images/reality-score-card.png',
-        width: 1448,
-        height: 1086,
+        url: 'https://0sqm.com/images/og-card.jpg',
+        width: 1200,
+        height: 630,
         alt: '$0SQM Reality Score Card',
       },
     ],
@@ -94,7 +99,7 @@ export const metadata: Metadata = {
     description: 'I saved $25,000 and officially own 0 SQM in Sydney. Same dream. Different budget.',
     site: '@Own0SQM',
     creator: '@Own0SQM',
-    images: ['https://0sqm.com/images/reality-score-card.png'],
+    images: ['https://0sqm.com/images/og-card.jpg'],
   },
 };
 
@@ -115,12 +120,30 @@ const jsonLd = {
       '@type': 'Organization',
       '@id': `${siteUrl}/#organization`,
       name: '$0SQM',
+      alternateName: 'Zero Square Metres',
       url: siteUrl,
       logo: {
         '@type': 'ImageObject',
         url: `${siteUrl}/images/reality-score-card.png`,
       },
-      sameAs: ['https://x.com/Own0SQM'],
+      foundingDate: '2026',
+      foundingLocation: {
+        '@type': 'Place',
+        name: 'Sydney, Australia',
+      },
+      description: 'The viral Australian housing reality check. Real data, real prices, same result.',
+      knowsAbout: [
+        'Australian housing affordability',
+        'Sydney property market',
+        'Housing crisis calculator',
+        'First home buyer reality check',
+      ],
+      sameAs: [
+        'https://x.com/Own0SQM',
+        'https://instagram.com/own0sqm',
+        'https://tiktok.com/@own0sqm',
+        'https://youtube.com/@own0sqm',
+      ],
     },
     {
       '@type': 'WebApplication',
@@ -135,6 +158,36 @@ const jsonLd = {
         priceCurrency: 'AUD',
       },
       description: 'Interactive satirical calculator comparing actual Australian property prices and stamp duties against personal savings.',
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${siteUrl}/#faq`,
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'How much land can I buy in Sydney with $25,000?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Based on current median land values of $4,800/m², $25,000 affords approximately 5.21 m² of theoretical land in Sydney — roughly the size of a walk-in closet.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the median house price in Sydney in 2026?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'As of August 2026, the median house price in Sydney is approximately $1,490,000 according to Cotality data.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the $0SQM Reality Check?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: '$0SQM is a viral housing affordability calculator that shows how many square metres of land your savings can buy in major Australian and global cities. It uses real median house prices, land values, and stamp duty data.',
+          },
+        },
+      ],
     },
   ],
 };

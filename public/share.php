@@ -8,7 +8,7 @@ $state = isset($_GET['state']) ? trim(strip_tags($_GET['state'])) : 'NSW';
 
 $title = "$city Reality Score: {$sqm} m² in theory. 0 m² in reality. — $0SQM";
 $desc = "I saved \${$savings} and officially own 0 SQM in {$city}. Different city. Same portfolio. The viral housing reality check.";
-$cardImage = "https://0sqm.com/images/reality-score-card-v3.jpg";
+$cardImage = "https://0sqm.com/images/og-card.jpg";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +27,7 @@ $cardImage = "https://0sqm.com/images/reality-score-card-v3.jpg";
   <meta property="og:image:secure_url" content="<?php echo $cardImage; ?>">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="900">
+  <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="$0SQM">
 
   <!-- Twitter Card -->
