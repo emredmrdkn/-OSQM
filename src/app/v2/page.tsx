@@ -1152,6 +1152,7 @@ https://0sqm.fun
             {[
               ["The Dream", "#dream"],
               ["Reality Check", "#reality"],
+              ["Listing Reality", "/listing-reality"],
               ["The Journey", "#journey"],
               ["Community", "/community"],
               ["Merch", "#merch"],
@@ -1185,6 +1186,7 @@ https://0sqm.fun
             {[
               ["The Dream", "#dream"],
               ["Reality Check", "#reality"],
+              ["Listing Reality", "/listing-reality"],
               ["The Journey", "#journey"],
               ["Community", "/community"],
               ["Merch", "#merch"],
@@ -1366,6 +1368,24 @@ https://0sqm.fun
           </div>
 
           <div className="mx-auto max-w-4xl space-y-3.5">
+            {/* Promo Banner: Listing Reality Check */}
+            <a
+              href="/listing-reality"
+              className="flex items-center justify-between gap-3 p-3 rounded-xl border-2 border-neutral-950 bg-[#FFE600] text-neutral-950 shadow-[3px_3px_0px_#141414] hover:shadow-[4px_4px_0px_#141414] hover:-translate-y-0.5 transition-all group font-mono"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="bg-neutral-950 text-[#FFE600] text-xs font-black px-2 py-0.5 rounded-xs uppercase tracking-wider">
+                  NEW
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-neutral-900">
+                  Listing Reality Check: Found a place you can&apos;t afford? Paste the rental link &rarr;
+                </span>
+              </div>
+              <span className="text-xs font-black uppercase underline decoration-2 hidden sm:inline-block">
+                Try Tool
+              </span>
+            </a>
+
             {/* Sleek, Compact City & Country Switcher */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 p-1.5 rounded-xl border border-border bg-paper shadow-2xs">
               {/* Category Switcher (Australia / Global) */}
