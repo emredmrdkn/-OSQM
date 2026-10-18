@@ -4,7 +4,6 @@ import { ArrowRight, Calendar, Check, ChevronLeft, ChevronRight, Copy, Download,
 import { useState, useRef, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { Button } from "@/components/v2/ui/button";
-import { ListingRealityChecker } from "@/components/organisms/ListingRealityChecker";
 
 const heroImage = "/images/v2/osqm-top-bg.jpg";
 const justinImage = "/images/v2/justin-dog-sunset.jpg";
@@ -1151,9 +1150,9 @@ https://0sqm.fun
           </a>
           <nav className="hidden items-center gap-7 text-sm font-semibold md:flex">
             {[
-              ["Listing Check", "#listing-check"],
               ["The Dream", "#dream"],
-              ["Deposit Check", "#reality"],
+              ["Reality Check", "#reality"],
+              ["Listing Reality", "/listing-reality"],
               ["The Journey", "#journey"],
               ["Community", "/community"],
               ["Merch", "#merch"],
@@ -1185,9 +1184,9 @@ https://0sqm.fun
         {menuOpen && (
           <nav className="grid border-t border-border bg-background px-4 py-4 text-lg font-bold md:hidden">
             {[
-              ["Listing Check", "#listing-check"],
               ["The Dream", "#dream"],
-              ["Deposit Check", "#reality"],
+              ["Reality Check", "#reality"],
+              ["Listing Reality", "/listing-reality"],
               ["The Journey", "#journey"],
               ["Community", "/community"],
               ["Merch", "#merch"],
@@ -1209,35 +1208,6 @@ https://0sqm.fun
           </nav>
         )}
       </header>
-
-      {/* PDF Main Hero: Listing Reality Check */}
-      <section
-        id="listing-check"
-        className="relative scroll-mt-16 bg-[#FAF9F5] border-b-2 border-neutral-950 px-4 pt-12 pb-14 sm:px-6 lg:px-8"
-      >
-        <div className="mx-auto max-w-4xl">
-          {/* Internal Blueprint Header Pill */}
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-neutral-950 pb-3 mb-4">
-            <div className="flex items-center gap-2 font-mono text-xs font-black uppercase tracking-wider">
-              <span className="bg-[#FFE600] border border-neutral-950 px-2 py-0.5">
-                $0SQM BLUEPRINT
-              </span>
-              <span className="text-neutral-500 hidden sm:inline">•</span>
-              <span className="text-neutral-700 hidden sm:inline">
-                MVP &rarr; Chrome Extension &rarr; True Rent
-              </span>
-            </div>
-            <a
-              href="#reality"
-              className="text-xs font-mono font-bold text-neutral-600 hover:text-neutral-950 underline flex items-center gap-1 cursor-pointer"
-            >
-              <span>Or calculate savings & deposit &darr;</span>
-            </a>
-          </div>
-
-          <ListingRealityChecker />
-        </div>
-      </section>
 
       {/* Hero Section */}
       <section
