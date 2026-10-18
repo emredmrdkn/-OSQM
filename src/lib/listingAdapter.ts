@@ -6,27 +6,31 @@ export interface ParseResult {
   isSupported: boolean;
   requiresManualFallback: boolean;
   cleanUrl?: string;
+  extractedSuburb?: string;
+  extractedPostcode?: string;
+  extractedBedrooms?: number;
   error?: string;
 }
 
 /**
  * Parses and validates a real estate listing URL.
  * Hostname allowlist: domain.com.au, realestate.com.au
+ * Rejects any unsupported or fake domains strictly per Blueprint Page 5.
  */
 export function parseListingUrl(rawUrl: string): ParseResult {
-  if (!rawUrl || typeof rawUrl !== 'string') {
+  if (!rawUrl || typeof rawUrl !== 'string' || !rawUrl.trim()) {
     return {
       provider: 'manual',
       isSupported: false,
       requiresManualFallback: true,
-      error: 'Invalid or empty URL provided.',
+      error: 'Please enter a valid rental listing URL.',
     };
   }
 
   let parsed: URL;
   try {
     const withProtocol = rawUrl.startsWith('http://') || rawUrl.startsWith('https://')
-      ? rawUrl
+      ? rawUrl.trim()
       : `https://${rawUrl.trim()}`;
     parsed = new URL(withProtocol);
   } catch {
@@ -40,47 +44,131 @@ export function parseListingUrl(rawUrl: string): ParseResult {
 
   const hostname = parsed.hostname.toLowerCase().replace(/^www\./, '');
 
-  // 1. Domain Parser
-  if (hostname.includes('domain.com.au')) {
-    // Typical Domain rental URL format:
-    // https://www.domain.com.au/12-34-example-st-surry-hills-nsw-2010-12345678
-    // Last segment is usually the numeric ID
-    const pathname = parsed.pathname;
-    const match = pathname.match(/(\d{6,12})/);
-    const listingId = match ? match[1] : undefined;
+  // 1. Domain.com.au Parser
+  if (hostname === 'domain.com.au' || hostname.endsWith('.domain.com.au')) {
+    const pathname = parsed.pathname.toLowerCase();
+    const matchId = pathname.match(/(\d{6,12})/);
+    const listingId = matchId ? matchId[1] : undefined;
+
+    const { suburb, postcode, bedrooms } = extractMetadataFromDomainPath(pathname);
 
     return {
       provider: 'domain',
       listingId,
       isSupported: true,
-      requiresManualFallback: !listingId,
+      requiresManualFallback: false,
       cleanUrl: parsed.toString(),
+      extractedSuburb: suburb,
+      extractedPostcode: postcode,
+      extractedBedrooms: bedrooms,
     };
   }
 
   // 2. RealEstate.com.au (REA) Parser
-  if (hostname.includes('realestate.com.au')) {
-    // Per Blueprint rule: Strictly NO scraping. Route immediately to manual fallback with pre-filled ID.
-    const pathname = parsed.pathname;
-    const match = pathname.match(/(\d{6,12})/);
-    const listingId = match ? match[1] : undefined;
+  if (hostname === 'realestate.com.au' || hostname.endsWith('.realestate.com.au')) {
+    const pathname = parsed.pathname.toLowerCase();
+    const matchId = pathname.match(/(\d{6,12})/);
+    const listingId = matchId ? matchId[1] : undefined;
+
+    const { suburb, postcode, bedrooms } = extractMetadataFromReaPath(pathname);
 
     return {
       provider: 'rea',
       listingId,
       isSupported: true,
-      requiresManualFallback: true, // Always manual fallback until authorized partner API
+      requiresManualFallback: true, // Always manual fallback until authorized partner API per Blueprint
       cleanUrl: parsed.toString(),
+      extractedSuburb: suburb,
+      extractedPostcode: postcode,
+      extractedBedrooms: bedrooms,
+      error: 'RealEstate.com.au does not allow automatic scraping. Please confirm weekly rent below.',
     };
   }
 
-  // 3. Unsupported Provider
+  // 3. Strictly Unsupported Domain / Fake site
   return {
     provider: 'manual',
     isSupported: false,
     requiresManualFallback: true,
-    error: 'Unsupported provider. Switched to quick manual check form.',
+    cleanUrl: parsed.toString(),
+    error: `Unsupported provider "${hostname}". Only Domain.com.au and Realestate.com.au rental listings are supported.`,
   };
+}
+
+function extractMetadataFromDomainPath(pathname: string): {
+  suburb?: string;
+  postcode?: string;
+  bedrooms?: number;
+} {
+  // Example: /12-smith-st-surry-hills-nsw-2010-12345678
+  const nswMatch = pathname.match(/([a-z0-9-]+)-nsw-(\d{4})/);
+  let suburb: string | undefined;
+  let postcode: string | undefined;
+  let bedrooms: number | undefined;
+
+  if (nswMatch) {
+    postcode = nswMatch[2];
+    const rawSlug = nswMatch[1];
+    // Look for street suffixes to identify the start of suburb
+    const parts = rawSlug.split('-');
+    const streetSuffixes = ['st', 'street', 'rd', 'road', 'ave', 'avenue', 'dr', 'drive', 'pl', 'place', 'ct', 'court', 'cres', 'crescent', 'pde', 'parade', 'way', 'hwy', 'highway'];
+    let suffixIdx = -1;
+    for (let i = 0; i < parts.length; i++) {
+      if (streetSuffixes.includes(parts[i])) {
+        suffixIdx = i;
+        break;
+      }
+    }
+    if (suffixIdx !== -1 && suffixIdx < parts.length - 1) {
+      suburb = parts.slice(suffixIdx + 1).map(capitalize).join(' ');
+    } else {
+      suburb = parts.slice(-2).map(capitalize).join(' ');
+    }
+  }
+
+  // Bedroom detection
+  const bedMatch = pathname.match(/(\d+)[- ]*(?:bed|bedroom)/);
+  if (bedMatch) {
+    bedrooms = parseInt(bedMatch[1], 10);
+  } else if (pathname.includes('studio')) {
+    bedrooms = 0;
+  }
+
+  return { suburb, postcode, bedrooms };
+}
+
+function extractMetadataFromReaPath(pathname: string): {
+  suburb?: string;
+  postcode?: string;
+  bedrooms?: number;
+} {
+  // Example: /property-apartment-nsw-bondi+beach-123456
+  let suburb: string | undefined;
+  let postcode: string | undefined;
+  let bedrooms: number | undefined;
+
+  const match = pathname.match(/nsw-([a-z0-9+]+)/);
+  if (match) {
+    const raw = match[1].replace(/\+/g, ' ');
+    suburb = raw.split(' ').map(capitalize).join(' ');
+  }
+
+  const pcMatch = pathname.match(/\b(2\d{3})\b/);
+  if (pcMatch) postcode = pcMatch[1];
+
+  const bedMatch = pathname.match(/(\d+)[- ]*(?:bed|bedroom)/);
+  if (bedMatch) {
+    bedrooms = parseInt(bedMatch[1], 10);
+  } else if (pathname.includes('studio')) {
+    bedrooms = 0;
+  }
+
+  return { suburb, postcode, bedrooms };
+}
+
+function capitalize(s: string): string {
+  if (!s) return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 /**
@@ -102,7 +190,7 @@ export function mapManualToNormalisedListing(input: {
   return {
     provider: 'manual',
     objective: 'rent',
-    headline: `${input.bedrooms || 1} Bed in ${input.suburb.trim()}`,
+    headline: `${input.bedrooms !== undefined ? `${input.bedrooms} Bed in ` : ''}${input.suburb.trim()}`,
     address: input.address?.trim() || `${input.suburb.trim()}, NSW`,
     suburb: input.suburb.trim(),
     postcode: input.postcode?.trim() || '2000',
@@ -123,114 +211,64 @@ export function mapManualToNormalisedListing(input: {
 }
 
 /**
- * Fetches a Domain listing via official API if credentials exist,
- * or safely falls back to parsed URL data / mock adapter.
+ * Fetches a Domain listing via official API if credentials exist.
  */
 export async function fetchDomainListing(
   listingId: string,
   rawUrl?: string
-): Promise<NormalisedListing> {
+): Promise<NormalisedListing | null> {
   const apiKey = process.env.DOMAIN_API_KEY;
 
-  if (apiKey) {
-    try {
-      const res = await fetch(`https://api.domain.com.au/v1/listings/${listingId}`, {
-        headers: {
-          'X-Api-Key': apiKey,
-          Accept: 'application/json',
-        },
-        next: { revalidate: 3600 },
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const priceNum =
-          typeof data.priceDetails?.price === 'number'
-            ? data.priceDetails.price
-            : parseRentFromText(data.priceDetails?.displayPrice || '');
-
-        return {
-          provider: 'domain',
-          providerListingId: listingId,
-          listingUrl: rawUrl || `https://www.domain.com.au/${listingId}`,
-          objective: 'rent',
-          headline: data.headline || `${data.bedrooms || 1} Bed Apartment`,
-          address: data.addressParts?.displayAddress || `${data.addressParts?.suburb}, NSW`,
-          suburb: data.addressParts?.suburb || 'Sydney',
-          postcode: data.addressParts?.postcode || '2000',
-          state: data.addressParts?.state || 'NSW',
-          weeklyRent: priceNum,
-          bedrooms: data.bedrooms,
-          bathrooms: data.bathrooms,
-          propertyType: data.propertyTypes?.[0] || 'apartment',
-          internalAreaM2: data.areaM2 || undefined,
-          quality: {
-            sourceFetchedAt: new Date().toISOString(),
-            areaMissing: !data.areaM2,
-            priceUnclear: priceNum === null,
-            benchmarkWeak: false,
-          },
-        };
-      }
-    } catch (err) {
-      console.warn('Domain API fetch failed, using URL fallback adapter', err);
-    }
+  if (!apiKey) {
+    return null;
   }
 
-  // Graceful fallback from URL metadata if API key is not yet configured
-  const extractedSuburb = extractSuburbFromUrl(rawUrl || '') || 'Surry Hills';
-  return {
-    provider: 'domain',
-    providerListingId: listingId,
-    listingUrl: rawUrl || `https://www.domain.com.au/${listingId}`,
-    objective: 'rent',
-    headline: `Rental Listing #${listingId}`,
-    address: `${extractedSuburb}, NSW`,
-    suburb: extractedSuburb,
-    postcode: '2010',
-    state: 'NSW',
-    weeklyRent: 760, // Realistic Sydney sample rental default
-    bedrooms: 1,
-    bathrooms: 1,
-    propertyType: 'apartment',
-    internalAreaM2: undefined, // Blueprint rule: Never invent area when missing
-    quality: {
-      sourceFetchedAt: new Date().toISOString(),
-      areaMissing: true,
-      priceUnclear: false,
-      benchmarkWeak: false,
-    },
-  };
+  try {
+    const res = await fetch(`https://api.domain.com.au/v1/listings/${listingId}`, {
+      headers: {
+        'X-Api-Key': apiKey,
+        Accept: 'application/json',
+      },
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const priceNum =
+        typeof data.priceDetails?.price === 'number'
+          ? data.priceDetails.price
+          : parseRentFromText(data.priceDetails?.displayPrice || '');
+
+      return {
+        provider: 'domain',
+        providerListingId: listingId,
+        listingUrl: rawUrl || `https://www.domain.com.au/${listingId}`,
+        objective: 'rent',
+        headline: data.headline || `${data.bedrooms || 1} Bed Apartment`,
+        address: data.addressParts?.displayAddress || `${data.addressParts?.suburb}, NSW`,
+        suburb: data.addressParts?.suburb || 'Sydney',
+        postcode: data.addressParts?.postcode || '2000',
+        state: data.addressParts?.state || 'NSW',
+        weeklyRent: priceNum,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        propertyType: data.propertyTypes?.[0] || 'apartment',
+        internalAreaM2: data.areaM2 || undefined,
+        quality: {
+          sourceFetchedAt: new Date().toISOString(),
+          areaMissing: !data.areaM2,
+          priceUnclear: priceNum === null,
+          benchmarkWeak: false,
+        },
+      };
+    }
+  } catch (err) {
+    console.warn('Domain API fetch failed:', err);
+  }
+
+  return null;
 }
 
 function parseRentFromText(text: string): number | null {
   const match = text.replace(/,/g, '').match(/\$?(\d{3,4})/);
   return match ? Number(match[1]) : null;
-}
-
-function extractSuburbFromUrl(url: string): string | null {
-  const cleaned = url.toLowerCase();
-  const suburbs = [
-    'surry-hills',
-    'bondi-beach',
-    'bondi',
-    'newtown',
-    'parramatta',
-    'chatswood',
-    'manly',
-    'marrickville',
-    'redfern',
-    'paddington',
-    'glebe',
-    'sydney',
-  ];
-  for (const s of suburbs) {
-    if (cleaned.includes(s)) {
-      return s
-        .split('-')
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(' ');
-    }
-  }
-  return null;
 }

@@ -25,7 +25,17 @@ export async function POST(req: NextRequest) {
       // 2. Parse listing URL
       const parsed = parseListingUrl(url);
 
-      if (parsed.requiresManualFallback && parsed.provider === 'rea') {
+      if (!parsed.isSupported) {
+        return NextResponse.json(
+          {
+            error: 'UNSUPPORTED_PROVIDER',
+            message: parsed.error || 'Only Domain.com.au or Realestate.com.au links are supported.',
+          },
+          { status: 400 }
+        );
+      }
+
+      if (parsed.provider === 'rea' || parsed.requiresManualFallback) {
         return NextResponse.json(
           {
             error: 'REA_MANUAL_FALLBACK_REQUIRED',
@@ -40,15 +50,16 @@ export async function POST(req: NextRequest) {
 
       if (parsed.provider === 'domain' && parsed.listingId) {
         listing = await fetchDomainListing(parsed.listingId, parsed.cleanUrl);
-      } else {
-        // Generic fallback with default suburb
-        listing = mapManualToNormalisedListing({
-          weeklyRent: 750,
-          suburb: 'Sydney CBD',
-          postcode: '2000',
-          bedrooms: 1,
-          listingUrl: url,
-        });
+      }
+
+      if (!listing) {
+        return NextResponse.json(
+          {
+            error: 'LISTING_NOT_FOUND',
+            message: 'Could not fetch listing automatically. Please enter rent and suburb manually.',
+          },
+          { status: 404 }
+        );
       }
     } else {
       return NextResponse.json(
