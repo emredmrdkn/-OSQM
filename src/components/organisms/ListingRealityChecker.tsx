@@ -256,7 +256,7 @@ export const ListingRealityChecker: React.FC = () => {
       beds: String(result.listing.bedrooms ?? 1),
     });
 
-    const shareUrl = `https://0sqm.com/share?${shareParams.toString()}`;
+    const shareUrl = `https://www.0sqm.com/share?${shareParams.toString()}`;
     const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
       tweetText
     )}&url=${encodeURIComponent(shareUrl)}`;
