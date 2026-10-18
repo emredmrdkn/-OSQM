@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 import { RealityCheckResponse } from '@/types/listingReality';
 import { ListingRealityCard } from './ListingRealityCard';
 import { findSuburbBenchmark } from '@/data/sydneyBenchmarks';
 import { computeListingMetrics, calcRealityScore } from '@/lib/listingCalculations';
 import { parseListingUrl, mapManualToNormalisedListing } from '@/lib/listingAdapter';
-import { ArrowRight, Download, Share2, RefreshCw, AlertCircle, Sparkles, CheckCircle2, HelpCircle } from 'lucide-react';
+import { ArrowRight, Download, Share2, RefreshCw, AlertCircle, Sparkles, CheckCircle2 } from 'lucide-react';
 
 const LOADING_MESSAGES = [
   'Validating listing source… 🔍',
@@ -36,6 +36,43 @@ export const ListingRealityChecker: React.FC = () => {
   const [isDownloading, setIsDownloading] = useState(false);
 
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Hydrate from URL query parameters if arriving from a shared link
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const qSuburb = params.get('suburb');
+    const qRent = params.get('rent');
+    const qBeds = params.get('beds') || '1';
+
+    if (qSuburb && qRent && Number(qRent) > 0) {
+      const listing = mapManualToNormalisedListing({
+        weeklyRent: Number(qRent),
+        suburb: qSuburb.trim(),
+        bedrooms: Number(qBeds),
+      });
+
+      const benchmarks = findSuburbBenchmark(listing.suburb);
+      const metrics = computeListingMetrics(listing, benchmarks);
+      const score = calcRealityScore(metrics, listing, benchmarks);
+      const shareId = `rc_${Math.random().toString(36).substring(2, 9)}`;
+
+      setResult({
+        shareId,
+        listing,
+        benchmarks,
+        metrics,
+        score,
+        dataQuality: {
+          status: 'partial',
+          missingFields: ['internalAreaM2'],
+          notice: 'Loaded from shared listing check.',
+        },
+        cardUrl: `/r/${shareId}`,
+        generatedAt: new Date().toISOString(),
+      });
+    }
+  }, []);
 
   const handleUrlSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,8 +107,6 @@ export const ListingRealityChecker: React.FC = () => {
     setIsLoading(false);
 
     // 2. Verified Domain / REA portal link handling
-    // Real estate links in Australia do not include weekly price in the URL slug.
-    // Per Blueprint Page 3: "Partial data: Eksik alanı açıkça göster; kullanıcıdan 1-2 alanı doğrulat: weekly rent"
     const detectedSuburb = parsed.extractedSuburb || 'Surry Hills';
     const detectedBedrooms = parsed.extractedBedrooms !== undefined ? String(parsed.extractedBedrooms) : '1';
 
@@ -207,12 +242,24 @@ export const ListingRealityChecker: React.FC = () => {
     const premiumText =
       result.metrics.localPremiumPercent !== null
         ? `${result.metrics.localPremiumPercent > 0 ? '+' : ''}${result.metrics.localPremiumPercent}% vs local`
-        : 'Checked';
+        : '';
 
-    const tweetText = `#MySquareMeter is 0.00 m².\nI joined the @Own0SQM club too.\n${result.listing.suburb} Reality Check: $${result.metrics.weeklyRent}/wk · ${premiumText} · Score ${result.score.total}/100.\nWen reasonable rent?`;
+    const tweetText = `#MySquareMeter is 0.00 m².\nI joined the @Own0SQM club too.\n${result.listing.suburb} Reality Check: $${result.metrics.weeklyRent}/wk${premiumText ? ` · ${premiumText}` : ''} · Score ${result.score.total}/100.\nWen reasonable rent?`;
+
+    const shareParams = new URLSearchParams({
+      type: 'listing',
+      suburb: result.listing.suburb,
+      rent: String(result.metrics.weeklyRent),
+      score: String(result.score.total),
+      label: result.score.label,
+      prem: premiumText,
+      beds: String(result.listing.bedrooms ?? 1),
+    });
+
+    const shareUrl = `https://0sqm.com/share?${shareParams.toString()}`;
     const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
       tweetText
-    )}&url=${encodeURIComponent('https://0sqm.com')}`;
+    )}&url=${encodeURIComponent(shareUrl)}`;
     window.open(tweetUrl, '_blank', 'noopener,noreferrer');
   };
 
