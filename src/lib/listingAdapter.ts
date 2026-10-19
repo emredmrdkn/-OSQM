@@ -5,17 +5,20 @@ export interface ParseResult {
   listingId?: string;
   isSupported: boolean;
   requiresManualFallback: boolean;
+  isSearchOrIndexPage?: boolean;
+  platformName?: string;
   cleanUrl?: string;
   extractedSuburb?: string;
   extractedPostcode?: string;
   extractedBedrooms?: number;
+  guidanceMessage?: string;
   error?: string;
 }
 
 /**
  * Parses and validates a real estate listing URL.
- * Hostname allowlist: domain.com.au, realestate.com.au
- * Rejects any unsupported or fake domains strictly per Blueprint Page 5.
+ * Recognizes Domain, REA, Flatmates, Gumtree, and Marketplace with localized Australian guidance.
+ * Rejects non-property or index/search URLs while avoiding fake data hallucination.
  */
 export function parseListingUrl(rawUrl: string): ParseResult {
   if (!rawUrl || typeof rawUrl !== 'string' || !rawUrl.trim()) {
@@ -23,7 +26,7 @@ export function parseListingUrl(rawUrl: string): ParseResult {
       provider: 'manual',
       isSupported: false,
       requiresManualFallback: true,
-      error: 'Please enter a valid rental listing URL.',
+      error: 'Please paste a valid rental listing URL (or use the quick check form below).',
     };
   }
 
@@ -38,60 +41,137 @@ export function parseListingUrl(rawUrl: string): ParseResult {
       provider: 'manual',
       isSupported: false,
       requiresManualFallback: true,
-      error: 'Malformed URL. Please paste a valid web link.',
+      error: 'Malformed URL. Please paste a full web link (e.g. https://www.domain.com.au/...).',
     };
   }
 
   const hostname = parsed.hostname.toLowerCase().replace(/^www\./, '');
+  const pathname = parsed.pathname.toLowerCase();
 
   // 1. Domain.com.au Parser
   if (hostname === 'domain.com.au' || hostname.endsWith('.domain.com.au')) {
-    const pathname = parsed.pathname.toLowerCase();
     const matchId = pathname.match(/(\d{6,12})/);
     const listingId = matchId ? matchId[1] : undefined;
-
     const { suburb, postcode, bedrooms } = extractMetadataFromDomainPath(pathname);
+
+    // If it's a domain homepage, news, or general search without any listing ID or suburb slug
+    if (!listingId && !suburb) {
+      return {
+        provider: 'domain',
+        isSupported: false,
+        requiresManualFallback: true,
+        isSearchOrIndexPage: true,
+        platformName: 'Domain',
+        cleanUrl: parsed.toString(),
+        error: 'This looks like a general Domain search or category page rather than a specific listing. Please paste the direct property link, or enter the suburb and rent below.',
+      };
+    }
 
     return {
       provider: 'domain',
       listingId,
       isSupported: true,
       requiresManualFallback: false,
+      platformName: 'Domain',
       cleanUrl: parsed.toString(),
       extractedSuburb: suburb,
       extractedPostcode: postcode,
       extractedBedrooms: bedrooms,
+      guidanceMessage: suburb
+        ? `Domain listing detected in ${suburb}${bedrooms !== undefined ? ` (${bedrooms}-bed)` : ''}. Please confirm the weekly rent ($) from the ad:`
+        : `Domain listing detected. Please confirm the suburb and weekly rent ($):`,
     };
   }
 
   // 2. RealEstate.com.au (REA) Parser
   if (hostname === 'realestate.com.au' || hostname.endsWith('.realestate.com.au')) {
-    const pathname = parsed.pathname.toLowerCase();
     const matchId = pathname.match(/(\d{6,12})/);
     const listingId = matchId ? matchId[1] : undefined;
-
     const { suburb, postcode, bedrooms } = extractMetadataFromReaPath(pathname);
+
+    // If it's realestate.com.au homepage or search page without property slug
+    if (!listingId && !suburb) {
+      return {
+        provider: 'rea',
+        isSupported: false,
+        requiresManualFallback: true,
+        isSearchOrIndexPage: true,
+        platformName: 'RealEstate.com.au',
+        cleanUrl: parsed.toString(),
+        error: 'This looks like the Realestate.com.au home or search page. Please paste the specific property link, or enter details below.',
+      };
+    }
 
     return {
       provider: 'rea',
       listingId,
       isSupported: true,
       requiresManualFallback: true, // Always manual fallback until authorized partner API per Blueprint
+      platformName: 'RealEstate.com.au',
       cleanUrl: parsed.toString(),
       extractedSuburb: suburb,
       extractedPostcode: postcode,
       extractedBedrooms: bedrooms,
-      error: 'RealEstate.com.au does not allow automatic scraping. Please confirm weekly rent below.',
+      guidanceMessage: suburb
+        ? `RealEstate.com.au listing detected in ${suburb}${bedrooms !== undefined ? ` (${bedrooms}-bed)` : ''}. Per REA platform terms, please confirm the weekly rent ($):`
+        : `RealEstate.com.au listing detected. Per REA platform terms, please enter the weekly rent ($):`,
     };
   }
 
-  // 3. Strictly Unsupported Domain / Fake site
+  // 3. Other Popular Australian Rental Portals (Warm Guidance)
+  if (hostname.includes('flatmates.com.au')) {
+    const fmMatch = pathname.match(/(?:flatmates|rooms-for-rent)-([a-z0-9-]+)/);
+    const suburb = fmMatch ? fmMatch[1].replace(/-/g, ' ').replace(/\b\d{4}\b/, '').trim() : undefined;
+    return {
+      provider: 'manual',
+      isSupported: false,
+      requiresManualFallback: true,
+      platformName: 'Flatmates.com.au',
+      cleanUrl: parsed.toString(),
+      extractedSuburb: suburb ? capitalize(suburb) : undefined,
+      guidanceMessage: 'Flatmates.com.au share-house link detected! Automated scraping is restricted, but enter the weekly rent and suburb below to run your reality check (15 sec):',
+    };
+  }
+
+  if (hostname.includes('gumtree.com.au')) {
+    return {
+      provider: 'manual',
+      isSupported: false,
+      requiresManualFallback: true,
+      platformName: 'Gumtree',
+      cleanUrl: parsed.toString(),
+      guidanceMessage: 'Gumtree rental ad detected! Automated scraping is restricted, but enter the weekly rent and suburb below:',
+    };
+  }
+
+  if (hostname.includes('rent.com.au')) {
+    return {
+      provider: 'manual',
+      isSupported: false,
+      requiresManualFallback: true,
+      platformName: 'Rent.com.au',
+      cleanUrl: parsed.toString(),
+      guidanceMessage: 'Rent.com.au listing detected! Please confirm the suburb and weekly rent below:',
+    };
+  }
+
+  if (hostname.includes('facebook.com') || hostname.includes('fb.com')) {
+    return {
+      provider: 'manual',
+      isSupported: false,
+      requiresManualFallback: true,
+      platformName: 'Facebook Marketplace',
+      cleanUrl: parsed.toString(),
+      guidanceMessage: 'Facebook Marketplace rental link detected! Meta restricts direct scraping, but enter the details below to calculate in 15 seconds:',
+    };
+  }
+
+  // 4. Clearly Non-Rental / Random Domains (e.g. google.com, youtube.com)
   return {
     provider: 'manual',
     isSupported: false,
     requiresManualFallback: true,
-    cleanUrl: parsed.toString(),
-    error: `Unsupported provider "${hostname}". Only Domain.com.au and Realestate.com.au rental listings are supported.`,
+    error: `"${hostname}" does not appear to be an Australian rental portal. Paste a Domain or Realestate.com.au listing link, or enter details manually below:`,
   };
 }
 

@@ -35,6 +35,7 @@ export const ListingRealityChecker: React.FC = () => {
   const [customIncome, setCustomIncome] = useState('');
   const [customSavings, setCustomSavings] = useState('');
   const [showIncomeOverride, setShowIncomeOverride] = useState(false);
+  const [showPasteHelp, setShowPasteHelp] = useState(false);
   const [isEditingInResult, setIsEditingInResult] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -86,15 +87,18 @@ export const ListingRealityChecker: React.FC = () => {
     setErrorMessage(null);
     setInfoMessage(null);
 
-    // 1. Strict URL validation per Blueprint Page 5
+    // 1. Intelligent URL validation with Australian guidance (no fake hallucinations)
     const parsed = parseListingUrl(raw);
 
-    // If fake / unsupported domain (e.g. google.com, fake.xyz)
-    if (!parsed.isSupported) {
+    // If completely unsupported / non-rental domain (e.g. google.com, youtube.com)
+    if (!parsed.isSupported && !parsed.guidanceMessage) {
       setErrorMessage(
         parsed.error ||
-          'Unsupported listing source. 0SQM only processes genuine Domain.com.au or Realestate.com.au rental listings. Please enter the details manually below (15 sec):'
+          'Unsupported listing source. Please paste a Domain, Realestate.com.au or Flatmates link, or use the quick check form below:'
       );
+      if (parsed.extractedSuburb) {
+        setManualSuburb(parsed.extractedSuburb);
+      }
       setIsManualMode(true);
       return;
     }
@@ -104,28 +108,26 @@ export const ListingRealityChecker: React.FC = () => {
 
     const stepInterval = setInterval(() => {
       setLoadingStep((prev) => (prev < LOADING_MESSAGES.length - 1 ? prev + 1 : prev));
-    }, 280);
+    }, 240);
 
-    await new Promise((resolve) => setTimeout(resolve, 900));
+    await new Promise((resolve) => setTimeout(resolve, 750));
     clearInterval(stepInterval);
     setIsLoading(false);
 
-    // 2. Verified Domain / REA portal link handling
-    const detectedSuburb = parsed.extractedSuburb || 'Surry Hills';
-    const detectedBedrooms = parsed.extractedBedrooms !== undefined ? String(parsed.extractedBedrooms) : '1';
+    // Set detected values ONLY if actually found in the URL. NEVER force Surry Hills!
+    if (parsed.extractedSuburb) {
+      setManualSuburb(parsed.extractedSuburb);
+    }
+    if (parsed.extractedBedrooms !== undefined) {
+      setManualBedrooms(String(parsed.extractedBedrooms));
+    }
 
-    setManualSuburb(detectedSuburb);
-    setManualBedrooms(detectedBedrooms);
     setIsManualMode(true);
 
-    if (parsed.provider === 'rea') {
-      setInfoMessage(
-        `✅ RealEstate.com.au link detected: Suburb identified as "${detectedSuburb}". Per REA terms, please enter the advertised weekly rent to calculate:`
-      );
-    } else {
-      setInfoMessage(
-        `✅ Domain.com.au listing detected in "${detectedSuburb}" (${detectedBedrooms}-bed). Please confirm the weekly rent ($) shown on the listing:`
-      );
+    if (parsed.guidanceMessage) {
+      setInfoMessage(parsed.guidanceMessage);
+    } else if (parsed.error) {
+      setErrorMessage(parsed.error);
     }
   };
 
@@ -339,12 +341,21 @@ export const ListingRealityChecker: React.FC = () => {
             /* URL Paste Form */
             <form onSubmit={handleUrlSubmit} className="space-y-4">
               <div>
-                <label
-                  htmlFor="listing-url-input"
-                  className="block text-xs font-bold text-neutral-700 uppercase mb-1.5"
-                >
-                  Paste Domain.com.au or Realestate.com.au Link:
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label
+                    htmlFor="listing-url-input"
+                    className="block text-xs font-bold text-neutral-700 uppercase"
+                  >
+                    Paste Australian Rental Link:
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowPasteHelp(!showPasteHelp)}
+                    className="text-[11px] font-bold text-neutral-600 hover:text-neutral-950 underline cursor-pointer"
+                  >
+                    {showPasteHelp ? '✕ Close Guide' : 'What can I paste? 🇦🇺'}
+                  </button>
+                </div>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     id="listing-url-input"
@@ -355,7 +366,7 @@ export const ListingRealityChecker: React.FC = () => {
                       setUrlInput(e.target.value);
                       setErrorMessage(null);
                     }}
-                    placeholder="https://www.domain.com.au/..."
+                    placeholder="https://www.domain.com.au/... or https://www.realestate.com.au/..."
                     className="flex-1 px-3 py-2.5 text-xs bg-neutral-50 border-2 border-neutral-950 focus:outline-none focus:bg-[#FFE600]/10 font-mono"
                     disabled={isLoading}
                   />
@@ -368,6 +379,29 @@ export const ListingRealityChecker: React.FC = () => {
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
+
+                {/* Blueprint Page 3: "What can I paste?" Guidance Panel */}
+                {showPasteHelp && (
+                  <div className="mt-2.5 p-3 bg-neutral-100 border border-neutral-300 rounded-xs text-[11px] text-neutral-800 space-y-1.5 animate-in fade-in duration-150">
+                    <p className="font-bold text-neutral-950">
+                      🇦🇺 Supported Australian Rental Links:
+                    </p>
+                    <ul className="space-y-1 text-neutral-700 list-disc list-inside">
+                      <li>
+                        <strong>Domain.com.au:</strong> Web listing URLs or Domain app share links.
+                      </li>
+                      <li>
+                        <strong>Realestate.com.au:</strong> Property URLs (per REA terms, confirm weekly rent in 15 sec).
+                      </li>
+                      <li>
+                        <strong>Flatmates, Gumtree, Marketplace:</strong> Paste the link and confirm the rent.
+                      </li>
+                    </ul>
+                    <p className="text-[10px] text-neutral-500 pt-1 border-t border-neutral-200">
+                      💡 Calibrated for Greater Sydney & NSW rentals against official ABS Census median data.
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Sample Verified Links */}
