@@ -296,12 +296,10 @@ export const ListingRealityChecker: React.FC = () => {
       rent: String(result.metrics.weeklyRent),
       score: String(result.score.total),
       label: result.score.label,
-      prem: premiumText,
       beds: String(result.listing.bedrooms ?? 1),
-      burden: `${result.metrics.rentBurdenPercent.toFixed(1)}%`,
-      upfront: `$${result.metrics.upfrontCashNSW.toLocaleString()}`,
       v: String(Date.now()),
     });
+    if (premiumText) shareParams.set('prem', premiumText);
 
     const shareUrl = `https://www.0sqm.com/share?${shareParams.toString()}`;
     const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(

@@ -38,14 +38,18 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     const ogImageUrl = `${siteUrl}/api/og/listing?${ogParams.toString()}`;
     const title = `${suburb} Rental Reality Check: $${rent}/wk (Score ${score}/100) | $0SQM`;
     const description = `${suburb}, NSW: $${rent}/week${prem ? ` · ${prem}` : ''} · Reality Score ${score}/100 (${label}). Upfront bond: ${upfront || '$' + (Number(rent) * 6).toLocaleString()}. Check your rental on $0SQM.`;
+    const sharePageUrl = `${siteUrl}/share?type=listing&${ogParams.toString()}`;
 
     return {
       title,
       description,
+      alternates: {
+        canonical: sharePageUrl,
+      },
       openGraph: {
         title,
         description,
-        url: `${siteUrl}/share?type=listing&${ogParams.toString()}`,
+        url: sharePageUrl,
         type: 'website',
         images: [
           {
@@ -87,14 +91,18 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const ogImageUrl = `${siteUrl}/api/og?${ogParams.toString()}`;
   const title = `${city} Reality Score: ${sqm} m² in theory. 0 m² in reality. — $0SQM`;
   const description = `I saved $${savings} and officially own 0 SQM in ${city}. Real data. Real prices. Same result.`;
+  const sharePageUrl = `${siteUrl}/share?${ogParams.toString()}`;
 
   return {
     title,
     description,
+    alternates: {
+      canonical: sharePageUrl,
+    },
     openGraph: {
       title,
       description,
-      url: `${siteUrl}/share?${ogParams.toString()}`,
+      url: sharePageUrl,
       type: 'website',
       images: [
         {
