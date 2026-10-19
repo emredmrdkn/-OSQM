@@ -691,7 +691,15 @@ export default function V2Page() {
   const handleShareOnX = () => {
     const cleanSqm = affordableSqm.toFixed(2);
     const tweetText = `#MySquareMeter is ${cleanSqm} m².\nI joined the @Own0SQM club too. #0SQM`;
-    const shareUrl = `https://www.0sqm.com/share?city=${encodeURIComponent(currentCity.name)}&sqm=${cleanSqm}&v=3`;
+    const shareParams = new URLSearchParams({
+      city: currentCity.name,
+      state: currentCity.flag,
+      sqm: cleanSqm,
+      savings: numericSavings.toLocaleString(),
+      symbol: currentCity.currencySymbol,
+      v: String(Date.now()),
+    });
+    const shareUrl = `https://www.0sqm.com/share?${shareParams.toString()}`;
     const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(tweetUrl, "_blank", "noopener,noreferrer");
   };

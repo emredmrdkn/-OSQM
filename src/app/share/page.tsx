@@ -71,16 +71,22 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const city = typeof params.city === 'string' ? params.city : 'Sydney';
   const sqm = typeof params.sqm === 'string' ? params.sqm : '0.00';
   const state = typeof params.state === 'string' ? params.state : 'NSW';
+  const savings = typeof params.savings === 'string' ? params.savings : '25,000';
+  const symbol = typeof params.symbol === 'string' ? params.symbol : '$';
+  const v = typeof params.v === 'string' ? params.v : undefined;
 
   const ogParams = new URLSearchParams({
     city,
     sqm,
     state,
+    savings,
+    symbol,
   });
+  if (v) ogParams.set('v', v);
 
   const ogImageUrl = `${siteUrl}/api/og?${ogParams.toString()}`;
   const title = `${city} Reality Score: ${sqm} m² in theory. 0 m² in reality. — $0SQM`;
-  const description = `I saved for a deposit and officially own 0 SQM in ${city}. Real data. Real prices. Same result.`;
+  const description = `I saved $${savings} and officially own 0 SQM in ${city}. Real data. Real prices. Same result.`;
 
   return {
     title,

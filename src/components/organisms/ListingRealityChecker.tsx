@@ -300,6 +300,7 @@ export const ListingRealityChecker: React.FC = () => {
       beds: String(result.listing.bedrooms ?? 1),
       burden: `${result.metrics.rentBurdenPercent.toFixed(1)}%`,
       upfront: `$${result.metrics.upfrontCashNSW.toLocaleString()}`,
+      v: String(Date.now()),
     });
 
     const shareUrl = `https://www.0sqm.com/share?${shareParams.toString()}`;
