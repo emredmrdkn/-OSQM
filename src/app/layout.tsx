@@ -36,7 +36,7 @@ const jakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://0sqm.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.0sqm.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     images: [
       {
-        url: 'https://0sqm.com/images/og-card.jpg',
+        url: `${siteUrl}/images/og-card.jpg`,
         width: 1200,
         height: 630,
         alt: '$0SQM Reality Score Card',
@@ -99,7 +99,7 @@ export const metadata: Metadata = {
     description: 'I saved $25,000 and officially own 0 SQM in Sydney. Same dream. Different budget.',
     site: '@Own0SQM',
     creator: '@Own0SQM',
-    images: ['https://0sqm.com/images/og-card.jpg'],
+    images: [`${siteUrl}/images/og-card.jpg`],
   },
 };
 

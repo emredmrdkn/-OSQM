@@ -68,26 +68,42 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   }
 
   // Default savings check metadata
+  const city = typeof params.city === 'string' ? params.city : 'Sydney';
+  const sqm = typeof params.sqm === 'string' ? params.sqm : '0.00';
+  const state = typeof params.state === 'string' ? params.state : 'NSW';
+
+  const ogParams = new URLSearchParams({
+    city,
+    sqm,
+    state,
+  });
+
+  const ogImageUrl = `${siteUrl}/api/og?${ogParams.toString()}`;
+  const title = `${city} Reality Score: ${sqm} m² in theory. 0 m² in reality. — $0SQM`;
+  const description = `I saved for a deposit and officially own 0 SQM in ${city}. Real data. Real prices. Same result.`;
+
   return {
-    title: '$0SQM — The Australian Dream Still Starts at 0m²',
-    description: 'Calculate how many microscopic square metres your life savings affords in Sydney and beyond. Real data. Real prices. Same result.',
+    title,
+    description,
     openGraph: {
-      title: '$0SQM — The Australian Dream Still Starts at 0m²',
-      description: 'Real data. Real prices. Same result. Calculate your square metres in Sydney.',
+      title,
+      description,
+      url: `${siteUrl}/share?${ogParams.toString()}`,
+      type: 'website',
       images: [
         {
-          url: 'https://0sqm.com/images/og-card.jpg',
+          url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: '$0SQM Reality Score Card',
+          alt: `${city} Reality Score Card`,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: '$0SQM — The Australian Dream Still Starts at 0m²',
-      description: 'I saved $25,000 and officially own 0 SQM in Sydney. Same dream. Different budget.',
-      images: ['https://0sqm.com/images/og-card.jpg'],
+      title,
+      description,
+      images: [ogImageUrl],
       site: '@Own0SQM',
       creator: '@Own0SQM',
     },

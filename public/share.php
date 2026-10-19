@@ -15,7 +15,7 @@ if ($type === 'listing') {
   $title = "{$suburb} Reality Check: \${$rent}/wk · Score {$score}/100 ({$label}) — \$0SQM";
   $desc = "Sydney Rental Reality Check: \${$rent}/wk in {$suburb} ({$beds}-bed) is {$prem} vs local median. Upfront cash: \${$upfront}. Wen reasonable rent?";
   $targetRedirect = "/listing-reality?suburb=" . urlencode($suburb) . "&rent=" . urlencode($rent) . "&beds=" . urlencode($beds);
-  $shareUrl = "https://0sqm.com/share?" . http_build_query($_GET);
+  $shareUrl = "https://www.0sqm.com/share?" . http_build_query($_GET);
 } else {
   $city = isset($_GET['city']) ? trim(strip_tags($_GET['city'])) : 'Sydney';
   $sqm = isset($_GET['sqm']) ? trim(strip_tags($_GET['sqm'])) : '0.00';
@@ -25,10 +25,10 @@ if ($type === 'listing') {
   $title = "$city Reality Score: {$sqm} m² in theory. 0 m² in reality. — $0SQM";
   $desc = "I saved \${$savings} and officially own 0 SQM in {$city}. Different city. Same portfolio. The viral housing reality check.";
   $targetRedirect = "/#reality";
-  $shareUrl = "https://0sqm.com/share?city=" . urlencode($city) . "&sqm=" . urlencode($sqm);
+  $shareUrl = "https://www.0sqm.com/share?city=" . urlencode($city) . "&sqm=" . urlencode($sqm);
 }
 
-$cardImage = "https://0sqm.com/images/og-card.jpg";
+$cardImage = "https://www.0sqm.com/images/og-card.jpg";
 ?>
 <!DOCTYPE html>
 <html lang="en">
