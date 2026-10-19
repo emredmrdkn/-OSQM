@@ -7,7 +7,7 @@ import { ListingRealityCard } from './ListingRealityCard';
 import { findSuburbBenchmark } from '@/data/sydneyBenchmarks';
 import { computeListingMetrics, calcRealityScore } from '@/lib/listingCalculations';
 import { parseListingUrl, mapManualToNormalisedListing } from '@/lib/listingAdapter';
-import { ArrowRight, Download, Share2, RefreshCw, AlertCircle, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Download, Share2, RefreshCw, AlertCircle, Sparkles, CheckCircle2, Sliders } from 'lucide-react';
 
 const LOADING_MESSAGES = [
   'Validating listing source… 🔍',
@@ -31,11 +31,15 @@ export const ListingRealityChecker: React.FC = () => {
   const [manualBedrooms, setManualBedrooms] = useState('1');
   const [manualArea, setManualArea] = useState('');
 
-  // Income override state
+  // Income & Savings override state
   const [customIncome, setCustomIncome] = useState('');
+  const [customSavings, setCustomSavings] = useState('');
+  const [showIncomeOverride, setShowIncomeOverride] = useState(false);
+  const [isEditingInResult, setIsEditingInResult] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
   const cardRef = useRef<HTMLDivElement>(null);
+  const activeBenchmark = findSuburbBenchmark(manualSuburb);
 
   // Hydrate from URL query parameters if arriving from a shared link
   useEffect(() => {
@@ -153,8 +157,9 @@ export const ListingRealityChecker: React.FC = () => {
 
       const benchmarks = findSuburbBenchmark(listing.suburb);
       const income = customIncome ? Number(customIncome) : undefined;
+      const savingsNum = customSavings ? Number(customSavings) : undefined;
       const metrics = computeListingMetrics(listing, benchmarks, income);
-      const score = calcRealityScore(metrics, listing, benchmarks);
+      const score = calcRealityScore(metrics, listing, benchmarks, savingsNum);
       const shareId = `rc_${Math.random().toString(36).substring(2, 9)}`;
 
       setResult({
@@ -178,6 +183,43 @@ export const ListingRealityChecker: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleRecalculate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!result) return;
+    const rentNum = Number(manualRent);
+    if (!rentNum || rentNum <= 0) return;
+
+    const updatedListing = {
+      ...result.listing,
+      weeklyRent: rentNum,
+      suburb: manualSuburb.trim() || result.listing.suburb,
+      bedrooms: Number(manualBedrooms),
+      internalAreaM2: manualArea ? Number(manualArea) : undefined,
+    };
+
+    const benchmarks = findSuburbBenchmark(updatedListing.suburb);
+    const income = customIncome ? Number(customIncome) : undefined;
+    const savingsNum = customSavings ? Number(customSavings) : undefined;
+    const metrics = computeListingMetrics(updatedListing, benchmarks, income);
+    const score = calcRealityScore(metrics, updatedListing, benchmarks, savingsNum);
+
+    setResult({
+      ...result,
+      listing: updatedListing,
+      benchmarks,
+      metrics,
+      score,
+      dataQuality: {
+        status: updatedListing.internalAreaM2 ? 'complete' : 'partial',
+        missingFields: updatedListing.internalAreaM2 ? [] : ['internalAreaM2'],
+        notice: !updatedListing.internalAreaM2
+          ? 'Floor area unentered — no fake maths today. Weights normalized.'
+          : undefined,
+      },
+    });
+    setIsEditingInResult(false);
   };
 
   // Quick preset verified demo samples
@@ -463,6 +505,61 @@ export const ListingRealityChecker: React.FC = () => {
                 </div>
               </div>
 
+              {/* Income & Savings Customization (Blueprint Page 5 & 8) */}
+              <div className="pt-2 border-t border-dashed border-neutral-300">
+                <button
+                  type="button"
+                  onClick={() => setShowIncomeOverride(!showIncomeOverride)}
+                  className="flex items-center justify-between w-full text-left text-[11px] font-bold text-neutral-800 hover:text-neutral-950 py-1 cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5 flex-wrap">
+                    <span>⚙️ Use my income / savings (optional)</span>
+                    <span className="text-[10px] text-neutral-500 font-normal">
+                      • {activeBenchmark.suburb} median: ${activeBenchmark.medianHouseholdWeeklyIncome.toLocaleString()}/wk
+                    </span>
+                  </span>
+                  <span className="text-xs">{showIncomeOverride ? '▲' : '▼'}</span>
+                </button>
+
+                {showIncomeOverride && (
+                  <div className="mt-2 p-2.5 bg-neutral-100 border border-neutral-300 rounded-xs grid grid-cols-1 sm:grid-cols-2 gap-2.5 animate-in fade-in duration-150">
+                    <div>
+                      <label className="block text-[10px] font-bold text-neutral-700 uppercase mb-1">
+                        Weekly Household Income ($)
+                      </label>
+                      <input
+                        type="number"
+                        min="100"
+                        value={customIncome}
+                        onChange={(e) => setCustomIncome(e.target.value)}
+                        placeholder={`Median: $${activeBenchmark.medianHouseholdWeeklyIncome}`}
+                        className="w-full px-2.5 py-1.5 text-xs bg-white border border-neutral-950 focus:outline-none font-bold"
+                      />
+                      <span className="text-[9px] text-neutral-500 block mt-0.5">
+                        Overrides ABS Census median. Kept private.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-neutral-700 uppercase mb-1">
+                        Current Savings ($) <span className="font-normal text-neutral-400">opt.</span>
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={customSavings}
+                        onChange={(e) => setCustomSavings(e.target.value)}
+                        placeholder="e.g. 15000"
+                        className="w-full px-2.5 py-1.5 text-xs bg-white border border-neutral-950 focus:outline-none"
+                      />
+                      <span className="text-[9px] text-neutral-500 block mt-0.5">
+                        Checks 6-week upfront buffer.
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <button
                 type="submit"
                 disabled={isLoading || !manualRent || !manualSuburb}
@@ -524,6 +621,85 @@ export const ListingRealityChecker: React.FC = () => {
                 <Download className="w-4 h-4" />
                 <span>{isDownloading ? 'Saving…' : 'Download Card'}</span>
               </button>
+            </div>
+
+            {/* Blueprint Page 9: "change input" / Tweak numbers on the fly */}
+            <div className="pt-2 border-t border-dashed border-neutral-300">
+              <button
+                type="button"
+                onClick={() => setIsEditingInResult(!isEditingInResult)}
+                className="w-full py-1.5 px-3 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-400 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <Sliders className="w-3.5 h-3.5" />
+                <span>{isEditingInResult ? 'Hide Input Tweaks ▲' : 'Tweak Rent, Income or Savings ▼'}</span>
+              </button>
+
+              {isEditingInResult && (
+                <form
+                  onSubmit={handleRecalculate}
+                  className="mt-2.5 p-3 bg-neutral-50 border border-neutral-300 space-y-2 text-left animate-in fade-in duration-150"
+                >
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <label className="block text-[10px] font-bold text-neutral-700 uppercase mb-0.5">
+                        Weekly Rent ($)
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={manualRent}
+                        onChange={(e) => setManualRent(e.target.value)}
+                        className="w-full px-2 py-1 bg-white border border-neutral-950 font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-neutral-700 uppercase mb-0.5">
+                        Weekly Income ($)
+                      </label>
+                      <input
+                        type="number"
+                        min="100"
+                        value={customIncome}
+                        onChange={(e) => setCustomIncome(e.target.value)}
+                        placeholder={`Median: $${result.benchmarks.medianHouseholdWeeklyIncome}`}
+                        className="w-full px-2 py-1 bg-white border border-neutral-950"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-neutral-700 uppercase mb-0.5">
+                        Current Savings ($)
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={customSavings}
+                        onChange={(e) => setCustomSavings(e.target.value)}
+                        placeholder="e.g. 15000"
+                        className="w-full px-2 py-1 bg-white border border-neutral-950"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-neutral-700 uppercase mb-0.5">
+                        Internal Area (m²)
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={manualArea}
+                        onChange={(e) => setManualArea(e.target.value)}
+                        placeholder="Leave blank if N/A"
+                        className="w-full px-2 py-1 bg-white border border-neutral-950"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full py-1.5 bg-neutral-950 text-white font-bold text-xs uppercase tracking-wider hover:bg-[#FFE600] hover:text-neutral-950 transition-all cursor-pointer"
+                  >
+                    Update Reality Score ⚡
+                  </button>
+                </form>
+              )}
             </div>
 
             <button

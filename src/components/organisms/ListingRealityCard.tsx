@@ -139,7 +139,7 @@ export const ListingRealityCard = React.forwardRef<HTMLDivElement, ListingRealit
                 metrics.rentBurdenPercent > 35 ? 'text-red-600' : 'text-neutral-950'
               }`}
             >
-              {metrics.rentBurdenPercent}% of weekly income
+              {metrics.rentBurdenPercent}% {metrics.isIncomeCustom ? 'of your income' : 'of local income'}
             </span>
           </div>
 
@@ -163,28 +163,57 @@ export const ListingRealityCard = React.forwardRef<HTMLDivElement, ListingRealit
 
         {/* Score Component Breakdown Bar */}
         <div className="mt-4 pt-1">
-          <p className="text-[10px] font-black uppercase text-neutral-500 mb-1.5 tracking-wider">
-            SCORE COMPONENTS
-          </p>
-          <div className="grid grid-cols-3 gap-1.5 text-[10px] text-center font-bold">
+          <div className="flex justify-between items-center mb-1.5">
+            <p className="text-[10px] font-black uppercase text-neutral-500 tracking-wider">
+              SCORE COMPONENTS
+            </p>
+            {score.components.spaceEfficiency === null && (
+              <span className="text-[9px] text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-xs font-bold">
+                Weights normalized (Area N/A)
+              </span>
+            )}
+          </div>
+          <div
+            className={`grid ${
+              score.components.spaceEfficiency !== null ? 'grid-cols-4' : 'grid-cols-3'
+            } gap-1.5 text-[10px] text-center font-bold`}
+          >
             <div className="bg-neutral-100 border border-neutral-300 p-1 rounded-xs">
               <span className="text-neutral-500 block text-[9px]">LOCAL VALUE</span>
-              <span>{score.components.localValue} / 40</span>
+              <span>
+                {score.components.localValue} / {score.normalizedWeights.localValue}
+              </span>
             </div>
             <div className="bg-neutral-100 border border-neutral-300 p-1 rounded-xs">
               <span className="text-neutral-500 block text-[9px]">RENT BURDEN</span>
-              <span>{score.components.rentBurden} / 30</span>
+              <span>
+                {score.components.rentBurden} / {score.normalizedWeights.rentBurden}
+              </span>
             </div>
             <div className="bg-neutral-100 border border-neutral-300 p-1 rounded-xs">
               <span className="text-neutral-500 block text-[9px]">UPFRONT CASH</span>
-              <span>{score.components.upfrontCash} / 15</span>
+              <span>
+                {score.components.upfrontCash} / {score.normalizedWeights.upfrontCash}
+              </span>
             </div>
+            {score.components.spaceEfficiency !== null && (
+              <div className="bg-neutral-100 border border-neutral-300 p-1 rounded-xs">
+                <span className="text-neutral-500 block text-[9px]">SPACE EFF.</span>
+                <span>
+                  {score.components.spaceEfficiency} / {score.normalizedWeights.spaceEfficiency}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Card Footer / Attributions */}
         <div className="mt-5 pt-3 border-t border-neutral-200 flex items-center justify-between text-[9px] text-neutral-500">
-          <span>{benchmarks.incomeSourceYear} • 0sqm.com</span>
+          <span>
+            {metrics.isIncomeCustom
+              ? 'User Income Override • 0sqm.com'
+              : `${benchmarks.incomeSourceYear} • 0sqm.com`}
+          </span>
           <span className="font-bold">Not financial advice. Just reality.</span>
         </div>
       </div>
